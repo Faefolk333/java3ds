@@ -1,0 +1,14 @@
+#pragma once
+#include <string>
+#include <vector>
+#include <map>
+#include <cstdlib>
+#include <cstdio>
+namespace updates {
+struct Json {std::string text;std::map<std::string,Json>object;std::vector<Json>array;};
+struct Parser {const std::string&s;size_t p=0;bool ok=true;void ws(){while(p<s.size()&&(unsigned char)s[p]<=32)p++;}char take(){if(p>=s.size()){ok=false;return 0;}return s[p++];}std::string str(){std::string r;if(take()!='"'){ok=false;return r;}while(ok&&p<s.size()){char c=take();if(c=='"')return r;if(c=='\\'){c=take();if(c=='u'){for(int i=0;i<4;i++){char h=take();if(!((h>='0'&&h<='9')||(h>='a'&&h<='f')||(h>='A'&&h<='F')))ok=false;}r+='?';continue;}if(c=='n')c='\n';else if(c=='r')c='\r';else if(c=='t')c='\t';else if(c!='"'&&c!='\\'&&c!='/'){ok=false;return r;}}else if((unsigned char)c<32){ok=false;return r;}r+=c;}ok=false;return r;}
+Json value(int depth=0){Json v;ws();if(depth>24||p>=s.size()){ok=false;return v;}char c=s[p];if(c=='"'){v.text=str();return v;}if(c=='{'||c=='['){p++;ws();char end=c=='{'?'}':']';if(p<s.size()&&s[p]==end){p++;return v;}while(ok){ws();if(c=='{'){std::string k=str();ws();if(take()!=':'){ok=false;break;}v.object[k]=value(depth+1);}else v.array.push_back(value(depth+1));ws();char next=take();if(next==end)return v;if(next!=','){ok=false;break;}}return v;}size_t a=p;while(p<s.size()&&s[p]!=','&&s[p]!='}'&&s[p]!=']'&&(unsigned char)s[p]>32)p++;v.text=s.substr(a,p-a);if(v.text.empty())ok=false;return v;}};
+struct Release{std::string tag,url,sha;unsigned size=0;};
+inline int version(std::string s){if(!s.empty()&&s[0]=='v')s.erase(0,1);int a=0,b=0,c=0;char extra=0;if(sscanf(s.c_str(),"%d.%d.%d%c",&a,&b,&c,&extra)!=3||a<0||b<0||c<0||a>999||b>999||c>999)return -1;return a*1000000+b*1000+c;}
+inline bool parse(const std::string&s,Release&r){Parser p{s};Json j=p.value();p.ws();if(!p.ok||p.p!=s.size()||j.object["draft"].text!="false"||j.object["prerelease"].text!="false")return false;r.tag=j.object["tag_name"].text;if(version(r.tag)<0)return false;for(auto&a:j.object["assets"].array){if(a.object["name"].text!="java3ds.3dsx")continue;r.url=a.object["url"].text;std::string d=a.object["digest"].text;if(d.size()!=71||d.substr(0,7)!="sha256:")return false;r.sha=d.substr(7);for(char c:r.sha)if(!((c>='0'&&c<='9')||(c>='a'&&c<='f')))return false;std::string n=a.object["size"].text;if(n.empty()||n.find_first_not_of("0123456789")!=std::string::npos)return false;unsigned long size=strtoul(n.c_str(),nullptr,10);if(size<4096||size>64*1024*1024)return false;r.size=size;const std::string prefix="https://api.github.com/repos/Faefolk333/java3ds/releases/assets/";return r.url.compare(0,prefix.size(),prefix)==0&&r.url.size()>prefix.size()&&r.url.find_first_not_of("0123456789",prefix.size())==std::string::npos;}return false;}
+}

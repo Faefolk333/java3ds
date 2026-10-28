@@ -1,0 +1,15 @@
+/work/
+/dist/
+__pycache__/
+*.pyc
+*.o
+*.exe
+github-token.txt
+*.3dsx
+*.elf
+*.smdh
+*.previous
+*.update
+/saves/
+/cache/
+/settings/

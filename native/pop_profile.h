@@ -1,0 +1,3 @@
+#pragma once
+#define POP_SOURCE_CRC 1543852231u
+#define POP_SOURCE_SIZE 623719u

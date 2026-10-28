@@ -1,0 +1,1 @@
+package com.nokia.mid.ui;public final class DeviceControl {public static void setLights(int n,int level){}public static void flashLights(long time){}public static void startVibra(int level,long time){}public static void stopVibra(){}}

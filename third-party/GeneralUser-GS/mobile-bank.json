@@ -1,0 +1,10 @@
+{
+  "source": "GeneralUser GS 2.0.3, S. Christian Collins",
+  "source_sha256": "9575028c7a1f589f5770fccc8cff2734566af40cd26ed836944e9a5152688cfe",
+  "derived_sha256": "8fdf9ee3fc3cf9bece1490354bfd6cfe86b8a1927a5a21d135ab171fb1fa15e1",
+  "all_presets": 287,
+  "samples": 920,
+  "bytes": 16254108,
+  "resampled_samples": 834,
+  "max_ordinary_sample_rate": 16000
+}

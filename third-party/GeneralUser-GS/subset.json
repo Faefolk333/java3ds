@@ -1,0 +1,32 @@
+{
+  "source_sha256": "9575028c7a1f589f5770fccc8cff2734566af40cd26ed836944e9a5152688cfe",
+  "tracks": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    10
+  ],
+  "programs": [
+    0,
+    9,
+    20,
+    24,
+    25,
+    32,
+    34,
+    44,
+    47,
+    48,
+    74,
+    77,
+    104,
+    116
+  ],
+  "presets": 15,
+  "samples": 176,
+  "bytes": 9918144,
+  "derived_sha256": "6ce8f2bdbe4325a744a04b7e7fd06e5ac2c5def36846c7961300b3d3d8351bdd",
+  "source": "GeneralUser GS v2.0.3 by S. Christian Collins; lossless preset/sample subset"
+}

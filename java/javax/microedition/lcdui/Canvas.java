@@ -1,0 +1,16 @@
+package javax.microedition.lcdui;
+public abstract class Canvas extends Displayable {
+ public static final int UP=1,LEFT=2,RIGHT=5,DOWN=6,FIRE=8,GAME_A=9,GAME_B=10,GAME_C=11,GAME_D=12;public static final int KEY_NUM0=48,KEY_NUM1=49,KEY_NUM2=50,KEY_NUM3=51,KEY_NUM4=52,KEY_NUM5=53,KEY_NUM6=54,KEY_NUM7=55,KEY_NUM8=56,KEY_NUM9=57,KEY_STAR=42,KEY_POUND=35;
+ public static volatile int frames;public static volatile Runnable frameHook;protected boolean suppressKeyEvents;private volatile boolean dirty=true;private boolean painting;private int last;private final long[]repeats=new long[19];public volatile int keyStates;
+ protected abstract void paint(Graphics g);protected void keyPressed(int k){}protected void keyReleased(int k){}protected void keyRepeated(int k){}protected void showNotify(){}protected void hideNotify(){}protected void pointerPressed(int x,int y){}protected void pointerReleased(int x,int y){}protected void pointerDragged(int x,int y){}
+ public void setFullScreenMode(boolean b){}public boolean hasPointerEvents(){return false;}public boolean hasPointerMotionEvents(){return false;}public boolean hasRepeatEvents(){return true;}public boolean isDoubleBuffered(){return true;}
+ public int getGameAction(int key){switch(key){case -1:case 50:return UP;case -2:case 56:return DOWN;case -3:case 52:return LEFT;case -4:case 54:return RIGHT;case -5:case 53:return FIRE;case 55:return GAME_A;case 57:return GAME_B;case 42:return GAME_C;case 35:return GAME_D;default:return 0;}}
+ public int getKeyCode(int action){switch(action){case UP:return -1;case DOWN:return -2;case LEFT:return -3;case RIGHT:return -4;case FIRE:return -5;case GAME_A:return 55;case GAME_B:return 57;case GAME_C:return 42;case GAME_D:return 35;default:throw new IllegalArgumentException();}}
+ public String getKeyName(int key){int a=getGameAction(key);switch(a){case UP:return "UP";case DOWN:return "DOWN";case LEFT:return "LEFT";case RIGHT:return "RIGHT";case FIRE:return "FIRE";default:return Character.toString((char)key);}}
+ public final synchronized void repaint(){dirty=true;pump(crimson.Native.buttons());}public final void repaint(int x,int y,int w,int h){repaint();}public final void serviceRepaints(){if(dirty)pump(crimson.Native.buttons());}
+ final synchronized void pump(int held){int keys=crimson.Controls.keys(held,crimson.GameMain.gameplay());int[]codes=crimson.Controls.CODES;int previous=last;last=keys;keyStates=0;long now=System.currentTimeMillis();
+  for(int i=0;i<codes.length;i++){if((keys&(1<<i))!=0){int a=getGameAction(codes[i]);if(a>0)keyStates|=1<<a;}if((previous&~keys&(1<<i))!=0){if(!suppressKeyEvents||getGameAction(codes[i])==0)keyReleased(codes[i]);}}
+  for(int i=0;i<codes.length;i++)if((keys&~previous&(1<<i))!=0){repeats[i]=now+400;if(!command(codes[i])&&(!suppressKeyEvents||getGameAction(codes[i])==0))keyPressed(codes[i]);}else if(!crimson.GameMain.popProfile&&(keys&previous&(1<<i))!=0&&now>=repeats[i]){repeats[i]=now+100;if(!suppressKeyEvents||getGameAction(codes[i])==0)keyRepeated(codes[i]);}last=keys;
+  if(dirty&&!painting){dirty=false;painting=true;try{paint(new Graphics(null,crimson.GameMain.width,crimson.GameMain.height,0));frames++;Runnable hook=frameHook;if(hook!=null)hook.run();crimson.Native.present();}finally{painting=false;}}
+ }
+}

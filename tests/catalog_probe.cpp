@@ -1,0 +1,3 @@
+#include "../native/catalog.h"
+#include <cstdio>
+int main(int n,char**v){if(n<3)return 1;GameInfo g;GameSettings s;std::string e;if(!inspectGame(v[1],g,e)){fprintf(stderr,"INSPECT %s\n",e.c_str());return 2;}if(n>3)s.width=atoi(v[3]);if(n>4)s.height=atoi(v[4]);if(g.pop){s.keys=2;}printf("TITLE %s MIDLETS %u POP %d\n",g.title.c_str(),(unsigned)g.midlets.size(),g.pop);printf("NATIVE %dx%d KNOWN %d BACKEND %s\n",g.nativeWidth,g.nativeHeight,g.resolutionKnown,g.unsupported.c_str());if(!prepareGame(g,s,"romfs/profiles/pop-classic.zip",v[2],e)){fprintf(stderr,"PREPARE %s\n",e.c_str());return 3;}if(n>5)g.properties["Check-Autorun"]="yes";if(!writeLaunchConfig(g,s,"work/test-saves","work/host-launch.cfg",e)){fprintf(stderr,"CONFIG %s\n",e.c_str());return 4;}return 0;}
