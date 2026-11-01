@@ -24,6 +24,7 @@ with zipfile.ZipFile(install,'w',zipfile.ZIP_DEFLATED,compresslevel=6) as z:
  z.writestr('3ds/java-3ds/games/ADD-YOUR-GAMES-HERE.txt','Add your JAR/JAD games here. A JAD also needs its matching local JAR.\n')
  for p in licenses:z.write(p,'licenses/'+p.relative_to(root).as_posix())
  for folder in ('J2ME-Loader-API','FreeJ2ME-M3G'):z.write(root/'third-party'/folder/'NOTICE','licenses/'+folder+'/NOTICE')
+ z.write(root/'third-party/opencore-amr/opencore/NOTICE','licenses/opencore-amr/NOTICE')
  z.write(root/'third-party/stb_image.h','licenses/stb_image.h')
  z.write(root/'third-party/font8x8/font8x8_basic.h','licenses/font8x8_basic.h')
 source=out/'Java3DS-0.3.7-source-private.zip'
