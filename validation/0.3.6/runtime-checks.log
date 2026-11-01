@@ -1,5 +1,5 @@
 TITLE Compatibility probes MIDLETS 1 POP 0
-NATIVE 320x240 KNOWN 0 BACKEND 
+NATIVE 320x240 KNOWN 0 BACKEND
 RenderCompatibility PASS
 MotionCompatibility PASS
 M3GCompatibility PASS
