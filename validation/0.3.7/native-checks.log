@@ -1,0 +1,3 @@
+STEREO_PASS flat_identity eye_direction gap_fill layer_depth model_depth HUD_priority mode_selection release
+DISPLAY_FILTER_PASS off_identity subtle_scanlines_grid alpha_preserved
+SETTINGS_PASS stereo_roundtrip older_settings invalid_values

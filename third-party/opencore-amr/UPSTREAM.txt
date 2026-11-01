@@ -1,0 +1,3 @@
+https://github.com/BelledonneCommunications/opencore-amr
+3b67218fb8efb776bcd79e7445774e02d778321d
+Decoder-only build, DISABLE_AMRNB_ENCODER.

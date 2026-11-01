@@ -1,1 +1,1 @@
-package javax.microedition.media; public interface Controllable { Control getControl(String s); }
+package javax.microedition.media; public interface Controllable { Control getControl(String s);Control[] getControls(); }

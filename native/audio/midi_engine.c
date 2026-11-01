@@ -1,6 +1,7 @@
 #include "midi_engine.h"
 #include <stdlib.h>
 #include <string.h>
+#include "../../third-party/opencore-amr/amrnb/interf_dec.h"
 #define TSF_SHORT_SAMPLES
 #define TSF_IMPLEMENTATION
 #include "../../third-party/TinySoundFont/tsf.h"
@@ -54,6 +55,15 @@ static int load_wav(Sequence*s,const uint8_t*b,int size,int rate){
  s->pcm=malloc(bytes);if(!s->pcm)return 0;memcpy(s->pcm,pcm,bytes);s->pcm_bytes=bytes;
  s->duration=((uint64_t)(bytes/stride)*rate+s->pcm_rate-1)/s->pcm_rate;return 1;
 }
+static int load_amr(Sequence*s,const uint8_t*b,int size,int rate){
+ static const int bytes[16]={13,14,16,18,20,21,27,32,6,0,0,0,0,0,0,1};
+ if(size<7||memcmp(b,"#!AMR\n",6))return 0;
+ int frames=0;for(int p=6;p<size;){int type=(b[p]>>3)&15,n=bytes[type];if((b[p]&0x83)||!n||n>size-p)return 0;p+=n;if(++frames>6553)return 0;}
+ if(!frames)return 0;size_t length=(size_t)frames*160*2;s->pcm=malloc(length);if(!s->pcm)return 0;
+ void*decoder=Decoder_Interface_init();if(!decoder){free(s->pcm);s->pcm=NULL;return 0;}
+ int frame=0;for(int p=6;p<size;){Decoder_Interface_Decode(decoder,b+p,(short*)s->pcm+frame*160,!(b[p]&4));p+=bytes[(b[p]>>3)&15];frame++;}
+ Decoder_Interface_exit(decoder);s->pcm_bytes=(int)length;s->pcm_rate=8000;s->pcm_bits=16;s->pcm_channels=1;s->duration=((uint64_t)frames*160*rate+7999)/8000;return 1;
+}
 int midi_engine_load(MidiEngine*e,const void*data,int size){
  if(!e||!data||size<4||size>1024*1024)return -1;int i;for(i=0;i<SLOTS&&e->slots[i].loaded;i++);if(i==SLOTS)return -1;
  Sequence*s=&e->slots[i];memset(s,0,sizeof(*s));s->volume=100;s->loops=1;
@@ -61,7 +71,7 @@ int midi_engine_load(MidiEngine*e,const void*data,int size){
   s->messages=tml_load_memory(data,size);if(!s->messages)return -1;
   unsigned length=0;tml_get_info(s->messages,NULL,NULL,NULL,NULL,&length);
   s->duration=(uint64_t)(length+250)*e->rate/1000; // Preserve a short release tail after the final event.
- }else if(!load_wav(s,data,size,e->rate))return -1;
+ }else if(!load_wav(s,data,size,e->rate)&&!load_amr(s,data,size,e->rate))return -1;
  s->cursor=s->messages;s->loaded=1;return i;
 }
 static void render_sequence(MidiEngine*e,Sequence*s,int16_t*out,int frames);
@@ -92,6 +102,7 @@ int midi_engine_control(MidiEngine*e,int id,int op,int value){
  case MIDI_STATE:return s->playing?400:300;
  case MIDI_POSITION:return (int)(s->frame*1000/e->rate);
  case MIDI_KIND:return s->messages?1:2;
+ case MIDI_DURATION:return (int)(s->duration*1000/e->rate);
  default:return -1;
  }
 }
@@ -117,7 +128,10 @@ static void render_sequence(MidiEngine*e,Sequence*s,int16_t*out,int frames){
    unsigned source_frames=s->pcm_bytes/(s->pcm_channels*(s->pcm_bits/8));
    for(int j=0;j<n;j++){uint64_t pos=(s->frame+j)*s->pcm_rate;unsigned f=pos/e->rate;unsigned next=f+1<source_frames?f+1:f;if(f>=source_frames)continue;
     int a=0,b=0;for(int c=0;c<s->pcm_channels;c++){a+=pcm_sample(s,f,c);b+=pcm_sample(s,next,c);}a/=s->pcm_channels;b/=s->pcm_channels;
-    out[done+j]=(int16_t)((a+(int64_t)(b-a)*(pos%e->rate)/e->rate)*s->volume/100);
+    // Keep interpolation signed: pos is uint64_t, and mixing its remainder
+    // directly into this expression wraps negative PCM samples before scaling.
+    int64_t fraction=(int64_t)(pos%e->rate);
+    out[done+j]=(int16_t)((a+(int64_t)(b-a)*fraction/e->rate)*s->volume/100);
    }
   }
   done+=n;s->frame+=n;

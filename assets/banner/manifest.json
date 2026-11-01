@@ -1,7 +1,7 @@
 {
-  "cgfx_bytes": 502712,
+  "cgfx_bytes": 264072,
   "binary_checks": {
-    "cgfx_bytes": 502712,
+    "cgfx_bytes": 264072,
     "dictionaries": [
       {
         "offset": 148,
@@ -13,61 +13,57 @@
       },
       {
         "offset": 532,
-        "entries": 6
-      },
-      {
-        "offset": 960,
-        "entries": 6
-      },
-      {
-        "offset": 1412,
-        "entries": 64
-      },
-      {
-        "offset": 6152,
         "entries": 5
       },
       {
-        "offset": 13836,
+        "offset": 900,
         "entries": 6
       },
       {
-        "offset": 15304,
+        "offset": 1352,
+        "entries": 48
+      },
+      {
+        "offset": 4948,
+        "entries": 4
+      },
+      {
+        "offset": 11012,
+        "entries": 6
+      },
+      {
+        "offset": 12480,
         "entries": 1
       },
       {
-        "offset": 15440,
+        "offset": 12556,
+        "entries": 4
+      },
+      {
+        "offset": 12728,
         "entries": 1
       },
       {
-        "offset": 15516,
-        "entries": 5
-      },
-      {
-        "offset": 15724,
+        "offset": 13080,
         "entries": 1
       },
       {
-        "offset": 16076,
+        "offset": 13204,
         "entries": 1
       },
       {
-        "offset": 16200,
-        "entries": 1
-      },
-      {
-        "offset": 16284,
+        "offset": 13288,
         "entries": 4
       }
     ],
-    "lookups_passed": 105
+    "lookups_passed": 85
   },
   "audio": {
     "channels": 2,
     "sample_bits": 16,
-    "sample_rate": 48000,
-    "frames": 88616,
-    "seconds": 1.8461666666666667
+    "sample_rate": 32000,
+    "frames": 59077,
+    "seconds": 1.84615625
   },
   "animations": [
     {
@@ -114,6 +110,6 @@
     "source_camera_max_delta": 0,
     "camera_motion_detected": false,
     "camera_space_baked": true,
-    "visible_build_marker": "0.3.6"
+    "facing_anchor": "YAxial billboard parent"
   }
 }

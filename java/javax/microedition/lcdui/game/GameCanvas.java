@@ -1,3 +1,6 @@
 package javax.microedition.lcdui.game;import javax.microedition.lcdui.*;
 public abstract class GameCanvas extends Canvas {public static final int UP_PRESSED=2,DOWN_PRESSED=64,LEFT_PRESSED=4,RIGHT_PRESSED=32,FIRE_PRESSED=256,GAME_A_PRESSED=512,GAME_B_PRESSED=1024,GAME_C_PRESSED=2048,GAME_D_PRESSED=4096;private Image buffer;
- protected GameCanvas(boolean suppress){suppressKeyEvents=suppress;buffer=Image.createImage(getWidth(),getHeight());}protected Graphics getGraphics(){return buffer.getGraphics();}public int getKeyStates(){return keyStates;}public void flushGraphics(){repaint();}public void flushGraphics(int x,int y,int w,int h){repaint(x,y,w,h);}public final void paint(Graphics g){g.drawImage(buffer,0,0,20);}}
+ protected GameCanvas(boolean suppress){suppressKeyEvents=suppress;buffer=Image.createImage(getWidth(),getHeight());}protected Graphics getGraphics(){return buffer.getGraphics();}public int getKeyStates(){return keyStates;}
+ public synchronized void flushGraphics(){flushGraphics(0,0,getWidth(),getHeight());}
+ public synchronized void flushGraphics(int x,int y,int w,int h){if(!isShown()||w<=0||h<=0)return;frameFlushed();Graphics.flushImage(buffer,x,y,w,h);}
+ public void paint(Graphics g){g.drawImage(buffer,0,0,20);}}

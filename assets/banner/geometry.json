@@ -35,5 +35,5 @@
   "source_camera_max_delta": 0,
   "camera_motion_detected": false,
   "camera_space_baked": true,
-  "visible_build_marker": "0.3.6"
+  "facing_anchor": "YAxial billboard parent"
 }

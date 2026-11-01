@@ -1,0 +1,14 @@
+RAM cache ready: 3 JARs, 1917423 bytes
+method not exist :javax/microedition/lcdui/TextBox.<init>(Ljava/lang/String;Ljava/lang/String;II)V
+method not exist :javax/microedition/lcdui/TextBox.getString()Ljava/lang/String;
+RAM cache hits: 622
+STAGE 40 0
+STAGE 41 3
+Java3DS: YetiSports Summer Games 320x240
+VM_AUDIO_LOAD handle=0 bytes=12536
+VM_AUDIO_START 0 result 0
+STAGE 80 0
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+VM_EXIT run=0 result=0 frames=731 peak=8288

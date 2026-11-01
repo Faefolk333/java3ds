@@ -1,4 +1,4 @@
-# Java3DS — private alpha 0.3.6
+# Java3DS — private alpha 0.3.7
 
 Java ME / JAR / JAD launcher for Nintendo 3DS, with a shared MIDI synthesizer.
 Extract the installation ZIP to the root of the SD card, replacing
@@ -7,35 +7,54 @@ with Java Pocket 3DS. Games, settings and saves are retained. Start **Java3DS**
 from Homebrew Launcher; add your JAR/JAD files under `/3ds/java-3ds/games/`.
 A JAD also needs its matching local JAR. Original game JARs are not bundled.
 
-## Changes in 0.3.6
+## Changes in 0.3.7
 
-Nokia int drawPixels without rotation now goes directly to the native RGB
-blitter instead of allocating and filling two temporary images. Micro3D caches immutable triangle descriptors and submits a figure in one native
-batch, avoiding Java's per-triangle coordinate gathering and JNI calls. Depth
-clearing uses the actual target area. A same-host, 35-second Blades 320x240
-comparison published 726 frames versus 602, using about 20% less process CPU.
-These are PC results, not measured 3DS frame rates.
+GameCanvas flush now publishes its buffer directly instead of calling the
+application's paint method twice. Moorhuhn again renders its menu, chickens,
+targets and crosshair in host gameplay tests. Hidden canvases cannot publish
+frames, and selecting the same screen no longer triggers hide/show callbacks.
 
-The game menu (L+R or touch MENU) adds **Stereo 3D: Off / Models / Layers / Auto**
-and strength 1–6. Default is Off. Raise the hardware 3D slider after enabling it.
-Models use the existing Micro3D/M3G depth buffer; Layers uses explicit JSR-118
-LayerManager ordering; Auto enables both. Single-pass depth reprojection produces
-the two eye images and keeps later 2D HUD drawing on the screen plane. This is an
-experimental approximation: newly exposed hidden pixels are filled from nearby
-surfaces. It cannot infer layers from an already flattened bitmap. Depth follows mutable
-Images, image clones/regions, and a bounded two-slot getRGB/drawRGB readback
-cache. Arbitrary game-side pixel-array copies or custom renderers can still lose
-that information.
-The depth buffer is allocated on demand and released after the VM worker exits.
-Settings persist per game. Stereo rendering adds work; use Off for best speed.
-This feature is inspired by [gpSP 3D](https://github.com/bheppe/gpsp-3d)'s layer
-separation; Java ME does not expose the GBA's BG/sprite registers.
+Micro3D implements half/add/subtract blending, color-key transparency and
+opaque-before-transparent submission within each mesh. Neutral black additive
+pixels no longer overwrite the scene or its stereo depth. Projection respects
+translated/offscreen graphics. Early triangle rejection avoids unnecessary
+per-pixel divisions while preserving opaque reference pixels.
 
-The banner now visibly says **BUILD 0.3.6**. Its four animation channels and
-supplied WAV are retained; this marker distinguishes the installed asset from
-a stale HOME Menu banner. After updating, fully restart the console before
-checking it. If the marker is visible but the motion is wrong, that is an
-animation conversion/framing issue rather than this old cached asset.
+AMR-NB effects use a reusable OpenCORE decoder. PlayerListener, mute, duration
+and playback-position APIs improve game audio compatibility. Signed PCM
+interpolation fixes distortion in negative WAV/AMR samples. MIDI, WAV and AMR
+players mix independently; AAC/MP3 and AMR-WB remain unsupported. The supplied
+Soul build disables many effects using ID -1 and forces infinite-loop requests
+to one playback; some silence is a game-build choice.
+
+Stereo defaults to **Auto** and stops collecting depth with the hardware slider
+lowered. Models uses Micro3D/M3G depth. Layers combines LayerManager with an
+experimental estimate for games drawing ordinary images/sprites; Auto enables
+both. Small HUD text stays on the screen plane. This is image reprojection,
+with approximate gap filling; it cannot recover hidden geometry. Custom games
+that provide a flattened software-rendered framebuffer, including Orcs & Elves
+II, still need renderer-specific depth integration. Depth from mutable images
+and the bounded getRGB/drawRGB cache remains supported. Older default-Off
+settings migrate to Auto once; a newly saved Off choice is retained.
+
+L+R or touch MENU offers CRT **Off / Soft scanlines / Soft grid**. Filters affect
+only the game image, share the same phase in both eyes and preserve settings
+per game. Yeti Sports' golf club now uses the requested five-degree fillArc
+instead of an incorrectly filled oval.
+
+The banner has no version badge. An unanimated Y-axis billboard parent
+counteracts HOME Menu's rotation of the entire model while retaining the four
+authored model animation channels. Single-sided closed meshes reduce CGFX
+from 502,712 to 264,072 bytes. The supplied quiet WAV is normalized to -1 dBFS
+and resampled to 32 kHz; its original is retained. No significant leading
+silence was present. HOME Menu controls startup timing. Motion, sound and
+performance still require a console retest; PC results do not establish 3DS FPS.
+
+## Changes in 0.3.6 (historical)
+
+Native Nokia pixel copies and Micro3D mesh batching reduced host rendering
+overhead. Experimental model/layer stereo and per-game strength settings were
+introduced. The temporary version badge from that build is removed in 0.3.7.
 
 ## Changes in 0.3.5 — HOME Menu banner hotfix
 
@@ -92,7 +111,7 @@ actual game ZIPs, including binary files with a misleading .jad suffix.
 * Touch keys highlight only on touch; menu parallax updates more often and
   filters the stick movement. The banner is unchanged.
 
-## CIA installation (0.3.6)
+## CIA installation (0.3.7)
 
 Install `java3ds.cia` with FBI to launch directly from HOME Menu. The package
 includes a native animated 3D banner converted from the supplied Blender scene

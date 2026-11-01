@@ -1,4 +1,52 @@
-# Java3DS 0.3.6 validation — 2026-11-01
+# Java3DS 0.3.7 validation — 2026-11-02
+
+Completed on PC; physical-console checks remain pending:
+
+- CIA/3DSX build, same title 000400000F3A3D00, CIA version 55 (0.3.7).
+  CTRTool verifies container/content/ExeFS/RomFS hashes. Ten RomFS files,
+  icon, banner, decompressed CGFX and embedded WAV samples equal the sources.
+  Three unsigned-homebrew signature failures are expected.
+- Two VM runs per runtime regression: rendering, sensors, M3G asset/spans,
+  Micro3D poses/batching/blending, arcs, GameCanvas flush, media callbacks,
+  RMS, controls, DirectGraphics and shutdown reentry; all return exit 0.
+- Micro3D opaque batch output remains pixel-identical to the per-triangle
+  reference. New blending checks cover half/add/subtract, saturation,
+  color-key, black additive identity, disabled transparency, no translucent
+  depth writes and opaque-first batch submission.
+- Arc checks cover quarter/negative/zero angles, clipping and a five-degree
+  wedge matching Yeti's golf-club draw call. GameCanvas checks demonstrate
+  no second paint, preserved buffer/partial flush and no hidden-canvas output.
+- Eighteen AMR clips from the user's Blades build match direct decoder PCM
+  exactly at 8 kHz. Duration, EOF, truncated/invalid AMR and no SoundFont load
+  pass. Existing MIDI/WAV lifecycle, lazy bank and independent mixer checks pass.
+  Signed PCM interpolation was corrected after this comparison exposed wrapping.
+  Soul bytecode confirms silent effect ID -1 and loop -1 converted to one play.
+- Six real games run 35 seconds with exit 0: Blades 320x240, Soul of Darkness,
+  Moorhuhn DeluXe, Yeti Summer, Orcs & Elves II and Witcher. Captured Moorhuhn
+  has a menu, chickens and crosshair, score changes after shooting. Orcs
+  reaches the dungeon. These timed scripted runs are not full-game coverage.
+- Fresh-save Blades with sound Yes loads/starts two MIDI assets and produces
+  nonzero PCM (peak 10195). Earlier sound-No scripted runs intentionally
+  produce no music. Host frame counts are not measurements of device FPS.
+- Witcher and Soul frames contain distinct positive/negative depth with Auto,
+  rather than HUD-only metadata. Layer estimates are heuristic. Orcs uses its
+  own Java renderer then drawRGB; it has no Micro3D/M3G depth integration.
+- Auto settings migration, new explicit Off persistence, CRT filter round-trip,
+  scanline/grid alpha preservation, compositor and HUD tests pass. Eight-row
+  menu/loading previews are included in validation/0.3.7.
+- Banner is 264072 bytes, all 85 dictionary lookups pass, four animation
+  members and a five-second loop remain. Rotation curves span at most about
+  64 degrees, not a full turn; text has translation channels only. Static
+  Facing anchor is YAxial to counter HOME Menu whole-model rotation. Badge
+  removed. Sound normalized by 32.99 dB to -1 dBFS, stereo PCM16/32000;
+  embedded samples equal the processed WAV. Desktop originals are untouched.
+
+Still to validate on 3DS: HOME Menu motion/materials/audio timing; Old/New
+memory headroom, 3D speed and sound; comfort of 2D layer hints; reported menu
+flicker and loading transitions. Software rasterization, per-mesh translucent
+ordering and incomplete custom-renderer depth remain limitations.
+
+## Previous 0.3.6 validation — 2026-11-01
 
 - Nokia drawPixels direct path checks reverse scan, clip and alpha against
   the prior image/region route (alpha rounding can differ by one channel level).

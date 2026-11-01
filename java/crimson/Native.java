@@ -10,12 +10,14 @@ public final class Native {
  public static native boolean microPose(float[] source,float[] destination,byte[] bones,float[] action);
  public static native void microTransform(float[] source,float[] destination,float[] matrix);
  public static native void m3gSpan(int[] raster,short[] depth,int offset,int count,int x,float[] values,int[] state,int[] texture);
+ public static native void arc(int[] target,int width,int height,int x,int y,int w,int h,int start,int extent,int color,int cx,int cy,int cw,int ch,float[] depth,boolean fill);
  public static native void microBegin();
  public static native void microBegin(int width,int height);
  public static native void microTriangle(int[] target,int w,int h,float[] triangle,float[] projection,int[] texture,int tw,int th,int color,int flags,int cx,int cy,int cw,int ch);
  public static void microMesh(int[] target,int w,int h,float[] vertices,float[] projection,int[] faces,int[][] textures,int[] sizes,int pattern,int cx,int cy,int cw,int ch){microMeshDepth(target,w,h,vertices,projection,faces,textures,sizes,pattern,cx,cy,cw,ch,null);}
  public static native void microMeshDepth(int[] target,int w,int h,float[] vertices,float[] projection,int[] faces,int[][] textures,int[] sizes,int pattern,int cx,int cy,int cw,int ch,float[] depth);
  public static native int stereoMode();
+ public static native void stereoAuto2D(boolean enabled);
  public static native void stereoRect(float[] depth,int width,int height,int x,int y,int w,int h);
  public static native void stereoRegion(int[] target,int tw,int th,int[] source,int sw,int sh,int sx,int sy,int w,int h,int t,int x,int y,int cx,int cy,int cw,int ch,float[] sourceDepth,float[] destinationDepth);
  public static native void stereoLayer(int[] target,int index,int count);

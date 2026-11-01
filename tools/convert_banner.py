@@ -5,6 +5,7 @@ root=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(root/'work/cia-tools/pycgfx'))
 from main import convert_gltf,write
 from cgfx.shared import ColorFloat
+from cgfx.sobj import BillboardMode,BoneFlag
 from check_banner import check_cgfx
 import gltflib
 out=root/'assets/banner';out.mkdir(parents=True,exist_ok=True)
@@ -15,6 +16,10 @@ for name in cgfx.data.models:
  # dictionary. Its stale branch indices resolve names to unrelated bones and
  # crash HOME Menu before this application's code runs. Rebuild after sorting.
  model.skeleton.bones.dict.regenerate()
+ anchor=model.skeleton.bones["Facing anchor"];assert anchor is not None
+ anchor.billboard_mode=BillboardMode.YAxial
+ anchor.flags=(anchor.flags & ~BoneFlag.IsIdentity)|BoneFlag.IsLocalMatrixCalculate|BoneFlag.IsWorldMatrixCalculate
+ assert model.skeleton.bones["Build marker"] is None
  for mesh in model.meshes.data.contents:
   shape=model.shapes.data.contents[mesh.shape_index]
   sets=shape.primitive_sets.data.contents
@@ -26,9 +31,6 @@ for name in cgfx.data.models:
   model.materials[material].material_color.emission=ColorFloat(.08,.16,.13,1)
   model.materials[material].material_color.specular[0]=ColorFloat(.95,1,1,1)
   model.materials[material].material_color.ambient=ColorFloat(.22,.28,.25,1)
-  if material=='Build marker':
-   model.materials[material].material_color.specular[0]=ColorFloat(0,0,0,1)
-   model.materials[material].material_color.emission=ColorFloat(.6,.6,.6,1)
 animations=[]
 for name in cgfx.data.skeletal_animations:
  a=cgfx.data.skeletal_animations[name];a.looping=True

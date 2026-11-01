@@ -24,7 +24,7 @@ class BannerFormatTest(unittest.TestCase):
         # This is what the opaque/transparent sort did in pycgfx. Move complete
         # entries, including their stale branch indices, then fix relative
         # pointers so this specifically tests name lookup, not pointer bounds.
-        offset = next(d['offset'] for d in result['dictionaries'] if d['entries'] == 5)
+        offset = next(d['offset'] for d in result['dictionaries'] if d['entries'] >= 3)
         corrupted = bytearray(self.data)
         a, b = offset + 12 + 16, offset + 12 + 32
         for dest, source in ((a, b), (b, a)):

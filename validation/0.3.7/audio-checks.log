@@ -1,0 +1,15 @@
+AUDIO_AMR_PASS clips=18 bit_exact_PCM duration EOF truncated reserved invalid_header no_SoundFont
+AUDIO_LAZY_PASS no_bank_for_open_WAV_or_MIDI_parse shared_load_on_MIDI_start parent_close_safe
+AUDIO_MIX_PASS 2_MIDI_1_WAV independent_start_stop_seek_close
+AUDIO_RENDER_PASS midi=0 duration_ms=3794 nonzero=78124 hash=46be9e67
+AUDIO_RENDER_PASS midi=1 duration_ms=1480 nonzero=32645 hash=cb4cb560
+AUDIO_RENDER_PASS midi=2 duration_ms=4382 nonzero=96631 hash=eef164b4
+AUDIO_RENDER_PASS midi=3 duration_ms=15245 nonzero=336074 hash=a6d9b34a
+AUDIO_RENDER_PASS midi=4 duration_ms=24151 nonzero=532396 hash=5a3bdd9b
+AUDIO_RENDER_PASS midi=10 duration_ms=4915 nonzero=107984 hash=afa51420
+AUDIO_RENDER_PASS wav=6 duration_ms=565 nonzero=12371 hash=fc5b4126
+AUDIO_RENDER_PASS wav=7 duration_ms=472 nonzero=10188 hash=ce2d1fdd
+AUDIO_RENDER_PASS wav=8 duration_ms=310 nonzero=6504 hash=681f567d
+AUDIO_RENDER_PASS wav=9 duration_ms=365 nonzero=7770 hash=e387f77d
+AUDIO_RENDER_PASS wav=12 duration_ms=298 nonzero=6108 hash=037cf4e9
+AUDIO_LIFECYCLE_PASS assets=11 shared_SoundFont_lifetime

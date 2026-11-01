@@ -1,0 +1,43 @@
+RAM cache ready: 3 JARs, 2680465 bytes
+RAM cache hits: 2578
+STAGE 40 0
+STAGE 41 3
+Java3DS: Blades and Magic (mobilegamesarena.net) 320x240
+VM_AUDIO_LOAD handle=0 bytes=454
+VM_AUDIO_LOAD handle=1 bytes=742
+VM_AUDIO_LOAD handle=2 bytes=934
+VM_AUDIO_LOAD handle=3 bytes=742
+VM_AUDIO_LOAD handle=4 bytes=1094
+VM_AUDIO_LOAD handle=5 bytes=806
+VM_AUDIO_LOAD handle=6 bytes=614
+VM_AUDIO_LOAD handle=7 bytes=742
+VM_AUDIO_LOAD handle=8 bytes=774
+VM_AUDIO_LOAD handle=9 bytes=390
+VM_AUDIO_LOAD handle=10 bytes=390
+VM_AUDIO_LOAD handle=11 bytes=518
+VM_AUDIO_LOAD handle=12 bytes=3494
+VM_AUDIO_LOAD handle=13 bytes=2662
+VM_AUDIO_LOAD handle=14 bytes=2726
+Image /data/3d/high/green_forest_sky.mtra ist nicht verschlüsselt!
+Image /data/3d/high/green_forest_ground.mtra ist nicht verschlüsselt!
+Image /data/3d/high/green_forest_sun_rays.mtra ist nicht verschlüsselt!
+Image /data/3d/high/green_forest_leaves_front.mtra ist nicht verschlüsselt!
+Image /data/3d/high/green_forest_trees.mtra ist nicht verschlüsselt!
+Image /data/3d/high/green_forest_fog.mtra ist nicht verschlüsselt!
+Image /data/3d/high/mentor_fx_shadow.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_sky.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_reflections.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_details.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_border.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_sky_reflection.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_sky.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_reflections.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_details.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_border.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_sky_reflection.mtra ist nicht verschlüsselt!
+STAGE 80 0
+STAGE 80 0
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+VM_EXIT run=0 result=0 frames=654 peak=0

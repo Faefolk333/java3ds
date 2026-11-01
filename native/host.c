@@ -27,7 +27,7 @@ static DWORD WINAPI audio_stream(void*p){int16_t buffer[220];ULONGLONG runStart=
 int crimson_audio_load(const void*p,int n){EnterCriticalSection(&audioLock);int h=midi_engine_load(audio,p,n);LeaveCriticalSection(&audioLock);printf("VM_AUDIO_LOAD handle=%d bytes=%d\n",h,n);return h;}
 int crimson_audio_control(int h,int op,int v){EnterCriticalSection(&audioLock);int r=midi_engine_control(audio,h,op,v);LeaveCriticalSection(&audioLock);if(op==MIDI_START)printf("VM_AUDIO_START %d result %d\n",h,r);return r;}
 static unsigned stereoVisibleFrames;
-static void capture_ppm(const char*path,const uint32_t*p){FILE*f=fopen(path,"wb");if(f){fprintf(f,"P6\n%d %d\n255\n",crimson_width,crimson_height);for(int i=0;i<crimson_width*crimson_height;i++){unsigned char rgb[3]={p[i]>>16,p[i]>>8,p[i]};fwrite(rgb,1,3,f);}fclose(f);}}
+static void capture_ppm(const char*path,const uint32_t*p){char output[MAX_PATH];if(getenv("JAVA_CAPTURE_DIR")){snprintf(output,sizeof(output),"%s/frame-%06ld.ppm",getenv("JAVA_CAPTURE_DIR"),frames);path=output;}FILE*f=fopen(path,"wb");if(f){fprintf(f,"P6\n%d %d\n255\n",crimson_width,crimson_height);for(int i=0;i<crimson_width*crimson_height;i++){unsigned char rgb[3]={p[i]>>16,p[i]>>8,p[i]};fwrite(rgb,1,3,f);}fclose(f);}}
 void crimson_publish(const uint32_t*p){
  InterlockedIncrement(&frames);
  if(getenv("JAVA_STEREO_TEST")){static int8_t depth[512*512];crimson_stereo_encode(depth,crimson_width*crimson_height);int lo=0,hi=0,n=0;for(int i=0;i<crimson_width*crimson_height;i++){if(depth[i]<lo)lo=depth[i];if(depth[i]>hi)hi=depth[i];n+=depth[i]!=0;}
@@ -37,7 +37,7 @@ void crimson_publish(const uint32_t*p){
  if(frames%(getenv("JAVA_CAPTURE_EVERY")?atoi(getenv("JAVA_CAPTURE_EVERY")):100)==0)capture_ppm("work/host-frame.ppm",p);
 }
 int crimson_motion(int kind,int sample[3]){sample[0]=kind?1250:0;sample[1]=kind?-2500:0;sample[2]=kind?3750:9807;return kind==0||kind==1;}
-int crimson_buttons(void){ULONGLONG t=GetTickCount64()-start;if(t>(getenv("JAVA_RUN_MS")?atoi(getenv("JAVA_RUN_MS")):30000))return 0x40000000;const char*script=getenv("JAVA_INPUT");if(script&&t>2000&&t%1600<200){if(!strcmp(script,"softkeys"))return t<16000?64:16;if(!strcmp(script,"blades"))return t<6500?8192:t<15000?64:16;if(!strcmp(script,"soul-title"))return t>=9500&&t<10000?64:0;if(!strcmp(script,"soul"))return t<14000?64:16;if(!strcmp(script,"mm2"))return t<24000?32:t<32000?64:16;}return autoplay&&t>2000&&t%1800<200?16:0;}
+int crimson_buttons(void){ULONGLONG t=GetTickCount64()-start;if(t>(getenv("JAVA_RUN_MS")?atoi(getenv("JAVA_RUN_MS")):30000))return 0x40000000;const char*script=getenv("JAVA_INPUT");if(script&&t>2000&&t%1600<200){if(!strcmp(script,"softkeys"))return t<16000?64:16;if(!strcmp(script,"blades"))return t<6500?8192:t<15000?64:16;if(!strcmp(script,"blades-play"))return t<6500?8192:t<25000?64:24;if(!strcmp(script,"soul-game"))return t<14000?64:t<35000?8192:24;if(!strcmp(script,"soul-title"))return t>=9500&&t<10000?64:0;if(!strcmp(script,"soul"))return t<14000?64:16;if(!strcmp(script,"mm2"))return t<24000?32:t<32000?64:16;}return autoplay&&t>2000&&t%1800<200?16:0;}
 int main(int argc,char**argv){
 #ifdef CRIMSON_CP_ALLOCATION_TEST
  extern int crimson_constant_pool_test(void);if(!getenv("JAVA_TEST_CP_OOM_VM"))return crimson_constant_pool_test();

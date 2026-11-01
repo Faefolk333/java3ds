@@ -37,7 +37,7 @@ static s32 region(Runtime*r,JClass*c){
  (void)c;int tw=arg(r,1),th=arg(r,2);uint32_t*d=target(r,tw,th);Instance*src=arr(r,3);
  int sw=arg(r,4),sh=arg(r,5),sx=arg(r,6),sy=arg(r,7),w=arg(r,8),h=arg(r,9),t=arg(r,10),dx=arg(r,11),dy=arg(r,12),cx=arg(r,13),cy=arg(r,14),cw=arg(r,15),ch=arg(r,16);
  if(!d||!src||sw<1||sh<1||sw>16384||sh>16384||(uint64_t)sw*sh>1048576||src->arr_length<sw*sh||sx<0||sy<0||w<1||h<1||sx+w>sw||sy+h>sh||t<0||t>8)return 0;
- int dw=t==8?w+80:(t>=4?h:w),dh=t==8?h:(t>=4?w:h);uint32_t*a=(uint32_t*)src->arr_body;float*z=crimson_stereo_target(d);float layer=crimson_stereo_layer();
+ int dw=t==8?w+80:(t>=4?h:w),dh=t==8?h:(t>=4?w:h);uint32_t*a=(uint32_t*)src->arr_body;float*z=crimson_stereo_target(d);float layer=crimson_stereo_tag_2d(tw,th,dx,dy,dw,dh);
  for(int y=0;y<dh;y++){int yy=dy+y;if(yy<0||yy>=th||yy<cy||yy>=cy+ch)continue;
  for(int x=0;x<dw;x++){int xx=dx+x;if(xx<0||xx>=tw||xx<cx||xx>=cx+cw)continue;
  int u=x,v=y;switch(t){case 8:u=x*w/dw;break;case 1:v=h-1-y;break;case 2:u=w-1-x;break;case 3:u=w-1-x;v=h-1-y;break;case 4:u=y;v=x;break;case 5:u=y;v=h-1-x;break;case 6:u=w-1-y;v=x;break;case 7:u=w-1-y;v=h-1-x;break;}
@@ -70,13 +70,14 @@ static s32 text(Runtime*r,JClass*c){
  for(int y=0;y<8*scale;y++){int yy=dy+y;if(yy<0||yy>=th||yy<cy||yy>=cy+ch)continue;for(int x=0;x<8*scale;x++){int xx=dx+i*8*scale+x;if(xx<0||xx>=tw||xx<cx||xx>=cx+cw)continue;if(bits&((uint64_t)1<<((y/scale)*8+x/scale))){d[yy*tw+xx]=color;if(z)z[yy*tw+xx]=layer;}}}}return 0;
 }
 
+static s32 stereoAuto2D(Runtime*r,JClass*c){(void)c;crimson_stereo_auto_2d(arg(r,0));return 0;}
 static s32 stereoMode(Runtime*r,JClass*c){(void)c;push_int(r->stack,crimson_stereo_mode());return 0;}
 static s32 stereoRect(Runtime*r,JClass*c){(void)c;Instance*depth=arr(r,0);int w=arg(r,1),h=arg(r,2),x=arg(r,3),y=arg(r,4),rw=arg(r,5),rh=arg(r,6);if(!crimson_stereo_mode()||!depth||w<1||h<1||(int64_t)w*h>depth->arr_length)return 0;float*z=(float*)depth->arr_body,layer=crimson_stereo_layer();int x0=x>0?x:0,y0=y>0?y:0,x1=(int64_t)x+rw<w?x+rw:w,y1=(int64_t)y+rh<h?y+rh:h;if(x0==0&&y0==0&&x1==w&&y1==h&&layer==-4){layer=0;crimson_stereo_finish_frame();}for(int yy=y0;yy<y1;yy++)for(int xx=x0;xx<x1;xx++)z[yy*w+xx]=layer;return 0;}
 static s32 stereoRegion(Runtime*r,JClass*c){
  (void)c;if(!crimson_stereo_mode())return 0;int tw=arg(r,1),th=arg(r,2);uint32_t*d=target(r,tw,th);Instance*src=arr(r,3),*sourceDepth=arr(r,17),*destinationDepth=arr(r,18);float*z=crimson_stereo_target(d);if(destinationDepth&&(int64_t)tw*th<=destinationDepth->arr_length)z=(float*)destinationDepth->arr_body;
  int sw=arg(r,4),sh=arg(r,5),sx=arg(r,6),sy=arg(r,7),w=arg(r,8),h=arg(r,9),t=arg(r,10),dx=arg(r,11),dy=arg(r,12),cx=arg(r,13),cy=arg(r,14),cw=arg(r,15),ch=arg(r,16);
  if(!d||!z||!src||sw<1||sh<1||(int64_t)sw*sh>src->arr_length||sx<0||sy<0||w<1||h<1||(int64_t)sx+w>sw||(int64_t)sy+h>sh||t<0||t>8)return 0;
- float*source=sourceDepth&&sourceDepth->arr_length>=(int64_t)sw*sh?(float*)sourceDepth->arr_body:NULL,layer=crimson_stereo_layer();uint32_t*p=(uint32_t*)src->arr_body;int dw=t==8?w+80:(t>=4?h:w),dh=t>=4&&t<8?w:h,marked=0;
+ float*source=sourceDepth&&sourceDepth->arr_length>=(int64_t)sw*sh?(float*)sourceDepth->arr_body:NULL;uint32_t*p=(uint32_t*)src->arr_body;int dw=t==8?w+80:(t>=4?h:w),dh=t>=4&&t<8?w:h,marked=0;float layer=crimson_stereo_tag_2d(tw,th,dx,dy,dw,dh);
  for(int y=0;y<dh;y++){int yy=dy+y;if(yy<0||yy>=th||yy<cy||yy>=(int64_t)cy+ch)continue;for(int x=0;x<dw;x++){int xx=dx+x;if(xx<0||xx>=tw||xx<cx||xx>=(int64_t)cx+cw)continue;int u=x,v=y;switch(t){case 8:u=x*w/dw;break;case 1:v=h-1-y;break;case 2:u=w-1-x;break;case 3:u=w-1-x;v=h-1-y;break;case 4:u=y;v=x;break;case 5:u=y;v=h-1-x;break;case 6:u=w-1-y;v=x;break;case 7:u=w-1-y;v=h-1-x;break;}int i=(sy+v)*sw+sx+u;if(p[i]>>24){float value=source?source[i]:layer;z[yy*tw+xx]=value;if(value)marked=1;}}}if(marked)crimson_stereo_content_drawn();
  return 0;
 }
@@ -84,6 +85,7 @@ static s32 stereoRegion(Runtime*r,JClass*c){
 static s32 stereoLayer(Runtime*r,JClass*c){(void)c;if(!arr(r,0))crimson_stereo_set_layer(arg(r,1),arg(r,2));return 0;}
 static s32 stereoM3G(Runtime*r,JClass*c){(void)c;int w=arg(r,1),h=arg(r,2);uint32_t*d=target(r,w,h);Instance*depth=arr(r,3);Instance*shadow=arr(r,4);float*z=crimson_stereo_target(d);if(crimson_stereo_mode()&&shadow&&shadow->arr_length>=w*h)z=(float*)shadow->arr_body;if(z&&depth&&depth->arr_length>=w*h){int16_t*src=(int16_t*)depth->arr_body;for(int i=0;i<w*h;i++)z[i]=src[i]>=0&&src[i]<32767?1.f+(32767-src[i])/32767.f:0;crimson_stereo_models_drawn();}return 0;}
 
+#include "arc.h"
 #include "software3d.h"
 #include "m3g_span.h"
 static s32 present(Runtime*r,JClass*c){(void)c;jthread_block_enter(r);crimson_publish(crimson_pixels);jthread_block_exit(r);crimson_stereo_finish_frame();return 0;}
@@ -118,8 +120,10 @@ static java_native_method methods[]={
  {"crimson/Native","m3gSpan","([I[SIII[F[I[I)V",m3gSpan},
  {"crimson/Native","microTransform","([F[F[F)V",microTransform},
  {"crimson/Native","microPose","([F[F[B[F)Z",microPose},
+ {"crimson/Native","arc","([IIIIIIIIIIIIII[FZ)V",arc},
  {"crimson/Native","microBegin","()V",microBegin},
  {"crimson/Native","microBegin","(II)V",microBeginSize},
+ {"crimson/Native","stereoAuto2D","(Z)V",stereoAuto2D},
  {"crimson/Native","stereoMode","()I",stereoMode},
  {"crimson/Native","stereoRect","([FIIIIII)V",stereoRect},
  {"crimson/Native","stereoRegion","([III[IIIIIIIIIIIIII[F[F)V",stereoRegion},

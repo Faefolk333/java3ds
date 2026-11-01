@@ -1,36 +1,36 @@
-# Java3DS 0.3.6 — privátní alpha
+# Java3DS 0.3.7 — privátní alpha
 
-Nově v 0.3.6: Nokia drawPixels bez rotace používá přímé nativní kopírování
-místo vytváření dočasných obrázků. Micro3D posílá celé sady trojúhelníků do nativního rendereru a
-maže jen používanou část hloubkového bufferu. Stejný 35sekundový test Blades na
-PC vykreslil 726 snímků místo 602 a spotřeboval asi o 20 % méně času CPU.
-Výkon na 3DS je ještě nutné změřit.
+GameCanvas nyní zveřejní hotový obraz bez druhého volání kreslení hry. V PC testu
+Moorhuhn funguje menu, kuřata, zaměřovač a střelba. Skryté plátno nemůže přepsat
+obraz aktuální hry. Yeti Sports dostalo správné kreslení úzkého výseku golfové hole.
 
-L+R nebo dotykové MENU > Stereo 3D: Off / Models / Layers / Auto. Přibyla také
-síla 1–6; efekt ovládá posuvník 3D konzole. Výchozí stav je Off. Models používá
-hloubku Micro3D/M3G, Layers skutečné vrstvy LayerManager, Auto obojí. Efekt je
-experimentální reprojekce hotového obrazu: odkryté části ploch jen přibližuje.
-Hloubka se přenáší i s pomocnými obrázky, jejich kopiemi a přes dvoumístnou
-cache getRGB/drawRGB. Libovolné vlastní kopírování pixelových polí ji stále může
-ztratit. Ze slitého obrázku nelze poznat původní vrstvy. Pro nejvyšší výkon ponech 3D vypnuté. Volby se ukládají pro hru.
+Micro3D nově respektuje poloprůhledné, sčítací a odečítací efekty a posun grafiky.
+Černé pozadí sčítacích efektů nepřekryje scénu. Přibylo časné odmítnutí pixelů mimo
+trojúhelník. Výkon na fyzickém 3DS je potřeba znovu ověřit.
 
-Banner obsahuje viditelné BUILD 0.3.6. Po instalaci konzoli úplně restartuj.
-Pokud označení chybí, může HOME Menu ještě ukazovat starý banner; pokud je vidět,
-ale pohyb je chybný, je problém v převodu nebo rámování animace. Původní modelová
-animace a dodaný WAV zůstávají. Originální Blender soubor na ploše se nemění.
+Zvuk podporuje MIDI, PCM WAV a nově AMR-NB, chybějící PlayerListener a mute API.
+Opravilo se také zkreslení záporných PCM vzorků. MP3, AAC a AMR-WB zatím nejsou
+podporované. Dodaná Soul of Darkness sama vypíná mnoho efektů číslem -1 a
+nekonečnou smyčku mění na jediné přehrání. Toto chování hry se nepřepisuje.
+PC test Blades 320 × 240 se zapnutou hudbou ji spustil a vytvořil zvuk.
 
-CIA nainstaluj přes FBI; zachová hry a uložené pozice v /3ds/java-3ds.
-Pro Homebrew Launcher rozbal instalační ZIP do kořene SD karty.
+3D je výchozí Auto, aktivní podle posuvníku konzole. Layers kromě LayerManager
+zkouší odhad hloubky běžných obrázků a spritů, Auto přidává hloubku modelů.
+Witcher a Soul of Darkness v testech již předávají různé hloubky. Jde o odhad,
+ne o obnovenou geometrii. Orcs & Elves II předává hotový obraz z vlastního rendereru;
+pro skutečnou hloubku jeho scény je stále potřeba zvláštní adaptér. Nově uložené
+Off zůstane zachované, starý výchozí stav Off se jednou převede na Auto.
 
-Oprava pádu při označení ikony v HOME Menu: banner 0.3.4 obsahoval po řazení
-průhledných modelů poškozenou tabulku názvů kostry. Nový export ji přestaví a
-kontroluje všech 83 vyhledání názvů v hotovém CGFX. Předchozí banner tímto testem
-neprojde. Animace i průsvitné materiály zůstávají; nově je přibalený dodaný zvuk
-java 3ds banner.wav (1,85 s). Opravu je ještě nutné ověřit na skutečné konzoli.
+V herním menu je CRT: Off / Soft scanlines / Soft grid. Jemné filtry ovlivňují jen
+hru a ukládají se pro titul. L+R nebo dotykové MENU otevře nastavení.
 
-Otevři přímo FBI a nainstaluj novou CIA přes Remote Install > Scan QR Code,
-případně ze SD. Před instalací nenajížděj na rozbitou ikonu Java3DS. Nová verze
-přepíše stejný titul, hry a uložené pozice na SD zůstanou zachované.
+Banner už neobsahuje číslo verze. Přidaný pevný rodič potlačuje otáčení celého
+modelu v HOME Menu a zachovává původní čtyři animační kanály. Zvuk je zesílený
+na špičku -1 dBFS a převedený na 32 kHz. Originály na ploše se nemění. Přesný pohyb,
+načasování zvuku a vzhled materiálů musí potvrdit konzole.
+
+CIA nainstaluj přes FBI. Hry a pozice v /3ds/java-3ds se zachovají. Pro Homebrew
+Launcher rozbal instalační ZIP do kořene SD karty.
 
 Ovládání spodního displeje z předchozí aktualizace:
 
@@ -46,7 +46,7 @@ Ovládání spodního displeje z předchozí aktualizace:
 Nativní výpočty urychlují běžné M3G texturování a Micro3D transformace modelů.
 Jde stále o softwarové 3D. Dump 28 odhalil další selhání alokace při načítání
 tříd; nově je ošetřené. MIDI banka se načte až při spuštění MIDI a vzorky zabírají
-polovinu RAM. U Blades, které MIDI nepoužívá, se velká banka nenačte vůbec.
+polovinu RAM. U hry bez spuštěného MIDI se velká banka nenačte.
 Odstranění systémového pádu a výkon musí potvrdit nové hraní na konzoli. Na PC jsou ověřené scény Blades, Outland a Orcs & Elves II.
 Worms se v PC testu načetly a vykreslily celé červy; hlášený problém na konzoli
 bez aktuálního logu zatím není potvrzený jako odstraněný.

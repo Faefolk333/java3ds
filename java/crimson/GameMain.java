@@ -14,11 +14,13 @@ public final class GameMain {
   BufferedReader r=new BufferedReader(new InputStreamReader(new FileInputStream(file),"UTF-8"));try{String line;while((line=r.readLine())!=null){int i=line.indexOf('=');if(i>0)properties.put(line.substring(0,i),line.substring(i+1));}}finally{r.close();}
   width=Integer.parseInt(property("launcher.width","320"));height=Integer.parseInt(property("launcher.height","240"));keyProfile=Integer.parseInt(property("launcher.keys","0"));popProfile=property("launcher.profile","").equals("pop-classic");original=width==320;
   if(width<64||height<64||width>480||height>640||width*height>512*512)throw new IOException("Invalid viewport");
+  System.setProperty("microedition.media.version","1.1");System.setProperty("supports.mixing","true");System.setProperty("supports.audio.capture","false");System.setProperty("supports.video.capture","false");
   System.setProperty("pop.saves",property("launcher.saves","/3ds/java-3ds/saves/default"));
   System.setProperty("microedition.platform","Nokia E71");System.setProperty("microedition.configuration","CLDC-1.1");System.setProperty("microedition.profiles","MIDP-2.0");System.setProperty("microedition.locale","en-US");System.setProperty("microedition.encoding","UTF-8");
   System.out.println("Java3DS: "+property("MIDlet-Name","MIDlet")+" "+width+"x"+height);
   String map=property("launcher.bindings","");java.util.StringTokenizer mt=new java.util.StringTokenizer(map,",");for(int i=0;i<14&&mt.hasMoreTokens();i++)Controls.bindings[i]=Integer.parseInt(mt.nextToken());
   ru.woesss.j2me.micro3d.SoftwareRender.nativeBatch=!"false".equals(property("launcher.micro.batch","true"));
+  Native.stereoAuto2D(!"experimental".equals(property("launcher.micro3d",""))&&!"experimental".equals(property("launcher.m3g","")));
   midlet=(MIDlet)Class.forName(property("launcher.main","")).newInstance();
   Thread start=new Thread(new Runnable(){public void run(){try{midlet.launch();}catch(Throwable e){e.printStackTrace();Native.stage(90,1);requestStop();}}},"MIDlet start");start.start();
   while(!stopped){int buttons=Native.buttons();if((buttons&0x40000000)!=0){requestStop();break;}Display.pump(buttons);Thread.sleep(10);}

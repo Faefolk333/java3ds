@@ -1,0 +1,37 @@
+[
+  {
+    "probe": "blades-sound",
+    "exit": 0,
+    "published_frames": 913,
+    "pcm_peak": 10195,
+    "stereo_visible_frames": null
+  },
+  {
+    "probe": "moor-fixed",
+    "exit": 0,
+    "published_frames": 281,
+    "pcm_peak": 14836,
+    "stereo_visible_frames": null
+  },
+  {
+    "probe": "orcs-fixed",
+    "exit": 0,
+    "published_frames": 624,
+    "pcm_peak": 0,
+    "stereo_visible_frames": null
+  },
+  {
+    "probe": "witcher-depth-final",
+    "exit": 0,
+    "published_frames": 236,
+    "pcm_peak": 6446,
+    "stereo_visible_frames": 133
+  },
+  {
+    "probe": "soul-depth-final",
+    "exit": 0,
+    "published_frames": 213,
+    "pcm_peak": 10228,
+    "stereo_visible_frames": 205
+  }
+]

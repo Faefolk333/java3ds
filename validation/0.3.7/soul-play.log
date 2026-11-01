@@ -1,0 +1,36 @@
+RAM cache ready: 3 JARs, 2100418 bytes
+RAM cache hits: 697
+STAGE 40 0
+STAGE 41 3
+Java3DS: Soul Of Darkness 320x240
+STEREO_FRAME frame=1 nonzero=0 min=0 max=0
+STEREO_FRAME frame=2 nonzero=6457 min=-128 max=11
+STEREO_FRAME frame=3 nonzero=6457 min=-128 max=11
+STEREO_FRAME frame=4 nonzero=6560 min=-128 max=11
+STEREO_FRAME frame=5 nonzero=6560 min=-128 max=11
+VM_AUDIO_LOAD handle=0 bytes=10852
+VM_AUDIO_LOAD handle=1 bytes=5943
+VM_AUDIO_LOAD handle=2 bytes=11095
+VM_AUDIO_LOAD handle=3 bytes=13180
+VM_AUDIO_LOAD handle=4 bytes=710
+VM_AUDIO_LOAD handle=5 bytes=952
+VM_AUDIO_LOAD handle=6 bytes=903
+VM_AUDIO_LOAD handle=7 bytes=4286
+VM_AUDIO_LOAD handle=8 bytes=186
+STEREO_FRAME frame=50 nonzero=2092 min=-128 max=47
+VM_AUDIO_START 0 result 0
+STEREO_FRAME frame=100 nonzero=68160 min=-128 max=47
+STEREO_FRAME frame=150 nonzero=4115 min=-128 max=23
+VM_AUDIO_START 1 result 0
+STEREO_FRAME frame=200 nonzero=63040 min=-128 max=42
+STEREO_FRAME frame=250 nonzero=63040 min=-128 max=42
+STEREO_FRAME frame=300 nonzero=63040 min=-128 max=42
+STEREO_FRAME frame=350 nonzero=63040 min=-128 max=42
+STEREO_FRAME frame=400 nonzero=63040 min=-128 max=42
+STAGE 80 0
+STAGE 80 0
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+STEREO_VISIBLE_FRAMES 441
+VM_EXIT run=0 result=0 frames=442 peak=14146

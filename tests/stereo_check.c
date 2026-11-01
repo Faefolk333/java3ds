@@ -14,6 +14,11 @@ int main(void){
  z[8]=-128;stereo_line(src,z,16,3*16,1,a);assert(a[8]==src[8]);memset(z,0,sizeof(z));z[5]=-127;stereo_line(src,z,16,3*16,1,a);assert(a[2]==src[5]);
  float*d=crimson_stereo_target(crimson_pixels);for(int i=0;i<16;i++)d[i]=1.f+i*.1f;crimson_stereo_encode(z,16);assert(z[0]<0&&z[15]>0);
  assert(crimson_stereo_config(2));crimson_stereo_encode(z,16);for(int i=0;i<16;i++)assert(!z[i]);assert(crimson_stereo_config(0));assert(!crimson_stereo_target(crimson_pixels));
+ assert(crimson_stereo_config(3));crimson_stereo_auto_2d(1);crimson_stereo_finish_frame();
+ float background=crimson_stereo_tag_2d(320,240,0,0,320,240);assert(background>-2);
+ assert(crimson_stereo_tag_2d(320,240,10,2,12,18)==-4);
+ float far=crimson_stereo_tag_2d(320,240,80,40,30,40),near=crimson_stereo_tag_2d(320,240,80,140,30,40);assert(near<far&&far<background);
+ crimson_stereo_auto_2d(0);crimson_stereo_finish_frame();assert(crimson_stereo_tag_2d(320,240,80,140,30,40)==0);
  crimson_stereo_release();assert(crimson_stereo_mode()==0&&!crimson_stereo_target(crimson_pixels));
  puts("STEREO_PASS flat_identity eye_direction gap_fill layer_depth model_depth HUD_priority mode_selection release");
 }

@@ -2,6 +2,7 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 export PATH="/mingw64/bin:$PATH"
+"${PYTHON:-python3}" -X utf8 "$ROOT/tools/build-amr.py" host
 SRC="$ROOT/third-party/minijvm/minijvm/c"
 OUT="$ROOT/work/runtime-host"
 mkdir -p "$OUT"
@@ -27,5 +28,5 @@ if [[ "${JAVA_CP_ALLOCATION_TEST:-0}" == 1 ]]; then
  gcc "${FLAGS[@]}" -c "$ROOT/tests/constant_pool_oom.c" -o "$OUT/constant-pool-oom.o"
  TEST_OBJECTS+=("$OUT/constant-pool-oom.o" -Wl,--wrap=utf8_create -Wl,--wrap=calloc -Wl,--wrap=malloc -DCRIMSON_CP_ALLOCATION_TEST)
 fi
-gcc "${FLAGS[@]}" -O2 "${TEST_OBJECTS[@]}" "${OBJS[@]}" "$OUT/jdwp_disabled.o" "$ROOT/native/midp_native.c" "$ROOT/native/raster.c" "$ROOT/native/audio/midi_engine.c" "$ROOT/native/host.c" -lpthread -lm -lws2_32 -lrpcrt4 -ldbghelp -o "$ROOT/work/${JAVA_HOST_OUTPUT:-java-host.exe}"
+gcc "${FLAGS[@]}" -O2 "${TEST_OBJECTS[@]}" "${OBJS[@]}" "$OUT/jdwp_disabled.o" "$ROOT/native/midp_native.c" "$ROOT/native/raster.c" "$ROOT/native/audio/midi_engine.c" "$ROOT/native/host.c" "$ROOT/work/amr-host/libamrnb.a" -lstdc++ -lpthread -lm -lws2_32 -lrpcrt4 -ldbghelp -o "$ROOT/work/${JAVA_HOST_OUTPUT:-java-host.exe}"
 printf "%s" "${FLAGS[*]}" > "$STAMP"

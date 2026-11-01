@@ -13,6 +13,8 @@ float crimson_stereo_layer(void);
 void crimson_stereo_set_layer(int index,int count);
 void crimson_stereo_models_drawn(void);
 void crimson_stereo_content_drawn(void);
+void crimson_stereo_auto_2d(int enabled);
+float crimson_stereo_tag_2d(int width,int height,int x,int y,int w,int h);
 void crimson_stereo_finish_frame(void);
 void crimson_stereo_encode(int8_t* result,int count);
 #ifdef __cplusplus

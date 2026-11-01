@@ -1,0 +1,62 @@
+RAM cache ready: 3 JARs, 2680887 bytes
+RAM cache hits: 2036
+STAGE 40 0
+STAGE 41 3
+Java3DS: Blades and Magic (mobilegamesarena.net) 320x240
+STEREO_FRAME frame=1 nonzero=0 min=0 max=0
+STEREO_FRAME frame=2 nonzero=0 min=0 max=0
+VM_AUDIO_LOAD handle=0 bytes=454
+VM_AUDIO_LOAD handle=1 bytes=742
+VM_AUDIO_LOAD handle=2 bytes=934
+VM_AUDIO_LOAD handle=3 bytes=742
+VM_AUDIO_LOAD handle=4 bytes=1094
+VM_AUDIO_LOAD handle=5 bytes=806
+VM_AUDIO_LOAD handle=6 bytes=614
+VM_AUDIO_LOAD handle=7 bytes=742
+VM_AUDIO_LOAD handle=8 bytes=774
+VM_AUDIO_LOAD handle=9 bytes=390
+VM_AUDIO_LOAD handle=10 bytes=390
+VM_AUDIO_LOAD handle=11 bytes=518
+VM_AUDIO_LOAD handle=12 bytes=3494
+VM_AUDIO_LOAD handle=13 bytes=2662
+VM_AUDIO_LOAD handle=14 bytes=2726
+STEREO_FRAME frame=3 nonzero=0 min=0 max=0
+STEREO_FRAME frame=4 nonzero=0 min=0 max=0
+STEREO_FRAME frame=5 nonzero=0 min=0 max=0
+STEREO_FRAME frame=50 nonzero=0 min=0 max=0
+STEREO_FRAME frame=100 nonzero=0 min=0 max=0
+STEREO_FRAME frame=150 nonzero=0 min=0 max=0
+Image /data/3d/high/green_forest_sky.mtra ist nicht verschlüsselt!
+Image /data/3d/high/green_forest_ground.mtra ist nicht verschlüsselt!
+Image /data/3d/high/green_forest_sun_rays.mtra ist nicht verschlüsselt!
+Image /data/3d/high/green_forest_leaves_front.mtra ist nicht verschlüsselt!
+Image /data/3d/high/green_forest_trees.mtra ist nicht verschlüsselt!
+Image /data/3d/high/green_forest_fog.mtra ist nicht verschlüsselt!
+Image /data/3d/high/mentor_fx_shadow.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_sky.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_reflections.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_details.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_border.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_sky_reflection.mtra ist nicht verschlüsselt!
+STEREO_FRAME frame=200 nonzero=75979 min=-128 max=63
+STEREO_FRAME frame=250 nonzero=76141 min=-128 max=63
+STEREO_FRAME frame=300 nonzero=75925 min=-128 max=63
+STEREO_FRAME frame=350 nonzero=74701 min=-128 max=63
+Image /data/3d/high/river_sky.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_reflections.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_details.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_border.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_sky_reflection.mtra ist nicht verschlüsselt!
+STEREO_FRAME frame=400 nonzero=76800 min=-128 max=0
+STEREO_FRAME frame=450 nonzero=76800 min=-128 max=0
+STEREO_FRAME frame=500 nonzero=76800 min=-128 max=0
+STEREO_FRAME frame=550 nonzero=76800 min=-128 max=0
+STEREO_FRAME frame=600 nonzero=76800 min=-128 max=0
+STEREO_FRAME frame=650 nonzero=76800 min=-128 max=0
+STAGE 80 0
+STAGE 80 0
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+STEREO_VISIBLE_FRAMES 175
+VM_EXIT run=0 result=0 frames=672 peak=0

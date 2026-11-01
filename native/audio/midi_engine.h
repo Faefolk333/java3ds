@@ -6,7 +6,7 @@ extern "C" {
 /* Portable SF2/MIDI + PCM WAV player. Caller serializes access; no platform or VM dependency.
  * Active MIDI and PCM slots mix independently; engines share a bank loaded on first MIDI start. */
 typedef struct MidiEngine MidiEngine;
-enum { MIDI_START=1,MIDI_STOP,MIDI_CLOSE,MIDI_SEEK,MIDI_VOLUME,MIDI_STATE,MIDI_POSITION,MIDI_KIND };
+enum { MIDI_START=1,MIDI_STOP,MIDI_CLOSE,MIDI_SEEK,MIDI_VOLUME,MIDI_STATE,MIDI_POSITION,MIDI_KIND,MIDI_DURATION };
 MidiEngine* midi_engine_open(const char* soundfont,int sample_rate);
 MidiEngine* midi_engine_clone(MidiEngine* source);
 int midi_engine_current(MidiEngine* engine);

@@ -1,4 +1,4 @@
-# Compatibility work — 0.3.6
+# Compatibility work — 0.3.7
 
 The user's 0.3.3 console report: Blades 240×320 launches slowly; the 320×240
 variant crashes the system; Outland launches but is impractically slow; Worms
@@ -151,3 +151,22 @@ a Java exception when an optional device class is absent.
 GameMain no longer holds its class monitor while calling destroyApp(true).
 A callback that starts/joins another shutdown caller can now complete. The
 existing cooperative VM stop remains; physical START+SELECT needs retesting.
+
+## 0.3.7 follow-up
+
+Moorhuhn's missing foreground was caused by repainting its GameCanvas twice;
+the corrected host run reaches menu and shooting with complete sprites.
+Orcs & Elves II also uses GameCanvas; publishing the buffer directly avoids
+that duplicate paint path. Physical menu flicker needs retesting.
+Blades 320x240 uses both MIDI and AMR-NB; both now decode, and a fresh-save
+host run selecting sound Yes starts MIDI and produces nonzero PCM.
+Soul loads/starts supported media. Its supplied bytecode disables many effects
+with sound ID -1 and changes requested infinite loops to one playback; this
+accounts for some silence. These game decisions are not overridden.
+Yeti golf draws its club as a five-degree arc, now implemented correctly.
+
+Micro3D blending is per mesh; globally sorted translucent geometry and full
+lighting fidelity are incomplete. Stereo layer hints work on ordinary image
+and sprite draws, not arbitrary flattened pixel arrays. Orcs' custom software
+3D renderer exposes no Micro3D/M3G depth. No raycaster-specific adapter exists.
+CRT filters are presentation-only. All new changes require device validation.

@@ -55,3 +55,10 @@ replaces the prior Java platform bridge.
 
 TinySoundFont is locally modified with optional PCM16 sample storage and an exact
 short-to-float lookup to reduce RAM. Original MIT license is retained.
+
+## OpenCORE AMR-NB (0.3.7)
+
+Decoder-only OpenCORE AMR-NB from BelledonneCommunications/opencore-amr,
+commit 3b67218fb8efb776bcd79e7445774e02d778321d, Apache-2.0. Upstream headers,
+LICENSE and provenance are retained under third-party/opencore-amr. Build flags
+and decoder source selection are in tools/build-amr.py. No encoder is linked.
