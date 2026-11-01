@@ -1,0 +1,23 @@
+[
+  {
+    "source": "deck_ui_navigation.wav",
+    "output": "navigation.wav",
+    "rate": 22050,
+    "channels": 1,
+    "bytes": 1848
+  },
+  {
+    "source": "confirmation_positive.wav",
+    "output": "confirm.wav",
+    "rate": 22050,
+    "channels": 1,
+    "bytes": 35392
+  },
+  {
+    "source": "deck_ui_achievement_toast.wav",
+    "output": "achievement.wav",
+    "rate": 22050,
+    "channels": 1,
+    "bytes": 106082
+  }
+]

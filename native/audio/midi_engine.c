@@ -1,13 +1,15 @@
 #include "midi_engine.h"
 #include <stdlib.h>
 #include <string.h>
+#define TSF_SHORT_SAMPLES
 #define TSF_IMPLEMENTATION
 #include "../../third-party/TinySoundFont/tsf.h"
 #define TML_IMPLEMENTATION
 #include "../../third-party/TinySoundFont/tml.h"
 #define SLOTS 32
 typedef struct { tsf*synth;tml_message *messages,*cursor;uint8_t *pcm;int pcm_bytes,pcm_rate,pcm_bits,pcm_channels;uint64_t frame,duration;int loops,volume,loaded,playing; } Sequence;
-struct MidiEngine {tsf* synth;Sequence slots[SLOTS];int rate,active;};
+typedef struct {tsf*synth;char*path;unsigned refs;} SoundBank;
+struct MidiEngine {SoundBank*bank;Sequence slots[SLOTS];int rate,active;};
 static unsigned le16(const uint8_t*p){return p[0]|p[1]<<8;}
 static uint32_t le32(const uint8_t*p){return (uint32_t)le16(p)|(uint32_t)le16(p+2)<<16;}
 static void reset_voice(tsf*synth){
@@ -27,19 +29,15 @@ static void message(tsf*synth,const tml_message*m){
  }
 }
 MidiEngine* midi_engine_open(const char*path,int rate){
- if(rate<8000||rate>48000)return NULL;
- MidiEngine*e=calloc(1,sizeof(*e));if(!e)return NULL;e->active=-1;e->rate=rate;
- e->synth=tsf_load_filename(path);if(!e->synth){free(e);return NULL;}
- tsf_set_output(e->synth,TSF_MONO,rate,-9.f);
- if(!tsf_set_max_voices(e->synth,32)){midi_engine_close(e);return NULL;}
- reset_voice(e->synth);return e;
+ if(!path||rate<8000||rate>48000)return NULL;
+ FILE*f=fopen(path,"rb");if(!f)return NULL;unsigned char magic[12];int valid=fread(magic,1,12,f)==12&&!memcmp(magic,"RIFF",4)&&!memcmp(magic+8,"sfbk",4);fclose(f);if(!valid)return NULL;
+ MidiEngine*e=calloc(1,sizeof(*e));if(!e)return NULL;e->active=-1;e->rate=rate;e->bank=calloc(1,sizeof(*e->bank));if(!e->bank){free(e);return NULL;}e->bank->path=malloc(strlen(path)+1);if(!e->bank->path){free(e->bank);free(e);return NULL;}strcpy(e->bank->path,path);e->bank->refs=1;return e;
 }
-void midi_engine_close(MidiEngine*e){if(!e)return;for(int i=0;i<SLOTS;i++){if(e->slots[i].messages)tml_free(e->slots[i].messages);free(e->slots[i].pcm);if(e->slots[i].synth)tsf_close(e->slots[i].synth);}tsf_close(e->synth);free(e);}
+static tsf*load_bank(MidiEngine*e){if(!e->bank->synth){tsf*s=tsf_load_filename(e->bank->path);if(!s)return NULL;tsf_set_output(s,TSF_MONO,e->rate,-9.f);if(!tsf_set_max_voices(s,32)){tsf_close(s);return NULL;}reset_voice(s);e->bank->synth=s;}return e->bank->synth;}
+int midi_engine_bank_loaded(MidiEngine*e){return e&&e->bank&&e->bank->synth;}
+void midi_engine_close(MidiEngine*e){if(!e)return;for(int i=0;i<SLOTS;i++){if(e->slots[i].messages)tml_free(e->slots[i].messages);free(e->slots[i].pcm);if(e->slots[i].synth)tsf_close(e->slots[i].synth);}if(e->bank&&!--e->bank->refs){if(e->bank->synth)tsf_close(e->bank->synth);free(e->bank->path);free(e->bank);}free(e);}
 MidiEngine* midi_engine_clone(MidiEngine*source){
- if(!source)return NULL;MidiEngine*e=calloc(1,sizeof(*e));if(!e)return NULL;
- e->active=-1;e->rate=source->rate;e->synth=tsf_copy(source->synth);
- if(!e->synth){free(e);return NULL;}tsf_set_output(e->synth,TSF_MONO,e->rate,-9.f);
- if(!tsf_set_max_voices(e->synth,32)){midi_engine_close(e);return NULL;}reset_voice(e->synth);return e;
+ if(!source)return NULL;MidiEngine*e=calloc(1,sizeof(*e));if(!e)return NULL;e->active=-1;e->rate=source->rate;e->bank=source->bank;e->bank->refs++;return e;
 }
 int midi_engine_current(MidiEngine*e){if(!e)return -1;if(e->active>=0&&e->slots[e->active].playing)return e->active;for(int i=0;i<SLOTS;i++)if(e->slots[i].playing)return i;return -1;}
 static int load_wav(Sequence*s,const uint8_t*b,int size,int rate){
@@ -82,8 +80,8 @@ int midi_engine_control(MidiEngine*e,int id,int op,int value){
  switch(op){
  case MIDI_START:
   if(!value||value < -1)return -1;
-  if(e->active==id&&s->playing)return 0;
-  if(s->messages&&!s->synth){s->synth=tsf_copy(e->synth);if(!s->synth)return -1;tsf_set_output(s->synth,TSF_MONO,e->rate,-9.f);if(!tsf_set_max_voices(s->synth,24)){tsf_close(s->synth);s->synth=NULL;return -1;}}
+  if(s->playing)return 0;
+  if(s->messages&&!s->synth){tsf*bank=load_bank(e);if(!bank)return -1;s->synth=tsf_copy(bank);if(!s->synth)return -1;tsf_set_output(s->synth,TSF_MONO,e->rate,-9.f);if(!tsf_set_max_voices(s->synth,24)){tsf_close(s->synth);s->synth=NULL;return -1;}}
   e->active=id;if(s->frame>=s->duration)s->frame=0;s->loops=value;seek(e,s,s->frame);s->playing=1;return 0;
  case MIDI_STOP:s->playing=0;reset_voice(s->synth);return 0;
  case MIDI_CLOSE:

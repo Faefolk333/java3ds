@@ -12,10 +12,10 @@ for name in ['java_pocket']:
   while child!=0xffffffff:
    directory(child,prefix);child=struct.unpack_from('<I',r,h[3]+child+4)[0]
  directory(0,'')
- expected={'java/'+n for n in ['minijvm_rt.jar','midp.jar']}|{'certs/github-roots.pem','audio/gm.sf2','audio/pop-theme.mid','profiles/pop-classic.zip','demo/LauncherCheck.jar'};assert set(files)==expected,files.keys()
+ expected={'java/'+n for n in ['minijvm_rt.jar','midp.jar']}|{'certs/github-roots.pem','audio/gm.sf2','audio/pop-theme.mid','profiles/pop-classic.zip','demo/LauncherCheck.jar'}|{'ui/'+n+'.wav' for n in ('navigation','confirm','achievement')};assert set(files)==expected,files.keys()
  for path,payload in files.items():
   assert payload==(root/'romfs'/path).read_bytes(),path
   if path.endswith('.jar'):
    with zipfile.ZipFile(io.BytesIO(payload)) as z:assert z.testzip() is None
- print('EMBEDDED_ASSETS_PASS '+name+' verified_JARs=3 SoundFont=1 MIDI_theme=1 PoP_profile=1')
+ print('EMBEDDED_ASSETS_PASS '+name+' verified_JARs=3 SoundFont=1 MIDI_theme=1 PoP_profile=1 UI_sounds=3')
 

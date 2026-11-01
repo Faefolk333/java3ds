@@ -30,7 +30,7 @@ public class BufferUtils {
 	}
 
 	public static FloatBuffer createFloatBuffer(int capacity) {
-		return createByteBuffer(capacity * 4).asFloatBuffer();
+		return FloatBuffer.allocate(capacity);
 	}
 
 	public static ByteBuffer createByteBuffer(int capacity) {

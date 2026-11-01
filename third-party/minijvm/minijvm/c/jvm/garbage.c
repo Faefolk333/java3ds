@@ -832,7 +832,7 @@ s32 _gc_pause_the_world(MiniJVM *jvm) {
     arraylist_iter_safe(thread_list, _list_iter_thread_pause, NULL);
 
     s32 all_thread_paused = 1;
-    s64 crimson_report_at=0;
+    s64 crimson_report_at=currentTimeMillis();
     while (1) {
         all_thread_paused = 1;
         arraylist_iter_safe(thread_list, _list_iter_thread_check_pause, &all_thread_paused);
@@ -844,10 +844,10 @@ s32 _gc_pause_the_world(MiniJVM *jvm) {
             crimson_report_at=currentTimeMillis();
         }
 
-        vm_share_timedwait(jvm, 20);
         if (all_thread_paused) {
             break;
         }
+        vm_share_timedwait(jvm, 20);
     }
 
     arraylist_iter_safe(thread_list, _list_iter_thread_move_objs_2_gc, NULL);

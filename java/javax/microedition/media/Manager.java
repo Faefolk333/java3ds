@@ -3,6 +3,8 @@ import java.io.*;
 import crimson.Native;
 import javax.microedition.media.control.VolumeControl;
 public final class Manager {
+ public static String[] getSupportedContentTypes(String protocol){return new String[]{"audio/midi","audio/x-midi","audio/wav","audio/x-wav"};}public static String[] getSupportedProtocols(String type){return new String[]{"resource"};}
+ public static Player createPlayer(String url)throws IOException,MediaException{if(url==null)throw new NullPointerException();if(!url.startsWith("resource:"))throw new MediaException("Unsupported media protocol");InputStream in=crimson.Resources.open(Manager.class,url.substring(9));try{return createPlayer(in,null);}finally{if(in!=null)in.close();}}
  public static Player createPlayer(InputStream in,String mime)throws IOException,MediaException{
   if(in==null)throw new IOException("Missing media");
   ByteArrayOutputStream out=new ByteArrayOutputStream();byte[] buffer=new byte[1024];int n;

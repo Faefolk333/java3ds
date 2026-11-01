@@ -1,0 +1,2 @@
+package javax.wireless.messaging;
+public interface MessageConnection extends javax.microedition.io.Connection {String TEXT_MESSAGE="text",BINARY_MESSAGE="binary";Message newMessage(String type);Message newMessage(String type,String address);Message receive()throws java.io.IOException;void send(Message message)throws java.io.IOException;void setMessageListener(MessageListener listener)throws java.io.IOException;int numberOfSegments(Message message);}

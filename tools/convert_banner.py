@@ -7,12 +7,13 @@ from main import convert_gltf,write
 from cgfx.shared import ColorFloat
 import gltflib
 out=root/'assets/banner';out.mkdir(parents=True,exist_ok=True)
-cgfx=convert_gltf(gltflib.GLTF.load(str(root/'work/banner/banner.glb'),load_file_resources=True))
+cgfx=convert_gltf(gltflib.GLTF.load(str(root/'assets/banner/banner.glb'),load_file_resources=True))
 for name in cgfx.data.models:
  model=cgfx.data.models[name]
  for material in model.materials:
-  model.materials[material].material_color.emission=ColorFloat(.12,.24,.20,1)
-  model.materials[material].material_color.ambient=ColorFloat(.1,.1,.1,1)
+  model.materials[material].material_color.emission=ColorFloat(.08,.16,.13,1)
+  model.materials[material].material_color.specular[0]=ColorFloat(.95,1,1,1)
+  model.materials[material].material_color.ambient=ColorFloat(.22,.28,.25,1)
 animations=[]
 for name in cgfx.data.skeletal_animations:
  a=cgfx.data.skeletal_animations[name];a.looping=True
@@ -31,6 +32,6 @@ data=write(cgfx);assert len(data)<=512*1024,f'Banner too large: {len(data)}'
 (out/'banner.cgfx').write_bytes(data)
 with wave.open(str(out/'silence.wav'),'wb') as w:
  w.setnchannels(2);w.setsampwidth(2);w.setframerate(32000);w.writeframes(bytes(32000*4))
-info={'cgfx_bytes':len(data),'animations':animations,'geometry':json.loads((root/'work/banner/geometry.json').read_text())}
+info={'cgfx_bytes':len(data),'animations':animations,'geometry':json.loads((root/'assets/banner/geometry.json').read_text())}
 (out/'manifest.json').write_text(json.dumps(info,indent=2)+'\n')
 print(json.dumps(info,indent=2))

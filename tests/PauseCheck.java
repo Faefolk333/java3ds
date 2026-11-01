@@ -1,0 +1,1 @@
+public class PauseCheck {public static void main(String[]args)throws Exception{while((crimson.Native.buttons()&0x40000000)==0){crimson.Native.present();Thread.sleep(10);}System.out.println("PAUSE_GAME_EXIT");}}

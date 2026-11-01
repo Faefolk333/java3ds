@@ -5,3 +5,5 @@ License: GNU GPL version 3 or later (see LICENSE and original per-file headers).
 Java3DS adaptations: MIDP image/graphics bridge, resource access, platform
 configuration, optional JPEG decoding and releaseTarget framebuffer commit.
 The complete corresponding adapted source is included in the source ZIP.
+
+0.3.4: GPL native scanline port, mixed-axis texture wrapping fix and profiler counters.

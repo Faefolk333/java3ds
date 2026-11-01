@@ -7,6 +7,9 @@ public final class Native {
  public static native void blit(int[] target,int width,int height,int[] source,int sw,int sh,int x,int y,int cx,int cy,int cw,int ch);
  public static native void rgb(int[] target,int tw,int th,int[] pixels,int offset,int scan,int x,int y,int w,int h,boolean alpha,int cx,int cy,int cw,int ch);
  public static native void text(int[] target,int tw,int th,long[] glyphs,String text,int x,int y,int scale,int color,int cx,int cy,int cw,int ch);
+ public static native boolean microPose(float[] source,float[] destination,byte[] bones,float[] action);
+ public static native void microTransform(float[] source,float[] destination,float[] matrix);
+ public static native void m3gSpan(int[] raster,short[] depth,int offset,int count,int x,float[] values,int[] state,int[] texture);
  public static native void microBegin();
  public static native void microTriangle(int[] target,int w,int h,float[] triangle,float[] projection,int[] texture,int tw,int th,int color,int flags,int cx,int cy,int cw,int ch);
  public static native void present();

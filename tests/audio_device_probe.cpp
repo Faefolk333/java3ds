@@ -23,6 +23,7 @@ int main(){
  crimson_audio_control(id,MIDI_CLOSE,0);f=fopen("work/audio-fixtures/track-1.mid","rb");assert(f);fseek(f,0,SEEK_END);data.resize(ftell(f));rewind(f);assert(fread(data.data(),1,data.size(),f)==data.size());fclose(f);
  id=crimson_audio_load(data.data(),data.size());assert(id>=0);assert(crimson_audio_control(id,MIDI_START,1)==0);
  std::this_thread::sleep_for(std::chrono::milliseconds(40));assert(audioNonzero.load()>silent);
+ crimson_audio_pause(1);std::this_thread::sleep_for(std::chrono::milliseconds(4));int frozenPosition=crimson_audio_control(id,MIDI_POSITION,0);std::this_thread::sleep_for(std::chrono::milliseconds(10));assert(crimson_audio_control(id,MIDI_POSITION,0)==frozenPosition);crimson_audio_pause(0);
  crimson_audio_shutdown();assert(audioDspExits==3&&audioLinearFrees==2);
  unsigned old=audioBuffers.load();std::this_thread::sleep_for(std::chrono::milliseconds(10));assert(old==audioBuffers.load());
  audioFailure=4;assert(crimson_audio_init()==0);std::this_thread::sleep_for(std::chrono::milliseconds(20));crimson_audio_shutdown();assert(audioDspExits==4&&audioLinearFrees==3);

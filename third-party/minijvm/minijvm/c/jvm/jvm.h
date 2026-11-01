@@ -2086,6 +2086,7 @@ struct _SlowCallTraceCtx {
 
 //======================= Jvm =============================
 struct _MiniJVM {
+    volatile int crimson_paused;
     volatile int crimson_stop; // Cooperative frontend cancellation; never kill a native thread.
     PeerClassLoader *boot_classloader;
     ArrayList *classloaders;

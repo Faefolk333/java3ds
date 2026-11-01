@@ -121,7 +121,7 @@ static s32 filterClassName(Utf8String *clsName) {
 
 #define check_gc_pause(offset){\
     if(offset <= 0 && __atomic_load_n(&r->jvm->crimson_stop,__ATOMIC_RELAXED)){r->thrd_info->is_stop=1;ret=RUNTIME_STATUS_ERROR;goto label_exit_while;}\
-    if (offset < 0 && r->thrd_info->suspend_count) {\
+    if (offset < 0 && (r->thrd_info->suspend_count || __atomic_load_n(&r->jvm->crimson_paused,__ATOMIC_RELAXED))) {\
         \
         r->stack->sp = sp;\
         check_suspend_and_pause(r);\

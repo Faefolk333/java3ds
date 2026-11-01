@@ -1,3 +1,51 @@
+# Compatibility work — 0.3.4
+
+The user's 0.3.3 console report: Blades 240×320 launches slowly; the 320×240
+variant crashes the system; Outland launches but is impractically slow; Worms
+fails to load. These reports take precedence over PC startup smoke success.
+Dump 28 names Java3DS. PC 0x0014CE50 / LR 0x001504F0 match the saved 0.3.3 ELF: utf8_append_part_c / _parseCPString. The dump instruction bytes match the ELF; r4 is NULL and the fault address is 4. utf8_create failed during class metadata parsing. Parser allocations now check failure and propagate an abort through class loading/JNI. A forced failure produces a clean VM error and teardown instead of the native NULL access. This does not prove every VM OOM path is covered. Existing dump 27 names "menu" and is separate.
+
+M3G now uses native nearest-texture scanlines for supported compositing paths,
+including vertex colors, depth, alpha and fog. Unsupported filters/multitexture
+still use the Java reference path. A mixed S/T wrapping bug in that reference
+path was also fixed. A differential 90-scene PC test compares native and Java
+output; twelve exponential-fog pixels differ by at most one channel level
+(two with MODULATE_X2). The measured run was 641ms Java versus 146ms native.
+This is a PC test, not a measured console FPS gain.
+
+Real Outland's 30-second PC test recorded 73,570 native spans, 701,547 native
+pixels and zero Java fallback pixels, then exited 0. The sampled cave renders.
+Blades now transforms model vertices and bone poses in C, reuses work arrays,
+and preserves the extra sentinel entries used by the model buffers. Both
+variants rendered the forest/player in 45-second PC runs and returned 0.
+A sentinel-tail and invalid bone-count regression passes. The targeted allocation fix and playable speed still need a console retest.
+
+Orcs & Elves II's real JAR was valid. It failed loading the missing WMA
+TextMessage type and Alert APIs. Offline messaging interfaces and basic alerts
+now let it reach the first-person dungeon/tutorial; no SMS transport is provided.
+Worms reached gameplay with complete bodies in a final 45-second PC run; the console
+load regression is still unverified. Log rotation retains the previous run.
+
+Spore Creatures in D:/HRY JAVA is a 454-byte textual JAD pointing to a remote
+download endpoint, with no matching 687220-byte game JAR; the user confirmed
+there is no other JAR. This cannot be run as a game. Catalog messages now
+separate descriptors from ZIP payloads, handle double extensions and inspect
+ZIP content before treating a .jad filename as a descriptor.
+
+Touch softkeys, a cooperative VM/audio pause menu, scaling changes and backlight
+sleep were added. The first touch wakes without activating a game key. Native
+scaling changes apply immediately; changing a PoP camera profile requires a
+relaunch. Hardware touch/backlight/audio/exit checks remain pending.
+
+MIDI memory: engines now share a lazily loaded bank; WAV, unsupported audio and
+MIDI parsing do not load it. SF2 samples stay PCM16 instead of being expanded
+into float storage. A 256 KiB lookup preserves the original float sample values;
+all eleven MIDI/WAV render hashes match the previous engine. Blades avoids the
+old ~31 MiB bank allocation entirely. Games that play MIDI use about half that
+sample RAM. Clone lifetime and independent mixing remain tested.
+
+## Earlier 0.3.3 work
+
 # Compatibility work — 0.3.3
 
 ## New Age of Heroes III dump

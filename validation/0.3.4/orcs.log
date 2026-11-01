@@ -1,0 +1,19 @@
+RAM cache ready: 3 JARs, 2021420 bytes
+RAM cache hits: 610
+STAGE 40 0
+STAGE 41 3
+Java3DS: Orcs & Elves II 320x240
+VM_AUDIO_LOAD handle=0 bytes=259
+VM_AUDIO_LOAD handle=1 bytes=192
+VM_AUDIO_LOAD handle=0 bytes=259
+VM_AUDIO_LOAD handle=1 bytes=192
+VM_AUDIO_LOAD handle=2 bytes=4060
+VM_AUDIO_START 2 result 0
+VM_AUDIO_LOAD handle=0 bytes=259
+VM_AUDIO_LOAD handle=1 bytes=192
+VM_AUDIO_LOAD handle=2 bytes=153
+STAGE 80 0
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+VM_EXIT run=0 result=0 frames=253 peak=0

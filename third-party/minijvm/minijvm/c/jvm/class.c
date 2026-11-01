@@ -15,6 +15,7 @@
 JClass *class_create(Runtime *runtime) {
     s32 jcsize = sizeof(JClass);
     JClass *clazz = jvm_calloc(jcsize);
+    if(!clazz)return NULL;
     clazz->mb.heap_size = jcsize;
     clazz->mb.clazz = clazz;
     clazz->mb.type = MEM_TYPE_CLASS;

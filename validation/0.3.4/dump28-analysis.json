@@ -1,0 +1,16 @@
+{
+  "dump": "crash_dump_00000028.dmp",
+  "sha256": "4122cb2409a368b159a6eb3fe4cf2ccf5a8ce38ee61547fcfc73f956a42d60f1",
+  "process": "Java3DS",
+  "matching_version": "0.3.3",
+  "pc": "0x0014ce50",
+  "lr": "0x001504f0",
+  "function": "utf8_append_part_c",
+  "caller": "_parseCPString",
+  "r4": 0,
+  "fault_address": 4,
+  "instruction": "ldr r5, [r4, #4]",
+  "instruction_matches_saved_elf": true,
+  "targeted_vm_fault_test_exit": 1,
+  "vm_destroy_reached": true
+}

@@ -17,3 +17,6 @@ github-token.txt
 *.cia
 
 /jvm_crash_*.dmp
+
+*.blend1
+*.blend2

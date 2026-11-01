@@ -1492,6 +1492,10 @@ public class Graphics3D
 		}
 	}
 
+ private final float[] spanValues=new float[12];
+ private final int[] spanState=new int[21];
+ private int nativeTextureMode(){if(texBlenders[0]==null)return 0;if(texBlenders[0]==Graphics3DPipelines.TextureBlenders.MODULATE_RGB)return 1;if(texBlenders[0]==Graphics3DPipelines.TextureBlenders.MODULATE_RGBA)return 2;if(texBlenders[0]==Graphics3DPipelines.TextureBlenders.REPLACE_ALPHA)return 3;return -1;}
+ private int nativeCompositeMode(){if(compBlender==null)return 0;if(compBlender==Graphics3DPipelines.CompositingBlenders.ALPHA)return 1;if(compBlender==Graphics3DPipelines.CompositingBlenders.ALPHA_ADD)return 2;if(compBlender==Graphics3DPipelines.CompositingBlenders.MODULATE)return 3;if(compBlender==Graphics3DPipelines.CompositingBlenders.MODULATE_X2)return 4;return -1;}
 	private void renderTriangleHalf(int defVertColor, int half, int yStart, int yEnd,
 		Triangle triScreen, boolean hasColors, boolean hasTexture, Fog fog, float invFogDiv,
 		int alphaThreshold, boolean usesDepth, boolean usesDepthWrite,
@@ -1512,6 +1516,10 @@ public class Graphics3D
 		int fogFactor = 65535;
 		int stepFogFactor = 0;
 
+  final int nativeTex=hasTexture?nativeTextureMode():0,nativeComp=nativeCompositeMode();
+  final boolean nativeSpan=M3GPlatform.nativeRaster&&!doDither&&nativeComp>=0&&(!hasTexture||(ACTIVE_TEXTURE_UNITS==1&&mipModes[0]==null&&texFilter[0]==TextureFilters.NEAREST&&nativeTex>=0));
+  final Image2D nativeImage=nativeSpan&&hasTexture?textures[0].getImage():null;
+  if(nativeSpan){spanState[0]=(hasColors?1:0)|(hasTexture?2:0)|(doPerspective?4:0)|(usesDepthWrite?8:0)|(colorEnabled?16:0)|(hasFog?32:0);spanState[1]=defVertColor;spanState[2]=alphaThreshold;spanState[3]=currAlphaFactor;spanState[4]=nativeComp;spanState[5]=nativeTex;spanState[6]=hasTexture?nativeImage.width:0;spanState[7]=hasTexture?nativeImage.height:0;spanState[8]=texRepeatS[0]?1:0;spanState[9]=texRepeatT[0]?1:0;spanState[14]=stepA;spanState[15]=stepR;spanState[16]=stepG;spanState[17]=stepB;spanState[18]=hasFog?fog.getColor():0;spanState[19]=M3GPlatform.m3gPerspCorrSubFactor;spanState[20]=fogMode;spanValues[9]=invFogDiv;spanValues[10]=fogFarNorm;spanValues[11]=fogDensity;}
 		// Get into the render loop proper.
 
 		float zStep  = usesDepth ? (zMidR - zMidL) * invMidSpan : 0;
@@ -1628,11 +1636,16 @@ public class Graphics3D
 				}
 			}
 
+   if(nativeSpan){
+    spanValues[0]=z;spanValues[1]=zStep;spanValues[2]=pw;spanValues[3]=pwStep;spanValues[4]=invPw;spanValues[5]=curS[0];spanValues[6]=curT[0];spanValues[7]=stepS[0];spanValues[8]=stepT[0];spanState[10]=deltaA;spanState[11]=deltaR;spanState[12]=deltaG;spanState[13]=deltaB;
+    crimson.Native.m3gSpan(rasterData,depthBuffer,rasterIdx,ixR-ixL,ixL,spanValues,spanState,nativeImage==null?null:nativeImage.image);M3GPlatform.nativeSpans++;M3GPlatform.nativePixels+=ixR-ixL;continue;
+   }
 			// If we don't do perspective correction, this will basically always
 			// evaluate to false below (screens with higher horizontal res bigger
 			// than Integer.MAX_VALUE don't even exist).
 			int perspX = doPerspective ? ixL : Integer.MAX_VALUE;
 
+			M3GPlatform.fallbackPixels+=ixR-ixL;
 			// Draw the pixels for the current y-coordinate
 			for (int x = ixL; x < ixR; x++, z += zStep, pw += pwStep, invPw += stepInvPw, fogFactor += stepFogFactor, rasterIdx++)
 			{
@@ -2314,6 +2327,7 @@ public class Graphics3D
 		boolean repeatS, boolean repeatT, boolean isNPOT)
 	{
 		if (!repeatS && !repeatT) { return Graphics3DPipelines.TextureWrappers.CLAMP; }
+        if(repeatS!=repeatT)return repeatS?Graphics3DPipelines.TextureWrappers.REPEAT_S:Graphics3DPipelines.TextureWrappers.REPEAT_T;
 		if (!isNPOT) { return Graphics3DPipelines.TextureWrappers.POT_REPEAT; }
 		return Graphics3DPipelines.TextureWrappers.NPOT_REPEAT;
 	}

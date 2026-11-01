@@ -1,37 +1,39 @@
-# Java3DS 0.3.3 — privátní alpha
+# Java3DS 0.3.4 — privátní alpha
 
-Nainstaluj `java3ds.cia` přes FBI; nahradí předchozí Java3DS se stejným ID.
-Hry, nastavení a uložené pozice zůstávají v `/3ds/java-3ds` na SD.
-Pro Homebrew Launcher rozbal instalační ZIP do kořene SD.
+CIA nainstaluj přes FBI; zachová hry a uložené pozice v /3ds/java-3ds.
+Pro Homebrew Launcher rozbal instalační ZIP do kořene SD karty.
 
-QR: FBI > Remote Install > Scan QR Code. Počítač musí zůstat zapnutý a 3DS
-musí být ve stejné domácí síti. QR platí 24 hodin. `Start-QR-Install.ps1`
-v této složce spustí nový server a vytvoří nový QR.
+Nové ovládání spodního displeje:
 
-Nové v 0.3.3:
+- LEFT a RIGHT jsou dotykové softkeys. Prostřední MENU nebo L+R otevře herní menu.
+- Menu pozastaví Java vlákna i herní audio. Nabízí pokračování, Native/Fill screen,
+  časovač displeje, ukončení hry do knihovny a zavření Java3DS.
+- START+SELECT stále ukončuje hru přímo. Změna displeje během hry mění škálování
+  hotového obrazu; případná změna PoP kamery se uplatní při příštím spuštění.
+- Zhasnutí spodního podsvícení: Never / 15 / 30 / 60 / 120 sekund, výchozí 30.
+  První dotyk displej jen probudí. Start bottom screen: Asleep začne se zhasnutým
+  displejem a také dovoluje probuzení dotykem. Nastavení se ukládá pro každou hru.
 
-- Ošetřené selhání alokace z dumpu Age of Heroes III, méně dočasných obrázků
-  a méně práce při každém vykreslení. Úplné odstranění pádu ověř až na konzoli.
-- Worms: opravené dlouhé obrázkové pásy se sprity; na PC jsou vidět i těla červů.
-- Hudba a efekty MIDI/PCM WAV se přehrávají nezávisle. AMR/AAC/MP3 zatím ne.
-- Experimentální skutečné 3D: Micro3D v3 (Blades and Magic) a M3G
-  (Outland, Gladiator). Výkon na 3DS ještě není změřen; některé efekty chybí.
-- Discworld se v testu dostal do úvodního dialogu. Doplněny RMS enumerace
-  a základní formuláře. Krátké testy nejsou zárukou dohratelnosti.
-- Rozlišení LocoRoco se rozpoznává jako 240×320 z LGE manifestu.
-- Native centruje obraz; Fill screen vyplní 400×240 roztažením hotového obrazu.
-  Poměr stran se může změnit. Okraje uvnitř grafiky hry se neodstraňují.
-- Spodní klávesy reagují vizuálně pouze na dotyk. Plynulejší aktualizace paralaxu.
-- Senzory jsou přístupné hrám přes JSR-256 a Sony API. Gyroskop a akcelerometr
-  jsou odlišné senzory; hra je musí sama používat. Tento LocoRoco build je nevolá.
+Nativní výpočty urychlují běžné M3G texturování a Micro3D transformace modelů.
+Jde stále o softwarové 3D. Dump 28 odhalil další selhání alokace při načítání
+tříd; nově je ošetřené. MIDI banka se načte až při spuštění MIDI a vzorky zabírají
+polovinu RAM. U Blades, které MIDI nepoužívá, se velká banka nenačte vůbec.
+Odstranění systémového pádu a výkon musí potvrdit nové hraní na konzoli. Na PC jsou ověřené scény Blades, Outland a Orcs & Elves II.
+Worms se v PC testu načetly a vykreslily celé červy; hlášený problém na konzoli
+bez aktuálního logu zatím není potvrzený jako odstraněný.
 
-Širší kamera je stále profil konkrétní hry (PoP Classic); univerzální Fill screen
-nemění herní svět. Ovládání a skrytí spodního displeje nastavíš v Controls.
-Banner se při této aktualizaci neměnil.
+Nová ikona a banner vycházejí z dodaných souborů. Kamera byla v originálu pevná;
+loop trvá 5 sekund (120 snímků při 24 fps). Průsvitnost a lesk CGFX přibližují sklo,
+bez skutečné Blender refrakce. Původní soubor na ploše zůstal nedotčený.
+Navigace, potvrzení a dokončení aktualizace používají dodané WAV zvuky.
 
-Soukromé Wi-Fi aktualizace používají token na SD v
-`/3ds/java-3ds/github-token.txt`; postup je v UPDATES.md. Lokální QR funguje
-bez tokenu. Zveřejněné GitHub vydání a místní testovací sestavení se mohou lišit.
+Spore Creatures ve složce obsahuje pouze malý JAD, nikoli herní JAR. Bez JARu se
+nespustí. Nabídka nyní odlišuje JAR/JAD a nepíše obecnou hlášku o chybějícím JARu
+u každé hry. Předchozí logy se zachovávají jako runtime.previous.log a output.previous.log.
 
-Testováno na počítači, fyzická konzole zatím ne. Po chybě zkopíruj runtime.log,
-output.log a nový Luma dump před dalším spuštěním. Podrobnosti: VALIDATION.md.
+QR: FBI > Remote Install > Scan QR Code. Počítač musí zůstat zapnutý a 3DS být
+ve stejné domácí síti. Lokální QR platí 24 hodin. Start-QR-Install.ps1 vytvoří nový.
+Wi-Fi aktualizace v aplikaci používají publikovaná GitHub vydání a token na SD;
+postup je v UPDATES.md. Místní testovací sestavení může být novější než vydání.
+
+Podrobnosti o testech a omezeních: VALIDATION.md a COMPATIBILITY.md.

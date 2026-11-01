@@ -44,3 +44,14 @@ with zipfile.ZipFile(demo) as src,zipfile.ZipFile(p/'lge.jar','w') as dest:
   dest.writestr(name,content)
 assert 'NATIVE 240x320 KNOWN 1' in invoke(p/'lge.jar').stdout
 print('CATALOG_PASS LGE_native_240x320')
+
+# Descriptor suffixes and URL-less download endpoints must never classify real ZIPs as missing.
+(p/'double.jar').write_bytes(data)
+(p/'double.jar.jad').write_text('MIDlet-Jar-URL: https://example.invalid/download/12345\n')
+assert 'TITLE' in invoke(p/'double.jar.jad').stdout
+assert 'Descriptor only' in invoke(p/'missing.jad',False).stderr
+print('CATALOG_PASS double_extension_descriptor local_binary preserved')
+
+(p/'binary.jar.jad').write_bytes(data)
+assert 'TITLE' in invoke(p/'binary.jar.jad').stdout
+print('CATALOG_PASS ZIP_content_over_descriptor_suffix')

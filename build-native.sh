@@ -10,6 +10,7 @@ for FILE in midp_native raster; do arm-none-eabi-gcc "${FLAGS[@]}" -std=gnu99 -c
 arm-none-eabi-gcc "${FLAGS[@]}" -std=gnu99 -c "$ROOT/native/audio/midi_engine.c" -o "$OUT/midi_engine.o"
 for FILE in main catalog updater; do arm-none-eabi-g++ "${FLAGS[@]}" -std=gnu++17 -fno-exceptions -fno-rtti -c "$ROOT/native/$FILE.cpp" -o "$OUT/$FILE.o"; done
 arm-none-eabi-g++ "${FLAGS[@]}" -std=gnu++17 -fno-exceptions -fno-rtti -c "$ROOT/native/audio/device_3ds.cpp" -o "$OUT/audio_device.o"
-arm-none-eabi-g++ "${ARCH[@]}" -specs=3dsx.specs -Wl,--gc-sections "$OUT/main.o" "$OUT/catalog.o" "$OUT/updater.o" "$OUT/midp_native.o" "$OUT/raster.o" "$OUT/midi_engine.o" "$OUT/audio_device.o" "$ROOT/work/runtime-arm/libminijvm-offline.a" -L"$DEVKITPRO/portlibs/3ds/lib" -L"$DEVKITPRO/portlibs/armv6k/lib" -L"$DEVKITPRO/libctru/lib" -lcurl -lmbedtls -lmbedx509 -lmbedcrypto -lz -lctru -lm -o "$OUT/java_pocket.elf"
+arm-none-eabi-g++ "${FLAGS[@]}" -std=gnu++17 -fno-exceptions -fno-rtti -c "$ROOT/native/audio/ui_3ds.cpp" -o "$OUT/ui_audio.o"
+arm-none-eabi-g++ "${ARCH[@]}" -specs=3dsx.specs -Wl,--gc-sections "$OUT/main.o" "$OUT/catalog.o" "$OUT/updater.o" "$OUT/midp_native.o" "$OUT/raster.o" "$OUT/midi_engine.o" "$OUT/audio_device.o" "$OUT/ui_audio.o" "$ROOT/work/runtime-arm/libminijvm-offline.a" -L"$DEVKITPRO/portlibs/3ds/lib" -L"$DEVKITPRO/portlibs/armv6k/lib" -L"$DEVKITPRO/libctru/lib" -lcurl -lmbedtls -lmbedx509 -lmbedcrypto -lz -lctru -lm -o "$OUT/java_pocket.elf"
 smdhtool --create "Java3DS" "JAR + JAD / MIDI / Wi-Fi" "Faefolk333" "$ROOT/assets/icon48.png" "$OUT/java_pocket.smdh"
 3dsxtool "$OUT/java_pocket.elf" "$OUT/java_pocket.3dsx" --smdh="$OUT/java_pocket.smdh" --romfs="$ROOT/romfs"

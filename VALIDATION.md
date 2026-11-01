@@ -1,3 +1,58 @@
+# Java3DS 0.3.4 validation — 2026-11-01
+
+PC validation, with physical-console checks still pending:
+
+- CIA/3DSX compile; CIA version 52 (0.3.4), same title 000400000F3A3D00.
+  CTRTool verifies content/ExeFS/RomFS hashes. All ten RomFS assets, icon and
+  banner compare to source. Unsigned-homebrew signature failures are expected.
+- M3G differential test: 90 scenes (perspective, vertex colors, textures,
+  alpha/depth, all five common compositing modes and both fog modes). Native
+  matches Java except twelve exponential-fog pixels with 1-channel-level
+  rounding (2 after MODULATE_X2). Example PC timing: 641ms versus 146ms.
+- Micro3D pose/transform regression covers the model-buffer sentinel tail,
+  matrix result and invalid bone counts. Blades 320×240 and 240×320 each reach
+  rendered forest/tutorial scenes in 45-second PC runs, exit 0. The new dump 28
+  matches a separate metadata-allocation failure; console retest remains needed.
+- Outland: real cave scene, 30-second run, 304 published frames; 73,570 native
+  spans / 701,547 native pixels / zero fallback pixels, exit 0.
+- Orcs & Elves II: final 25-second startup run exits 0; an earlier 35-second
+  iteration reached the dungeon/tutorial and played MIDI. Worms: gameplay scene, 45 seconds, 712
+  frames, complete bodies, MIDI/WAV PCM, exit 0; console load issue pending.
+  Final Blades 320×240 repeat after memory changes: 40 seconds, 645 frames, exit 0.
+- Two repeated runtime regressions cover rendering, M3G, sensor connections,
+  RMS, controls (including touch softkeys), DirectGraphics and shutdown reentry.
+- Pause test freezes published frames, resumes them, and exits normally for two
+  VM runs. Cancellation while paused returns internal status 2 and destroys VM
+  cleanly. Backlight state test covers timer, first-touch consumption, held touch,
+  always-on setting, start-asleep and menu keep-awake.
+- Catalog regressions include real ZIP named .jad, .jar.jad descriptor sibling,
+  missing binary, JAR preservation, resource rewriting and LGE metadata.
+- Updater and CIA heap/stream/target/integrity regression checks pass.
+- UI functions render library, depressed keypad softkeys and game menu on PC.
+  Three supplied WAVs converted to mono PCM16/22050; actual DSP channel-1 UI
+  output and coexistence with game audio need console testing.
+- Source camera matrices are identical over all 120 original frames. Banner
+  source is a compact derivative; the Desktop original was not changed. Four
+  model animation members, 300 ticks/5s loop, 484616-byte CGFX; Blender preview
+  is approximate and does not prove HOME Menu framing/material appearance.
+
+- Dump 28 matched against saved 0.3.3 ELF and instruction bytes: NULL UTF-8
+  metadata allocation. Three parser fault tests cover NULL string/record and
+  failed growth; a real Class.forName fault test reports a VM error and reaches
+  destruction without a native crash. This is targeted, not universal OOM handling.
+- SoundFont now loads on first MIDI start, with shared lazy bank lifetime and
+  PCM16 sample storage. Eleven rendered asset hashes are bit-identical to the
+  previous float bank. WAV and MIDI parsing leave the large bank unloaded.
+  Tracked audio allocations: 5292-byte idle for two engines, largest allocation
+  16028374 bytes, peak 18392672 bytes. Closing restores the process-start allocation
+  baseline. All 128 GM melodic programs and percussion produce nonzero PCM.
+
+New evidence: validation/0.3.4. Hardware checks: Blades crash retest, 3D speed,
+Worms loading, menu pause/exit, backlight touch wake, UI audio and HOME banner.
+Spore needs the actual missing JAR. No claim of all games being playable.
+
+## Historical 0.3.3 validation
+
 # Java3DS 0.3.3 validation — 2026-11-01
 
 All tests below ran on the Windows PC. No physical console was controlled.

@@ -1,4 +1,4 @@
-# Java3DS — private alpha 0.3.3
+# Java3DS — private alpha 0.3.4
 
 Java ME / JAR / JAD launcher for Nintendo 3DS, with a shared MIDI synthesizer.
 Extract the installation ZIP to the root of the SD card, replacing
@@ -6,6 +6,26 @@ Extract the installation ZIP to the root of the SD card, replacing
 with Java Pocket 3DS. Games, settings and saves are retained. Start **Java3DS**
 from Homebrew Launcher; add your JAR/JAD files under `/3ds/java-3ds/games/`.
 A JAD also needs its matching local JAR. Original game JARs are not bundled.
+
+## Changes in 0.3.4
+
+Touch LEFT/RIGHT softkeys and MENU join the phone keypad. MENU (or L+R)
+pauses the VM and game audio, changes display scaling or sleep timeout,
+returns to the library, or closes Java3DS. START+SELECT remains a direct exit.
+The lower backlight sleeps after 30 seconds by default (Never/15/30/60/120);
+the first touch wakes it without pressing a phone key. Settings persist per game.
+
+M3G's common nearest-texture scanlines and Micro3D vertex/bone transformations
+now run in native code. 3D remains experimental software rendering. Dump 28 identified a failed UTF-8
+metadata allocation in Blades 320×240. Parsing now aborts safely on that failure;
+the MIDI bank loads on demand and uses half the sample RAM. Physical crash
+and performance retests remain pending. Orcs & Elves II reached gameplay on the PC after
+adding offline messaging types and alerts. Compressed audio remains incomplete.
+
+The supplied icon, fixed-camera five-second glass-style banner, navigation,
+confirmation and update-success sounds are included. Runtime/output logs retain
+one previous run. JAR/JAD labels and messages now distinguish descriptors from
+actual game ZIPs, including binary files with a misleading .jad suffix.
 
 ## Changes in 0.3.3
 
@@ -28,7 +48,7 @@ A JAD also needs its matching local JAR. Original game JARs are not bundled.
 * Touch keys highlight only on touch; menu parallax updates more often and
   filters the stick movement. The banner is unchanged.
 
-## CIA installation (0.3.3)
+## CIA installation (0.3.4)
 
 Install `java3ds.cia` with FBI to launch directly from HOME Menu. The package
 includes a native animated 3D banner converted from the supplied Blender scene

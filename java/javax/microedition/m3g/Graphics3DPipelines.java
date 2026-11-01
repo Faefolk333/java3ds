@@ -293,7 +293,10 @@ class Graphics3DPipelines
 	// and with this, it processes both S and T coordinates in one go and returns
 	// them packed in an integer as follows: ST = (T << 16) | (S & 0xFFFF).
 	static class TextureWrappers
-	{
+ {
+  private static int repeat(int n,int length){int v=n%length;return v<0?v+length:v;}
+  static final TextureWrapper REPEAT_S=new TextureWrapper(){public int wrap(int s,int t,int w,int h){return ((t<0?0:t>=h?h-1:t)<<16)|repeat(s,w);}};
+  static final TextureWrapper REPEAT_T=new TextureWrapper(){public int wrap(int s,int t,int w,int h){return (repeat(t,h)<<16)|(s<0?0:s>=w?w-1:s);}};
 		// If the texture is Power-Of-Two, repeat wrapping can be done
 		// quickly as just an AND of the coordinate with the the edge
 		// mask (which is width - 1). Why is that? A POT texture has

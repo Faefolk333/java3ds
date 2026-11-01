@@ -42,3 +42,16 @@ M3G scene graph, loader and software renderer are adapted from FreeJ2ME-Plus
 under GPL-3.0-or-later. Original headers are retained. See
 third-party/FreeJ2ME-M3G/LICENSE and NOTICE. Complete corresponding modified
 source and build scripts are in this private repository and source ZIP.
+
+## User-supplied UI assets (0.3.4)
+
+The new icon and Blender-derived banner use the user's Desktop artwork.
+The three UI WAVs were supplied in the user's "PSP Sounds" folder under names
+recorded in assets/ui-sound-source.json; no ownership or redistribution license
+is asserted. They remain private data in this repository and local packages.
+M3G native span code ports the existing GPL-3.0-or-later pipeline; its original
+license and corresponding source are included. Micro3D native matrix/pose code
+replaces the prior Java platform bridge.
+
+TinySoundFont is locally modified with optional PCM16 sample storage and an exact
+short-to-float lookup to reduce RAM. Original MIT license is retained.

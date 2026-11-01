@@ -536,7 +536,9 @@ s32 org_mini_vm_RefNative_defineClass(Runtime *runtime, JClass *clazz) {
     JClass *cl = class_parse(cloader, bytebuf, runtime);
     bytebuf_destroy(bytebuf);
 
+    if(!cl)return RUNTIME_STATUS_ERROR;
     Instance *clIns = insOfJavaLangClass_create_get(runtime, cl);
+    if(!clIns){__atomic_store_n(&runtime->jvm->crimson_stop,1,__ATOMIC_RELEASE);return RUNTIME_STATUS_ERROR;}
 
     setFieldRefer(getInstanceFieldPtr(clIns, runtime->jvm->shortcut.class_classLoader), cloader);
 
@@ -559,7 +561,9 @@ s32 org_mini_vm_RefNative_findLoadedClass0(Runtime *runtime, JClass *clazz) {
     JClass *cl = classes_get(runtime->jvm, jloader, ustr);
     utf8_destroy(ustr);
     if (cl) {
-        Instance *clIns = insOfJavaLangClass_create_get(runtime, cl);
+        if(!cl)return RUNTIME_STATUS_ERROR;
+    Instance *clIns = insOfJavaLangClass_create_get(runtime, cl);
+    if(!clIns){__atomic_store_n(&runtime->jvm->crimson_stop,1,__ATOMIC_RELEASE);return RUNTIME_STATUS_ERROR;}
         push_ref(runtime->stack, clIns);
     } else {
         push_ref(runtime->stack, NULL);

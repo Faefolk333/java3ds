@@ -1,0 +1,14 @@
+{
+  "audio/gm.sf2": "8fdf9ee3fc3cf9bece1490354bfd6cfe86b8a1927a5a21d135ab171fb1fa15e1",
+  "audio/pop-theme.mid": "6bc8f74dc5b2334fc159f735c87683300069c62a38355385de167c237cb2a484",
+  "certs/github-roots.pem": "ca8f993871b486a884bca6583ab859a6b4e323d65209788c25631f7cadd811cf",
+  "demo/LauncherCheck.jar": "b7646c23ebe006033223e3cbcae4b49556782bfc1b0f7612978ebda786b8b88e",
+  "java/midp.jar": "79bac7c29780842a66c0982aa739a2c9c2b9261d848503819a162d3aa609e6c9",
+  "java/minijvm_rt.jar": "646588272728cf213f008f73e1e0a102fde926619a96a0e2d5c93049d2750c26",
+  "profiles/pop-classic.zip": "706893512fdfe5398d1e6036c0b5ddec8e3bd1904bd2aed4760998bf13967afd",
+  "ui/achievement.wav": "c5c9e0066d4faa22a8e4b26d451e4c2f623aa4a148554fc63ce3732a6d87b343",
+  "ui/confirm.wav": "c07bf00bf28b2031f5ed5ab6b8d9935e395985d8b297a7cfe00661f60201871d",
+  "ui/navigation.wav": "eba81974f30e39f2c6f723729625e8577132f6e0dfe331a002739378d15931bc",
+  "icon48.png": "cfd1ac4a815888563cf52c87fd2ec980c030c13ef2d8bcce2190816854c58efe",
+  "banner.bnr": "023793be8ff4bd6ec3365ac06d7bc38520c6c2fa4ee96dc7427fe68a36e3b64c"
+}

@@ -1,0 +1,9 @@
+package javax.microedition.lcdui;
+public class Alert extends Screen {
+ public static final int FOREVER=-2;public static final Command DISMISS_COMMAND=new Command("OK",Command.OK,0);private String text;private Image image;private AlertType type;private int timeout=2000;private long shownAt;Displayable returnTo;
+ public Alert(String title){this(title,null,null,null);}public Alert(String title,String text,Image image,AlertType type){setTitle(title);this.text=text;this.image=image;this.type=type;}
+ public String getString(){return text;}public void setString(String value){text=value;}public Image getImage(){return image;}public void setImage(Image value){image=value;}public AlertType getType(){return type;}public void setType(AlertType value){type=value;}public int getTimeout(){return timeout;}public int getDefaultTimeout(){return 2000;}public void setTimeout(int value){if(value<=0&&value!=FOREVER)throw new IllegalArgumentException();timeout=value;}
+ void shown(Displayable previous){returnTo=previous;shownAt=System.currentTimeMillis();}void tick(){if(timeout!=FOREVER&&commands.isEmpty()&&System.currentTimeMillis()-shownAt>=timeout)Display.getDisplay(null).setCurrent(returnTo);}
+ protected boolean command(int key){if(super.command(key))return true;if(key==-5||key==-6||key==-7){Display.getDisplay(null).setCurrent(returnTo);return true;}return false;}
+ protected void paint(Graphics g){g.setColor(0x132437);g.fillRect(0,0,getWidth(),getHeight());g.setColor(0xffffff);g.drawString(getTitle()==null?"Alert":getTitle(),8,8,20);int y=30;if(image!=null){g.drawImage(image,getWidth()/2,y,Graphics.TOP|Graphics.HCENTER);y+=image.getHeight()+8;}if(text!=null){int n=Math.max(1,(getWidth()-16)/8);for(int i=0;i<text.length();i+=n){g.drawString(text.substring(i,Math.min(text.length(),i+n)),8,y,20);y+=10;}}}
+}

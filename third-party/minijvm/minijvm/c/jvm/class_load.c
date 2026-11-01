@@ -33,32 +33,23 @@ static s32 _slow_profile_need_exclude(Utf8String *class_name) {
 #endif
 
 /* parse UTF-8 String */
-void *_parseCPString(JClass *_this, ByteBuf *buf, s32 index) {
-    ConstantUTF8 *ptr = jvm_calloc(sizeof(ConstantUTF8));
-
-    ptr->item.tag = CONSTANT_UTF8;
-    ptr->item.index = index;
-
-    //fread(short_tmp, 2, 1, fp);
-    Short2Char s2c;
-    s2c.c1 = (c8) bytebuf_read(buf); //short_tmp[0];
-    s2c.c0 = (c8) bytebuf_read(buf); //short_tmp[1];
-    ptr->string_size = s2c.s;
-
-    ptr->utfstr = utf8_create();
-    s32 i = 0;
-    for (; i < ptr->string_size; i++) {
-        u8 ch = (u8) bytebuf_read(buf); //0;
-        //fread(&ch, 1, 1, fp);
-        utf8_append_part_c(ptr->utfstr, &ch, 0, 1);
-    }
-    arraylist_push_back(_this->constantPool.utf8CP, ptr);
-    return ptr;
+// Preserve this failure boundary for crash symbolication and allocation fault tests.
+__attribute__((noinline)) void *_parseCPString(JClass *_this, ByteBuf *buf, s32 index) {
+    ConstantUTF8 *ptr=jvm_calloc(sizeof(ConstantUTF8));if(!ptr)return NULL;
+    ptr->item.tag=CONSTANT_UTF8;ptr->item.index=index;
+    int hi=bytebuf_read(buf),lo=bytebuf_read(buf);ptr->string_size=((hi&255)<<8)|(lo&255);
+    if(hi<0||lo<0||buf->rp>buf->wp||(u32)ptr->string_size>buf->wp-buf->rp){jvm_free(ptr);return NULL;}
+    ptr->utfstr=utf8_create();
+    if(!ptr->utfstr){jvm_free(ptr);return NULL;}
+    if(ptr->string_size>ptr->utfstr->_alloced&&!_utf8_space_require(ptr->utfstr,ptr->string_size)){utf8_destroy(ptr->utfstr);jvm_free(ptr);return NULL;}
+    memcpy(ptr->utfstr->data,buf->buf+buf->rp,ptr->string_size);ptr->utfstr->length=ptr->string_size;buf->rp+=ptr->string_size;
+    arraylist_push_back(_this->constantPool.utf8CP,ptr);return ptr;
 }
 
 /* parse Integer */
 void *_parseCPInteger(JClass *_this, ByteBuf *buf, s32 index) {
     ConstantInteger *ptr = jvm_calloc(sizeof(ConstantInteger));
+    if(!ptr)return NULL;
 
     ptr->item.tag = CONSTANT_INTEGER;
     ptr->item.index = index;
@@ -77,6 +68,7 @@ void *_parseCPInteger(JClass *_this, ByteBuf *buf, s32 index) {
 /* parse Float */
 void *_parseCPFloat(JClass *_this, ByteBuf *buf, s32 index) {
     ConstantFloat *ptr = jvm_calloc(sizeof(ConstantFloat));
+    if(!ptr)return NULL;
 
     ptr->item.tag = CONSTANT_FLOAT;
     ptr->item.index = index;
@@ -96,6 +88,7 @@ void *_parseCPFloat(JClass *_this, ByteBuf *buf, s32 index) {
 /* parse LONG */
 void *_parseCPLong(JClass *_this, ByteBuf *buf, s32 index) {
     ConstantLong *ptr = jvm_calloc(sizeof(ConstantLong));
+    if(!ptr)return NULL;
 
     ptr->item.tag = CONSTANT_LONG;
     ptr->item.index = index;
@@ -118,6 +111,7 @@ void *_parseCPLong(JClass *_this, ByteBuf *buf, s32 index) {
 /* parse Double */
 void *_parseCPDouble(JClass *_this, ByteBuf *buf, s32 index) {
     ConstantDouble *ptr = jvm_calloc(sizeof(ConstantDouble));
+    if(!ptr)return NULL;
 
     ptr->item.tag = CONSTANT_DOUBLE;
     ptr->item.index = index;
@@ -140,6 +134,7 @@ void *_parseCPDouble(JClass *_this, ByteBuf *buf, s32 index) {
 /* parse Constant Pool Class */
 void *_parseCPClass(JClass *_this, ByteBuf *buf, s32 index) {
     ConstantClassRef *ptr = jvm_calloc(sizeof(ConstantClassRef));
+    if(!ptr)return NULL;
 
     ptr->item.tag = CONSTANT_CLASS;
     ptr->item.index = index;
@@ -157,6 +152,7 @@ void *_parseCPClass(JClass *_this, ByteBuf *buf, s32 index) {
 /* parse Constant Pool String Ref */
 void *_parseCPStringRef(JClass *_this, ByteBuf *buf, s32 index) {
     ConstantStringRef *ptr = jvm_calloc(sizeof(ConstantStringRef));
+    if(!ptr)return NULL;
 
     ptr->item.tag = CONSTANT_STRING_REF;
     ptr->item.index = index;
@@ -174,6 +170,7 @@ void *_parseCPStringRef(JClass *_this, ByteBuf *buf, s32 index) {
 /* parse Constant Pool Field */
 void *_parseCPField(JClass *_this, ByteBuf *buf, s32 index) {
     ConstantFieldRef *ptr = jvm_calloc(sizeof(ConstantFieldRef));
+    if(!ptr)return NULL;
 
     ptr->item.tag = CONSTANT_FIELD_REF;
     ptr->item.index = index;
@@ -196,6 +193,7 @@ void *_parseCPField(JClass *_this, ByteBuf *buf, s32 index) {
 /* parse Constant Pool Method */
 void *_parseCPMethod(JClass *_this, ByteBuf *buf, s32 index) {
     ConstantMethodRef *ptr = jvm_calloc(sizeof(ConstantMethodRef));
+    if(!ptr)return NULL;
     ptr->para_slots = -1;
 
     ptr->item.tag = CONSTANT_METHOD_REF;
@@ -218,6 +216,7 @@ void *_parseCPMethod(JClass *_this, ByteBuf *buf, s32 index) {
 
 void *_parseCPInterfaceMethod(JClass *_this, ByteBuf *buf, s32 index) {
     ConstantInterfaceMethodRef *ptr = jvm_calloc(sizeof(ConstantInterfaceMethodRef));
+    if(!ptr)return NULL;
 
     ptr->item.tag = CONSTANT_INTERFACE_METHOD_REF;
     ptr->item.index = index;
@@ -239,6 +238,7 @@ void *_parseCPInterfaceMethod(JClass *_this, ByteBuf *buf, s32 index) {
 
 void *_parseCPNameAndType(JClass *_this, ByteBuf *buf, s32 index) {
     ConstantNameAndType *ptr = jvm_calloc(sizeof(ConstantNameAndType));
+    if(!ptr)return NULL;
 
     ptr->item.tag = CONSTANT_NAME_AND_TYPE;
     ptr->item.index = index;
@@ -258,6 +258,7 @@ void *_parseCPNameAndType(JClass *_this, ByteBuf *buf, s32 index) {
 
 void *_parseCPMethodType(JClass *_this, ByteBuf *buf, s32 index) {
     ConstantMethodType *ptr = jvm_calloc(sizeof(ConstantNameAndType));
+    if(!ptr)return NULL;
 
     ptr->item.tag = CONSTANT_METHOD_TYPE;
     ptr->item.index = index;
@@ -274,6 +275,7 @@ void *_parseCPMethodType(JClass *_this, ByteBuf *buf, s32 index) {
 
 void *_parseCPMethodHandle(JClass *_this, ByteBuf *buf, s32 index) {
     ConstantMethodHandle *ptr = jvm_calloc(sizeof(ConstantNameAndType));
+    if(!ptr)return NULL;
 
     ptr->item.tag = CONSTANT_METHOD_HANDLE;
     ptr->item.index = index;
@@ -291,6 +293,7 @@ void *_parseCPMethodHandle(JClass *_this, ByteBuf *buf, s32 index) {
 
 void *_parseCPInvokeDynamic(JClass *_this, ByteBuf *buf, s32 index) {
     ConstantInvokeDynamic *ptr = jvm_calloc(sizeof(ConstantNameAndType));
+    if(!ptr)return NULL;
 
     ptr->item.tag = CONSTANT_INVOKE_DYNAMIC;
     ptr->item.index = index;
@@ -663,6 +666,7 @@ s32 _parse_constant_pool(JClass *_this, ByteBuf *buf, s32 count) {
     u64 offset_start = 0;
     u64 offset_end = 0;
     _this->constant_item_ptr = jvm_calloc(count * sizeof(void *));
+    if(!_this->constant_item_ptr)return -1;
     _this->constant_item_count = count;
     for (i = 1; i < count; i++) {
         //fread(&tag, 1, 1, fp);
@@ -722,6 +726,7 @@ s32 _parse_constant_pool(JClass *_this, ByteBuf *buf, s32 count) {
                 break;
         };
         offset_end = buf->rp;
+        if(!ptr)return -1;
         _this->constant_item_ptr[idx] = ptr;
     }
 
@@ -1954,7 +1959,7 @@ s32 _LOAD_CLASS_FROM_BYTES(JClass *_this, ByteBuf *buf) {
     s2c.c0 = (c8) bytebuf_read(buf);
     cff->constant_pool_count = s2c.s;
     /* constant pool table */
-    _parse_constant_pool(_this, buf, cff->constant_pool_count);
+    if(_parse_constant_pool(_this,buf,cff->constant_pool_count))return -1;
     /* access flag */
     //fread(short_tmp, 2, 1, fp);
     s2c.c1 = (c8) bytebuf_read(buf);
@@ -2017,6 +2022,7 @@ JClass *class_parse(Instance *loader, ByteBuf *bytebuf, Runtime *runtime) {
     JClass *tmpclazz = NULL, *tmp_for_del = NULL;
     if (bytebuf != NULL) {
         tmp_for_del = class_create(runtime);
+        if(!tmp_for_del){extern void crimson_release_oom_reserve(void);crimson_release_oom_reserve();__atomic_store_n(&runtime->jvm->crimson_stop,1,__ATOMIC_RELEASE);return NULL;}
         tmp_for_del->jloader = loader;
         MiniJVM *jvm = runtime->jvm;
 
@@ -2038,13 +2044,15 @@ JClass *class_parse(Instance *loader, ByteBuf *bytebuf, Runtime *runtime) {
                 jvm_printf("multiple load class: %llx  %s \n", (s64) (intptr_t) tmp_for_del, utf8_cstr(tmp_for_del->name));
             }
         } else {
-            jvm_printf("load class error: %llx  %s \n", (s64) (intptr_t) tmp_for_del, utf8_cstr(tmp_for_del->name));
+            extern void crimson_release_oom_reserve(void);crimson_release_oom_reserve();
+            jvm_printf("Class load aborted: invalid constant pool or out of memory\n");
+            __atomic_store_n(&runtime->jvm->crimson_stop,1,__ATOMIC_RELEASE);
         }
         if (tmp_for_del) {
             // class register to gc when it created ,
             // gc will remove the same name class from class_table when gc destroy this class ,
             // so we need clear its name to avoid gc remove a class with same name
-            utf8_clear(tmp_for_del->name);
+            if(tmp_for_del->name)utf8_clear(tmp_for_del->name);
         }
     }
     if (tmpclazz) {

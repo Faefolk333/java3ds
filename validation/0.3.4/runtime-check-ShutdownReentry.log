@@ -1,0 +1,20 @@
+RAM cache ready: 3 JARs, 1502912 bytes
+RAM cache hits: 315
+STAGE 40 0
+STAGE 41 3
+STAGE 80 0
+SHUTDOWN_REENTRY_PASS
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+VM_EXIT run=0 result=0 frames=0 peak=0
+RAM cache ready: 3 JARs, 1502912 bytes
+RAM cache hits: 315
+STAGE 40 0
+STAGE 41 3
+STAGE 80 0
+SHUTDOWN_REENTRY_PASS
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+VM_EXIT run=1 result=0 frames=0 peak=0

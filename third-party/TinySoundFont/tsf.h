@@ -327,10 +327,24 @@ typedef char tsf_char20[20];
 
 #define TSF_FourCCEquals(value1, value2) (value1[0] == value2[0] && value1[1] == value2[1] && value1[2] == value2[2] && value1[3] == value2[3])
 
+// Java3DS optional lossless PCM16 sample storage. The lookup retains the exact
+// short-to-float values used by the original renderer, without a 2x bank expansion.
+#ifdef TSF_SHORT_SAMPLES
+#ifdef STB_VORBIS_INCLUDE_STB_VORBIS_H
+#error TSF_SHORT_SAMPLES supports SF2 PCM16 only
+#endif
+typedef short tsf_sample;
+static float tsf_sample_lookup[65536];
+static int tsf_sample_lookup_ready;
+#define TSF_SAMPLE_AT(input,pos) tsf_sample_lookup[(unsigned short)(input)[pos]]
+#else
+typedef float tsf_sample;
+#define TSF_SAMPLE_AT(input,pos) ((input)[pos])
+#endif
 struct tsf
 {
 	struct tsf_preset* presets;
-	float* fontSamples;
+	tsf_sample* fontSamples;
 	struct tsf_voice* voices;
 	struct tsf_channels* channels;
 
@@ -972,7 +986,7 @@ static int tsf_decode_sf3_samples(const void* rawBuffer, float** pFloatBuffer, u
 }
 #endif
 
-static int tsf_load_samples(void** pRawBuffer, float** pFloatBuffer, unsigned int* pSmplCount, struct tsf_riffchunk *chunkSmpl, struct tsf_stream* stream)
+static int tsf_load_samples(void** pRawBuffer, tsf_sample** pFloatBuffer, unsigned int* pSmplCount, struct tsf_riffchunk *chunkSmpl, struct tsf_stream* stream)
 {
 	#ifdef STB_VORBIS_INCLUDE_STB_VORBIS_H
 	// With OGG Vorbis support we cannot pre-allocate the memory for tsf_decode_sf3_samples
@@ -990,6 +1004,11 @@ static int tsf_load_samples(void** pRawBuffer, float** pFloatBuffer, unsigned in
 	*pSmplCount = resNum;
 	return (*pFloatBuffer ? 1 : 0);
 	#else
+#ifdef TSF_SHORT_SAMPLES
+ (void)pRawBuffer;*pSmplCount=chunkSmpl->size/(unsigned int)sizeof(short);*pFloatBuffer=(tsf_sample*)TSF_MALLOC(*pSmplCount*sizeof(tsf_sample));
+ if(!*pFloatBuffer||!stream->read(stream->data,*pFloatBuffer,*pSmplCount*sizeof(tsf_sample)))return 0;
+ if(!tsf_sample_lookup_ready){unsigned int i;for(i=0;i<65536;i++)tsf_sample_lookup[i]=(float)((short)i/32767.0);tsf_sample_lookup_ready=1;}return 1;
+#else
 	// Inline convert the samples from short to float
 	float *res, *out; const short *in;
 	(void)pRawBuffer;
@@ -999,6 +1018,7 @@ static int tsf_load_samples(void** pRawBuffer, float** pFloatBuffer, unsigned in
 	for (res = *pFloatBuffer, out = res + *pSmplCount, in = (short*)res + *pSmplCount; out != res;)
 		*(--out) = (float)(*(--in) / 32767.0);
 	return 1;
+#endif
 	#endif
 }
 
@@ -1220,7 +1240,7 @@ static void tsf_voice_calcpitchratio(struct tsf_voice* v, float pitchShift, floa
 static void tsf_voice_render(tsf* f, struct tsf_voice* v, float* outputBuffer, int numSamples)
 {
 	struct tsf_region* region = v->region;
-	float* input = f->fontSamples;
+	tsf_sample* input = f->fontSamples;
 	float* outL = outputBuffer;
 	float* outR = (f->outputmode == TSF_STEREO_UNWEAVED ? outL + numSamples : TSF_NULL);
 
@@ -1292,7 +1312,7 @@ static void tsf_voice_render(tsf* f, struct tsf_voice* v, float* outputBuffer, i
 					unsigned int pos = (unsigned int)tmpSourceSamplePosition, nextPos = (pos >= tmpLoopEnd && isLooping ? tmpLoopStart : pos + 1);
 
 					// Simple linear interpolation.
-					float alpha = (float)(tmpSourceSamplePosition - pos), val = (input[pos] * (1.0f - alpha) + input[nextPos] * alpha);
+					float alpha = (float)(tmpSourceSamplePosition - pos), val = (TSF_SAMPLE_AT(input,pos) * (1.0f - alpha) + TSF_SAMPLE_AT(input,nextPos) * alpha);
 
 					// Low-pass filter.
 					if (tmpLowpass.active) val = tsf_voice_lowpass_process(&tmpLowpass, val);
@@ -1313,7 +1333,7 @@ static void tsf_voice_render(tsf* f, struct tsf_voice* v, float* outputBuffer, i
 					unsigned int pos = (unsigned int)tmpSourceSamplePosition, nextPos = (pos >= tmpLoopEnd && isLooping ? tmpLoopStart : pos + 1);
 
 					// Simple linear interpolation.
-					float alpha = (float)(tmpSourceSamplePosition - pos), val = (input[pos] * (1.0f - alpha) + input[nextPos] * alpha);
+					float alpha = (float)(tmpSourceSamplePosition - pos), val = (TSF_SAMPLE_AT(input,pos) * (1.0f - alpha) + TSF_SAMPLE_AT(input,nextPos) * alpha);
 
 					// Low-pass filter.
 					if (tmpLowpass.active) val = tsf_voice_lowpass_process(&tmpLowpass, val);
@@ -1333,7 +1353,7 @@ static void tsf_voice_render(tsf* f, struct tsf_voice* v, float* outputBuffer, i
 					unsigned int pos = (unsigned int)tmpSourceSamplePosition, nextPos = (pos >= tmpLoopEnd && isLooping ? tmpLoopStart : pos + 1);
 
 					// Simple linear interpolation.
-					float alpha = (float)(tmpSourceSamplePosition - pos), val = (input[pos] * (1.0f - alpha) + input[nextPos] * alpha);
+					float alpha = (float)(tmpSourceSamplePosition - pos), val = (TSF_SAMPLE_AT(input,pos) * (1.0f - alpha) + TSF_SAMPLE_AT(input,nextPos) * alpha);
 
 					// Low-pass filter.
 					if (tmpLowpass.active) val = tsf_voice_lowpass_process(&tmpLowpass, val);
@@ -1365,7 +1385,7 @@ TSFDEF tsf* tsf_load(struct tsf_stream* stream)
 	struct tsf_riffchunk chunkList;
 	struct tsf_hydra hydra;
 	void* rawBuffer = TSF_NULL;
-	float* floatBuffer = TSF_NULL;
+	tsf_sample* floatBuffer = TSF_NULL;
 	tsf_u32 smplCount = 0;
 
 	if (!tsf_riffchunk_read(TSF_NULL, &chunkHead, stream) || !TSF_FourCCEquals(chunkHead.id, "sfbk"))

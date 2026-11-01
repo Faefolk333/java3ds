@@ -1,0 +1,164 @@
+RAM cache ready: 3 JARs, 2674467 bytes
+STAGE 40 0
+STAGE 41 3
+Java3DS: Blades and Magic (mobilegamesarena.net) 320x240
+VM_AUDIO_LOAD handle=-1 bytes=454
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:21)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:24)
+    at ak.<init>(ak:-1)
+    at u.b(u:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (0) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=742
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:21)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:24)
+    at ak.<init>(ak:-1)
+    at u.b(u:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (1) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=934
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:21)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:24)
+    at ak.<init>(ak:-1)
+    at u.b(u:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (2) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=742
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:21)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:24)
+    at ak.<init>(ak:-1)
+    at u.b(u:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (3) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=1094
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:21)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:24)
+    at ak.<init>(ak:-1)
+    at u.b(u:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (4) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=806
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:21)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:24)
+    at ak.<init>(ak:-1)
+    at u.b(u:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (5) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=614
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:21)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:24)
+    at ak.<init>(ak:-1)
+    at u.b(u:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (6) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=742
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:21)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:24)
+    at ak.<init>(ak:-1)
+    at u.b(u:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (7) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=774
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:21)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:24)
+    at ak.<init>(ak:-1)
+    at u.b(u:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (8) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=390
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:21)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:24)
+    at ak.<init>(ak:-1)
+    at u.b(u:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (9) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=390
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:21)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:24)
+    at ak.<init>(ak:-1)
+    at u.b(u:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (10) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=518
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:21)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:24)
+    at ak.<init>(ak:-1)
+    at u.b(u:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (11) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=3494
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:21)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:24)
+    at ak.<init>(ak:-1)
+    at u.b(u:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (12) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=2662
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:21)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:24)
+    at ak.<init>(ak:-1)
+    at u.b(u:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (13) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=2726
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:21)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:24)
+    at ak.<init>(ak:-1)
+    at u.b(u:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (14) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+Image /data/3d/high/green_forest_sky.mtra ist nicht verschlüsselt!
+Image /data/3d/high/green_forest_ground.mtra ist nicht verschlüsselt!
+Image /data/3d/high/green_forest_sun_rays.mtra ist nicht verschlüsselt!
+Image /data/3d/high/green_forest_leaves_front.mtra ist nicht verschlüsselt!
+Image /data/3d/high/green_forest_trees.mtra ist nicht verschlüsselt!
+Image /data/3d/high/green_forest_fog.mtra ist nicht verschlüsselt!
+MICRO3D_RENDER triangles=23
+Image /data/3d/high/mentor_fx_shadow.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_sky.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_reflections.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_details.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_border.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_sky_reflection.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_sky.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_reflections.mtra ist nicht verschlüssRAM cache hits: 999
+elt!
+Image /data/3d/high/river_details.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_border.mtra ist nicht verschlüsselt!
+Image /data/3d/high/river_sky_reflection.mtra ist nicht verschlüsselt!
+STAGE 80 0
+STAGE 80 0
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+VM_EXIT run=0 result=0 frames=645 peak=0

@@ -29,34 +29,40 @@ Build the Java adapter/runtime as documented in README, then run
 libctru and the same portlibs as the 3DSX build, run `bash build-cia.sh`.
 The checked-in generated banner is sufficient; Blender is not needed for a
 normal application rebuild. Output: `work/arm/java3ds.cia`, title ID
-`000400000F3A3D00`, product code `CTR-P-J3DS`, title version 51 (0.3.3).
+`000400000F3A3D00`, product code `CTR-P-J3DS`, title version 52 (0.3.4).
 Keep this title ID for future updates. The executable supports Old/New 3DS;
 64 MiB/124 MiB memory profiles are encoded in its exheader. The CIA build
 reserves 4 MiB of linear memory and caps the regular heap at 48 MiB (Old) / 80 MiB (New), with resource-limit checks.
 
 ## Rebuild the custom banner
 
-`assets/banner/source.blend` is the user's unchanged original. It contains
-120 frames at **24 fps**, not 120 fps. The derived animation is a five-second
-loop. HOME Menu receives a native CGFX skeleton animation, 300 ticks at 60 Hz;
-that does not guarantee 60 rendered frames per second on the console.
+The supplied Desktop Blender scene has a fixed camera: sampled frames 1/30/60/90/120
+have identical camera matrices. Its 120 frames at 24 fps form a five-second loop.
+Model transforms are baked into the fixed HOME Menu perspective and closed by a
+matching final pose. The native CGFX animation has 300 ticks at 60 Hz.
 
-1. Use Blender 5.2+ with the glTF exporter. Run it in background/factory mode
-   with `--disable-autoexec assets/banner/source.blend --python tools/export_banner.py`.
-2. In `work/cia-tools/pycgfx`, check out commit
-   `1f78850086f3a77c41e07162e842f97a5bf3c18a` from
-   https://github.com/skyfloogle/pycgfx . Install `gltflib==1.0.13` and Pillow.
-3. Run `python tools/convert_banner.py` and then bannertool:
-   `makebanner -ci assets/banner/banner.cgfx -a assets/banner/silence.wav -o assets/banner/banner.bnr`.
-4. Rebuild the CIA. `assets/banner/manifest.json` records geometry and animation.
+`assets/banner/source.blend` is now a compact derived scene imported from the
+optimized GLB; the user's Desktop original was not modified. `banner.glb`,
+`geometry.json` and `manifest.json` reproduce the shipped asset. Its 2,840 vertices
+produce a 484,616-byte CGFX, below the 512 KiB limit. Glass shells use alpha
+blending, bright specular material and a Phong lookup table. HOME Menu cannot
+reproduce Blender's physical refraction. Preview PNGs are an approximation.
 
-The source's dense geometry is simplified to 2,718 vertices. The CGFX is
-441,336 bytes, below HOME Menu's 512 KiB limit. Both animated objects retain
-their motion and loop; camera normalization matches the fixed banner camera.
-The procedural Electromagnetic Shield shader is approximated by mint chrome
-with emission because HOME Menu cannot run Blender shader nodes. No banner
-sound was supplied, so its audio is silent. Blender preview renders are an
-approximation, not a screenshot of the actual HOME Menu renderer.
+For a new original scene, run Blender 5.2 with `--background --factory-startup
+--disable-autoexec ORIGINAL.blend --python tools/export_banner.py`. Copy the
+resulting work/banner-v034/banner.glb and geometry.json into assets/banner,
+then run tools/save_banner_source.py in a fresh Blender background process.
+Use https://github.com/skyfloogle/pycgfx at commit
+`1f78850086f3a77c41e07162e842f97a5bf3c18a` in `work/cia-tools/pycgfx`.
+The conversion environment needs `gltflib==1.0.13` and Pillow. Then:
+
+```text
+python tools/convert_banner.py
+bannertool makebanner -ci assets/banner/banner.cgfx -a assets/banner/silence.wav -o assets/banner/banner.bnr
+```
+
+The supplied 48×48 icon is used by both CIA and 3DSX installers. The HOME Menu
+banner remains silent; navigation sounds play inside Java3DS itself.
 
 ## Verification
 

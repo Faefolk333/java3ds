@@ -25,3 +25,23 @@ static s32 microTriangle(Runtime*r,JClass*c){
  int count=0;if(p[6]){float nearPlane=p[2]>0?p[2]:1.f;for(int i=0;i<3;i++){float*a=input[i],*b=input[(i+1)%3];int ina=a[2]>=nearPlane,inb=b[2]>=nearPlane;if(ina){memcpy(clipped[count++],a,5*sizeof(float));}if(ina!=inb){float t=(nearPlane-a[2])/(b[2]-a[2]);for(int k=0;k<5;k++)clipped[count][k]=a[k]+t*(b[k]-a[k]);count++;}}}else{memcpy(clipped,input,sizeof(input));count=3;}
  for(int i=1;i+1<count;i++){float v[3][5];memcpy(v[0],clipped[0],20);memcpy(v[1],clipped[i],20);memcpy(v[2],clipped[i+1],20);micro_raster(d,dw,dh,v,p,tex?(uint32_t*)tex->arr_body:NULL,tw,th,(uint32_t)arg(r,8),arg(r,9),arg(r,10),arg(r,11),arg(r,12),arg(r,13));}return 0;
 }
+
+static s32 microTransform(Runtime*r,JClass*c){
+ (void)c;Instance*src=arr(r,0),*dst=arr(r,1),*matrix=arr(r,2);if(!src||!dst||!matrix||matrix->arr_length<12||dst->arr_length>src->arr_length||dst->arr_length%3)return 0;
+ float*s=(float*)src->arr_body,*d=(float*)dst->arr_body,*m=(float*)matrix->arr_body;for(int i=0;i+2<dst->arr_length;i+=3){float x=s[i],y=s[i+1],z=s[i+2];for(int k=0;k<3;k++)d[i+k]=m[k*4]*x+m[k*4+1]*y+m[k*4+2]*z+m[k*4+3];}return 0;
+}
+static void micro_mul(float*out,const float*a,const float*b){for(int row=0;row<3;row++)for(int col=0;col<4;col++)out[row*4+col]=a[row*4]*b[col]+a[row*4+1]*b[col+4]+a[row*4+2]*b[col+8]+(col==3?a[row*4+3]:0);}
+static s32 microPose(Runtime*r,JClass*c){
+ (void)c;Instance*src=arr(r,0),*dst=arr(r,1),*bone=arr(r,2),*action=arr(r,3);int ok=0;float*matrices=NULL;
+ if(!src||!dst||!bone||dst->arr_length<src->arr_length||bone->arr_length%56||bone->arr_length>560000)goto finish;
+ int count=bone->arr_length/56,vertex=0;matrices=malloc((size_t)count*12*sizeof(float));if(count&&!matrices)goto finish;
+ for(int i=0;i<count;i++){
+  const unsigned char*b=(unsigned char*)bone->arr_body+i*56;int32_t n,parent;memcpy(&n,b,4);memcpy(&parent,b+4,4);float*m=matrices+i*12,temp[12];memcpy(m,b+8,48);
+  if(n<0||parent>=i||n>(src->arr_length/3)-vertex)goto finish;
+  if(parent>=0){micro_mul(temp,matrices+parent*12,m);memcpy(m,temp,48);}
+  if(action&&i*12+12<=action->arr_length){micro_mul(temp,m,(float*)action->arr_body+i*12);memcpy(m,temp,48);}
+  float*s=(float*)src->arr_body,*d=(float*)dst->arr_body;for(int j=0;j<n;j++,vertex++){int o=vertex*3;float x=s[o],y=s[o+1],z=s[o+2];for(int row=0;row<3;row++)d[o+row]=m[row*4]*x+m[row*4+1]*y+m[row*4+2]*z+m[row*4+3];}
+ }
+ ok=1;
+ finish:free(matrices);push_int(r->stack,ok);return 0;
+}

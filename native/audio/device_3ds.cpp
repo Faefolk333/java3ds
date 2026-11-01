@@ -20,7 +20,7 @@ static int theme=-1;
 static bool themeEnabled,themeAudible;
 static uint32_t midiAudible;
 static LightLock audioLock;
-static std::atomic<bool> running{false};
+static std::atomic<bool> running{false},paused{false};
 static Thread audioThread;
 static int16_t* output;
 static ndspWaveBuf waves[BUFFERS];
@@ -34,6 +34,7 @@ static void stream(void*){
    int16_t*pcm=output+next*FRAMES;
    LightLock_Lock(&audioLock);
    int active=midi_engine_current(engine);bool melody=active>=0&&midi_engine_control(engine,active,MIDI_KIND,0)==1;
+   if(paused.load()){memset(pcm,0,FRAMES*sizeof(*pcm));LightLock_Unlock(&audioLock);goto publish_buffer;}
    midi_engine_render(engine,pcm,FRAMES);
    int16_t fx[FRAMES];midi_engine_render(effects,fx,FRAMES);for(int i=0;i<FRAMES;i++){int mixed=(int)pcm[i]+fx[i];pcm[i]=(int16_t)(mixed < -32768?-32768:mixed>32767?32767:mixed);}
    if(melody&&!(midiAudible&(1u<<active))){int peak=0;for(int i=0;i<FRAMES;i++){int n=pcm[i]<0?-pcm[i]:pcm[i];if(n>peak)peak=n;}if(peak){midiAudible|=1u<<active;fprintf(stderr,"AUDIO midi PCM handle=%d peak=%d\n",active,peak);}}
@@ -43,13 +44,16 @@ static void stream(void*){
     if(peak&&!themeAudible){themeAudible=true;fprintf(stderr,"AUDIO background PCM peak=%d\n",peak);}
    }
    LightLock_Unlock(&audioLock);
+   publish_buffer:
    memset(w,0,sizeof(*w));w->data_pcm16=pcm;w->nsamples=FRAMES;
    if(R_FAILED(DSP_FlushDataCache(pcm,FRAMES*sizeof(*pcm)))){fprintf(stderr,"AUDIO cache failure\n");running.store(false);break;}
    ndspChnWaveBufAdd(0,w);next=(next+1)%BUFFERS;
   }else svcSleepThread(2000000);
  }
 }
+extern "C" void crimson_audio_pause(int value){paused.store(value!=0);}
 extern "C" int crimson_audio_init(){
+ paused.store(false);
  LightLock_Init(&audioLock);
  Result status=ndspInit();if(R_FAILED(status)){fprintf(stderr,"AUDIO ndspInit failed %08lx (check /3ds/dspfirm.cdc)\n",(unsigned long)status);return -1;}dsp=true;
  engine=midi_engine_open(AUDIO_FONT,RATE);
@@ -65,7 +69,7 @@ extern "C" int crimson_audio_init(){
  float mix[12]={};mix[0]=mix[1]=1.f;ndspChnSetMix(0,mix);
  running.store(true);audioThread=threadCreate(stream,nullptr,64*1024,0x2f,-2,false);
  if(!audioThread){running.store(false);crimson_audio_shutdown();return -4;}
- fprintf(stderr,"AUDIO ready: SF2 MIDI + PCM WAV, %d Hz, 32 voices\n",RATE);return 0;
+ fprintf(stderr,"AUDIO ready: lazy SF2 MIDI + PCM WAV, %d Hz, 32 voices\n",RATE);return 0;
 }
 extern "C" void crimson_audio_shutdown(){
  running.store(false);if(audioThread){threadJoin(audioThread,U64_MAX);threadFree(audioThread);audioThread=nullptr;}

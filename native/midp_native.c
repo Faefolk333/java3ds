@@ -68,6 +68,7 @@ static s32 text(Runtime*r,JClass*c){
 }
 
 #include "software3d.h"
+#include "m3g_span.h"
 static s32 present(Runtime*r,JClass*c){(void)c;jthread_block_enter(r);crimson_publish(crimson_pixels);jthread_block_exit(r);return 0;}
 extern int crimson_motion(int kind,int sample[3]);
 static s32 motion(Runtime*r,JClass*c){(void)c;Instance*a=arr(r,1);int v[3],ok=a&&a->arr_length>=3&&crimson_motion(arg(r,0),v);if(ok)memcpy(a->arr_body,v,sizeof(v));push_int(r->stack,ok);return 0;}
@@ -97,6 +98,9 @@ static s32 snapshot(Runtime*r,JClass*c){Instance*a=jarray_create_by_type_index(r
 static java_native_method methods[]={
  {"crimson/Native","readPixels","([III[IIIIIII)V",readPixels},
  {"crimson/Native","motion","(I[I)Z",motion},
+ {"crimson/Native","m3gSpan","([I[SIII[F[I[I)V",m3gSpan},
+ {"crimson/Native","microTransform","([F[F[F)V",microTransform},
+ {"crimson/Native","microPose","([F[F[B[F)Z",microPose},
  {"crimson/Native","microBegin","()V",microBegin},
  {"crimson/Native","microTriangle","([III[F[F[IIIIIIIII)V",microTriangle},
  {"crimson/Native","rgb","([III[IIIIIIIZIIII)V",rgb},
@@ -119,9 +123,10 @@ static unsigned pop_sample_lock,pop_sample_disabled;
 extern const char* crimson_launch_config(void);
 static void*oom_reserve;
 void crimson_release_oom_reserve(void){free(oom_reserve);oom_reserve=NULL;}
-static MiniJVM*active_vm;static unsigned vm_lock;
+static MiniJVM*active_vm;static unsigned vm_lock;static int pause_requested;
 void crimson_request_stop(void){while(__atomic_exchange_n(&vm_lock,1,__ATOMIC_ACQUIRE)){}if(active_vm)__atomic_store_n(&active_vm->crimson_stop,1,__ATOMIC_RELEASE);__atomic_store_n(&vm_lock,0,__ATOMIC_RELEASE);}
-static void active_set(MiniJVM*j){while(__atomic_exchange_n(&vm_lock,1,__ATOMIC_ACQUIRE)){}active_vm=j;__atomic_store_n(&vm_lock,0,__ATOMIC_RELEASE);}
+void crimson_pause_game(int paused){while(__atomic_exchange_n(&vm_lock,1,__ATOMIC_ACQUIRE)){}__atomic_store_n(&pause_requested,paused,__ATOMIC_RELEASE);if(active_vm)__atomic_store_n(&active_vm->crimson_paused,paused,__ATOMIC_RELEASE);__atomic_store_n(&vm_lock,0,__ATOMIC_RELEASE);}
+static void active_set(MiniJVM*j){while(__atomic_exchange_n(&vm_lock,1,__ATOMIC_ACQUIRE)){}active_vm=j;if(j)__atomic_store_n(&j->crimson_paused,__atomic_load_n(&pause_requested,__ATOMIC_RELAXED),__ATOMIC_RELEASE);__atomic_store_n(&vm_lock,0,__ATOMIC_RELEASE);}
 int crimson_run_game(const char*boot,const char*cp,const char*mainclass){
  __atomic_store_n(&pop_sample_disabled,0,__ATOMIC_RELAXED);
  __atomic_store_n(&pop_last_method,NULL,__ATOMIC_RELAXED);
@@ -156,7 +161,7 @@ int crimson_run_game(const char*boot,const char*cp,const char*mainclass){
  while(__atomic_exchange_n(&pop_sample_lock,1,__ATOMIC_ACQUIRE)){}
  __atomic_store_n(&pop_sample_disabled,1,__ATOMIC_RELAXED);
  __atomic_store_n(&pop_sample_lock,0,__ATOMIC_RELEASE);
- active_set(NULL);crimson_stage(71,result);set_jvm_state(j,JVM_STATUS_STOPED);thread_stop_all(j);jvm_destroy(j);crimson_stage(72,result);jvm_printf("RAM cache hits: %lld\n",crimson_zip_cache_hits());crimson_zip_cache_clear();jvm_destroy_mem_alloc();micro_reset();crimson_release_oom_reserve();return result;
+ active_set(NULL);crimson_stage(71,result);set_jvm_state(j,JVM_STATUS_STOPED);thread_stop_all(j);jvm_destroy(j);crimson_stage(72,result);jvm_printf("RAM cache hits: %lld\n",crimson_zip_cache_hits());crimson_zip_cache_clear();jvm_destroy_mem_alloc();micro_reset();crimson_release_oom_reserve();__atomic_store_n(&pause_requested,0,__ATOMIC_RELEASE);return result;
 }
 
 extern MethodInfo *pop_last_method;

@@ -119,6 +119,7 @@ s32 classes_put(MiniJVM *jvm, JClass *clazz) {
 }
 
 s32 classes_remove(MiniJVM *jvm, JClass *clazz) {
+    if(!clazz||!clazz->name)return -1;
     if (clazz) {
         //jvm_printf("PUT in classloader %s <- %s\n", clazz->jloader ? utf8_cstr(clazz->jloader->mb.clazz->name) : "NULL", utf8_cstr(clazz->name));
         PeerClassLoader *pcl = classLoaders_find_by_instance(jvm, clazz->jloader);
@@ -1127,6 +1128,11 @@ s32 check_throw_interruptexception(Runtime *runtime) {
 s32 check_suspend_and_pause(Runtime *runtime) {
     JavaThreadInfo *threadInfo = runtime->thrd_info;
     MiniJVM *jvm = runtime->jvm;
+    if (__atomic_load_n(&jvm->crimson_paused,__ATOMIC_RELAXED) && !__atomic_load_n(&jvm->crimson_stop,__ATOMIC_RELAXED)) {
+        jthread_block_enter(runtime);
+        while(__atomic_load_n(&jvm->crimson_paused,__ATOMIC_RELAXED) && !__atomic_load_n(&jvm->crimson_stop,__ATOMIC_RELAXED))threadSleep(10);
+        jthread_block_exit(runtime);
+    }
     if (threadInfo->suspend_count && !threadInfo->no_pause) {
         // 使用精确的锁列表检查线程是否持有任何锁（仅JDWP模式）
         // 只有当线程持有pending_release_lock时才延迟挂起（精确的锁冲突检测）
@@ -1507,12 +1513,14 @@ Instance *instance_copy(Runtime *runtime, Instance *src, s32 deep_copy) {
  */
 
 Instance *insOfJavaLangClass_create_get(Runtime *runtime, JClass *clazz) {
+    if(!clazz)return NULL;
     JClass *java_lang_class = classes_load_get_with_clinit_c(NULL, STR_CLASS_JAVA_LANG_CLASS, runtime);
     if (java_lang_class) {
         if (clazz->ins_class) {
             return clazz->ins_class;
         } else {
             Instance *ins = instance_create(runtime, java_lang_class);
+            if(!ins)return NULL;
             instance_init(ins, runtime);
             clazz->ins_class = ins;
             setFieldRefer(getInstanceFieldPtr(ins, runtime->jvm->shortcut.class_classLoader), clazz->jloader);
