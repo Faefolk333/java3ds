@@ -1,4 +1,27 @@
-# Java3DS 0.3.4 validation — 2026-11-01
+# Java3DS 0.3.5 validation — 2026-11-01
+
+- Dumps 29/30: process `menu`, identical PC 0x187d58 / LR 0x20b940 /
+  FAR 0x8, before application startup. No HOME Menu symbols are available;
+  application ELF addresses must not be used to symbolicate this crash.
+- Reproduced invalid Patricia lookup in the actual 0.3.4 CGFX at 0x2ac4:
+  `Scene root` resolves to `GreasePencil.002`. All five skeleton entries fail.
+  Upstream opacity sorting reorders nodes without regenerating branch indices.
+- Conversion rebuilds that tree and sets rigid SOBJ mesh node names. All 83
+  serialized lookups in 13 dictionaries now pass. Regression rejects reordered
+  entries with otherwise valid pointers and rejects truncated files. The old
+  0.3.4 binary is rejected by the same build gate.
+- Geometry, fixed camera, 300-tick loop and glass materials are retained.
+  New original WAV is stereo PCM16/48000, 88616 frames (1.846167 seconds).
+- CIA/3DSX build, title version 53, same title ID. Container hash and embedded
+  resource checks are recorded in validation/0.3.5 after packaging.
+- Physical HOME Menu highlighting, audio, launch, exit and return to icon are
+  pending a console retest. Format and container checks do not replace it.
+
+The following records describe the earlier 0.3.4 runtime validation. Its
+banner passed container hashes but was subsequently shown to crash HOME Menu;
+those earlier checks did not validate Patricia lookup.
+
+## Previous 0.3.4 validation — 2026-11-01
 
 PC validation, with physical-console checks still pending:
 

@@ -1,0 +1,59 @@
+{
+  "cgfx_bytes": 484616,
+  "dictionaries": [
+    {
+      "offset": 148,
+      "entries": 1
+    },
+    {
+      "offset": 420,
+      "entries": 3
+    },
+    {
+      "offset": 532,
+      "entries": 5
+    },
+    {
+      "offset": 900,
+      "entries": 5
+    },
+    {
+      "offset": 1288,
+      "entries": 48
+    },
+    {
+      "offset": 4884,
+      "entries": 4
+    },
+    {
+      "offset": 10948,
+      "entries": 5
+    },
+    {
+      "offset": 12176,
+      "entries": 1
+    },
+    {
+      "offset": 12252,
+      "entries": 4
+    },
+    {
+      "offset": 12424,
+      "entries": 1
+    },
+    {
+      "offset": 12776,
+      "entries": 1
+    },
+    {
+      "offset": 12900,
+      "entries": 1
+    },
+    {
+      "offset": 12984,
+      "entries": 4
+    }
+  ],
+  "lookups_passed": 83,
+  "decompressed_banner_matches_source": true
+}

@@ -25,11 +25,12 @@ python tools/serve_cia.py --file dist/java3ds.cia --host YOUR_LAN_IP --output di
 ## Build
 
 Build the Java adapter/runtime as documented in README, then run
-`tools/setup-cia-tools.ps1` to download pinned build tools. With devkitARM,
+`tools/setup-cia-tools.ps1` to download pinned build tools. Set `PYTHON` to your
+Python executable if `python3` is not on PATH. With devkitARM,
 libctru and the same portlibs as the 3DSX build, run `bash build-cia.sh`.
 The checked-in generated banner is sufficient; Blender is not needed for a
 normal application rebuild. Output: `work/arm/java3ds.cia`, title ID
-`000400000F3A3D00`, product code `CTR-P-J3DS`, title version 52 (0.3.4).
+`000400000F3A3D00`, product code `CTR-P-J3DS`, title version 53 (0.3.5).
 Keep this title ID for future updates. The executable supports Old/New 3DS;
 64 MiB/124 MiB memory profiles are encoded in its exheader. The CIA build
 reserves 4 MiB of linear memory and caps the regular heap at 48 MiB (Old) / 80 MiB (New), with resource-limit checks.
@@ -44,7 +45,9 @@ matching final pose. The native CGFX animation has 300 ticks at 60 Hz.
 `assets/banner/source.blend` is now a compact derived scene imported from the
 optimized GLB; the user's Desktop original was not modified. `banner.glb`,
 `geometry.json` and `manifest.json` reproduce the shipped asset. Its 2,840 vertices
-produce a 484,616-byte CGFX, below the 512 KiB limit. Glass shells use alpha
+produce a 484,616-byte CGFX, below the 512 KiB CGFX limit. This size check alone does not establish runtime
+validity. The 0.3.4 bone dictionary was malformed after opacity sorting; 0.3.5
+rebuilds it and validates all 83 serialized name lookups. Glass shells use alpha
 blending, bright specular material and a Phong lookup table. HOME Menu cannot
 reproduce Blender's physical refraction. Preview PNGs are an approximation.
 
@@ -58,11 +61,21 @@ The conversion environment needs `gltflib==1.0.13` and Pillow. Then:
 
 ```text
 python tools/convert_banner.py
-bannertool makebanner -ci assets/banner/banner.cgfx -a assets/banner/silence.wav -o assets/banner/banner.bnr
+bannertool makebanner -ci assets/banner/banner.cgfx -a assets/banner/banner.wav -o assets/banner/banner.bnr
 ```
 
 The supplied 48×48 icon is used by both CIA and 3DSX installers. The HOME Menu
-banner remains silent; navigation sounds play inside Java3DS itself.
+banner includes the supplied 1.846-second stereo PCM16/48000 WAV.
+Navigation sounds play independently inside Java3DS itself.
+
+## Recovery from the 0.3.4 HOME Menu crash
+
+Open FBI directly without highlighting Java3DS, and install the replacement
+CIA over the existing title. Do not delete game/save folders. The replacement
+uses the same title ID and version 53. Dumps 29/30 both identify process `menu`,
+PC 0x187d58, LR 0x20b940, FAR 0x8; these are HOME Menu addresses, not VM code.
+The malformed dictionary is independently reproduced in the shipped 0.3.4 CGFX;
+the precise HOME function is not symbolicated. See validation/0.3.5.
 
 ## Verification
 

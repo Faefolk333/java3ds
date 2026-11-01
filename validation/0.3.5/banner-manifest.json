@@ -1,0 +1,114 @@
+{
+  "cgfx_bytes": 484616,
+  "binary_checks": {
+    "cgfx_bytes": 484616,
+    "dictionaries": [
+      {
+        "offset": 148,
+        "entries": 1
+      },
+      {
+        "offset": 420,
+        "entries": 3
+      },
+      {
+        "offset": 532,
+        "entries": 5
+      },
+      {
+        "offset": 900,
+        "entries": 5
+      },
+      {
+        "offset": 1288,
+        "entries": 48
+      },
+      {
+        "offset": 4884,
+        "entries": 4
+      },
+      {
+        "offset": 10948,
+        "entries": 5
+      },
+      {
+        "offset": 12176,
+        "entries": 1
+      },
+      {
+        "offset": 12252,
+        "entries": 4
+      },
+      {
+        "offset": 12424,
+        "entries": 1
+      },
+      {
+        "offset": 12776,
+        "entries": 1
+      },
+      {
+        "offset": 12900,
+        "entries": 1
+      },
+      {
+        "offset": 12984,
+        "entries": 4
+      }
+    ],
+    "lookups_passed": 83
+  },
+  "audio": {
+    "channels": 2,
+    "sample_bits": 16,
+    "sample_rate": 48000,
+    "frames": 88616,
+    "seconds": 1.8461666666666667
+  },
+  "animations": [
+    {
+      "name": "COMMON",
+      "frames_at_60_hz": 300.0,
+      "looping": true,
+      "members": 4
+    }
+  ],
+  "geometry": {
+    "fps": 24.0,
+    "frames": 120,
+    "duration_seconds": 5.0,
+    "objects": [
+      {
+        "name": "GreasePencil.001",
+        "glass": true,
+        "vertices_before": 285482,
+        "vertices": 735,
+        "triangles": 1438
+      },
+      {
+        "name": "Text",
+        "glass": false,
+        "vertices_before": 3948,
+        "vertices": 685,
+        "triangles": 1354
+      },
+      {
+        "name": "Text.001",
+        "glass": true,
+        "vertices_before": 3948,
+        "vertices": 685,
+        "triangles": 1354
+      },
+      {
+        "name": "GreasePencil.002",
+        "glass": false,
+        "vertices_before": 285482,
+        "vertices": 735,
+        "triangles": 1438
+      }
+    ],
+    "source_camera_max_delta": 0,
+    "camera_motion_detected": false,
+    "camera_space_baked": true
+  }
+}

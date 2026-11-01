@@ -1,0 +1,24 @@
+{
+  "romfs_files_equal": [
+    "audio\\gm.sf2",
+    "audio\\pop-theme.mid",
+    "certs\\github-roots.pem",
+    "demo\\LauncherCheck.jar",
+    "java\\midp.jar",
+    "java\\minijvm_rt.jar",
+    "profiles\\pop-classic.zip",
+    "ui\\achievement.wav",
+    "ui\\confirm.wav",
+    "ui\\navigation.wav"
+  ],
+  "smdh_equal": true,
+  "banner_equal": true,
+  "cwav": {
+    "format": "PCM16",
+    "channels": 2,
+    "sample_rate": 48000,
+    "frames": 88616,
+    "matches_original_pcm": true
+  },
+  "cia_sha256": "ecf853cbd2cf73be5ec290e0839a40827070d87bff2c0b13b3c23637896479b8"
+}

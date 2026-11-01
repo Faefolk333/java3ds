@@ -1,9 +1,19 @@
-# Java3DS 0.3.4 — privátní alpha
+# Java3DS 0.3.5 — privátní alpha
 
 CIA nainstaluj přes FBI; zachová hry a uložené pozice v /3ds/java-3ds.
 Pro Homebrew Launcher rozbal instalační ZIP do kořene SD karty.
 
-Nové ovládání spodního displeje:
+Oprava pádu při označení ikony v HOME Menu: banner 0.3.4 obsahoval po řazení
+průhledných modelů poškozenou tabulku názvů kostry. Nový export ji přestaví a
+kontroluje všech 83 vyhledání názvů v hotovém CGFX. Předchozí banner tímto testem
+neprojde. Animace i průsvitné materiály zůstávají; nově je přibalený dodaný zvuk
+java 3ds banner.wav (1,85 s). Opravu je ještě nutné ověřit na skutečné konzoli.
+
+Otevři přímo FBI a nainstaluj novou CIA přes Remote Install > Scan QR Code,
+případně ze SD. Před instalací nenajížděj na rozbitou ikonu Java3DS. Nová verze
+přepíše stejný titul, hry a uložené pozice na SD zůstanou zachované.
+
+Ovládání spodního displeje z předchozí aktualizace:
 
 - LEFT a RIGHT jsou dotykové softkeys. Prostřední MENU nebo L+R otevře herní menu.
 - Menu pozastaví Java vlákna i herní audio. Nabízí pokračování, Native/Fill screen,

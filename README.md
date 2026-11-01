@@ -1,4 +1,4 @@
-# Java3DS — private alpha 0.3.4
+# Java3DS — private alpha 0.3.5
 
 Java ME / JAR / JAD launcher for Nintendo 3DS, with a shared MIDI synthesizer.
 Extract the installation ZIP to the root of the SD card, replacing
@@ -6,6 +6,20 @@ Extract the installation ZIP to the root of the SD card, replacing
 with Java Pocket 3DS. Games, settings and saves are retained. Start **Java3DS**
 from Homebrew Launcher; add your JAR/JAD files under `/3ds/java-3ds/games/`.
 A JAD also needs its matching local JAR. Original game JARs are not bundled.
+
+## Changes in 0.3.5 — HOME Menu banner hotfix
+
+Dumps 29/30 belong to HOME Menu, before Java3DS starts. The 0.3.4 banner had
+an invalid skeleton name dictionary: translucent-node sorting moved entries
+without rebuilding its Patricia branches. Rebuild that dictionary and explicitly
+name rigid mesh nodes. The build now checks all 83 serialized name lookups;
+the previous banner fails this check. The fixed-camera animation and glass
+materials remain. The supplied 1.846-second stereo WAV is now embedded.
+
+Install the replacement CIA with FBI, without selecting the broken Java3DS
+HOME icon first. Keep title ID 000400000F3A3D00; games and SD saves are retained.
+Physical HOME Menu playback still needs a console retest. The earlier local
+0.3.4 QR server was stopped to avoid reinstalling the broken banner.
 
 ## Changes in 0.3.4
 
@@ -48,7 +62,7 @@ actual game ZIPs, including binary files with a misleading .jad suffix.
 * Touch keys highlight only on touch; menu parallax updates more often and
   filters the stick movement. The banner is unchanged.
 
-## CIA installation (0.3.4)
+## CIA installation (0.3.5)
 
 Install `java3ds.cia` with FBI to launch directly from HOME Menu. The package
 includes a native animated 3D banner converted from the supplied Blender scene

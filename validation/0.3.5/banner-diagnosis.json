@@ -1,0 +1,81 @@
+{
+  "v034": {
+    "sha256": "93d86692e99090fe8b4f8fe5dd14a146c759c2238f535c4a19549aa2420184a2",
+    "rejected": "DICT lookup at 0x2ac4: 'Scene root' resolves to 'GreasePencil.002'"
+  },
+  "v035": {
+    "sha256": "e12d81895baf7608b5486bda47c4ab843ebb70778eca5ad73fbba451e4623b3e",
+    "checks": {
+      "cgfx_bytes": 484616,
+      "dictionaries": [
+        {
+          "offset": 148,
+          "entries": 1
+        },
+        {
+          "offset": 420,
+          "entries": 3
+        },
+        {
+          "offset": 532,
+          "entries": 5
+        },
+        {
+          "offset": 900,
+          "entries": 5
+        },
+        {
+          "offset": 1288,
+          "entries": 48
+        },
+        {
+          "offset": 4884,
+          "entries": 4
+        },
+        {
+          "offset": 10948,
+          "entries": 5
+        },
+        {
+          "offset": 12176,
+          "entries": 1
+        },
+        {
+          "offset": 12252,
+          "entries": 4
+        },
+        {
+          "offset": 12424,
+          "entries": 1
+        },
+        {
+          "offset": 12776,
+          "entries": 1
+        },
+        {
+          "offset": 12900,
+          "entries": 1
+        },
+        {
+          "offset": 12984,
+          "entries": 4
+        }
+      ],
+      "lookups_passed": 83
+    }
+  },
+  "dump29": {
+    "sha256": "4b5bf02b180ce21ddf92fbba866592e200ef785353985f46094c8c2d5e899472",
+    "process": "menu",
+    "pc": "0x187d58",
+    "lr": "0x20b940",
+    "far": "0x8"
+  },
+  "dump30": {
+    "sha256": "1cd645923998c832f943d021d76a9182e2aeb1871b2520b3c3314672c0bbab2f",
+    "process": "menu",
+    "pc": "0x187d58",
+    "lr": "0x20b940",
+    "far": "0x8"
+  }
+}
