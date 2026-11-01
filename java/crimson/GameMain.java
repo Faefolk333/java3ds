@@ -18,6 +18,7 @@ public final class GameMain {
   System.setProperty("microedition.platform","Nokia E71");System.setProperty("microedition.configuration","CLDC-1.1");System.setProperty("microedition.profiles","MIDP-2.0");System.setProperty("microedition.locale","en-US");System.setProperty("microedition.encoding","UTF-8");
   System.out.println("Java3DS: "+property("MIDlet-Name","MIDlet")+" "+width+"x"+height);
   String map=property("launcher.bindings","");java.util.StringTokenizer mt=new java.util.StringTokenizer(map,",");for(int i=0;i<14&&mt.hasMoreTokens();i++)Controls.bindings[i]=Integer.parseInt(mt.nextToken());
+  ru.woesss.j2me.micro3d.SoftwareRender.nativeBatch=!"false".equals(property("launcher.micro.batch","true"));
   midlet=(MIDlet)Class.forName(property("launcher.main","")).newInstance();
   Thread start=new Thread(new Runnable(){public void run(){try{midlet.launch();}catch(Throwable e){e.printStackTrace();Native.stage(90,1);requestStop();}}},"MIDlet start");start.start();
   while(!stopped){int buttons=Native.buttons();if((buttons&0x40000000)!=0){requestStop();break;}Display.pump(buttons);Thread.sleep(10);}

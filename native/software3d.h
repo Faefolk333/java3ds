@@ -2,10 +2,13 @@
 #include <math.h>
 // A bounded software depth buffer, shared by the single active MIDP scene.
 static float*micro_depth;
-static void micro_reset(void){free(micro_depth);micro_depth=NULL;}
-static s32 microBegin(Runtime*r,JClass*c){(void)c;if(!micro_depth)micro_depth=malloc(512*512*sizeof(float));if(!micro_depth){extern void crimson_release_oom_reserve(void);crimson_release_oom_reserve();push_ref(r->stack,exception_create(JVM_ERROR_OUTOFMEMORY,r));return RUNTIME_STATUS_EXCEPTION;}memset(micro_depth,0,512*512*sizeof(float));return 0;}
+static int micro_depth_count;
+static void micro_reset(void){free(micro_depth);micro_depth=NULL;micro_depth_count=0;}
+static s32 micro_begin(Runtime*r,int count){if(count<1||count>512*512)return 0;if(!micro_depth)micro_depth=malloc(512*512*sizeof(float));if(!micro_depth){extern void crimson_release_oom_reserve(void);crimson_release_oom_reserve();push_ref(r->stack,exception_create(JVM_ERROR_OUTOFMEMORY,r));return RUNTIME_STATUS_EXCEPTION;}micro_depth_count=count;memset(micro_depth,0,count*sizeof(float));return 0;}
+static s32 microBegin(Runtime*r,JClass*c){(void)c;return micro_begin(r,512*512);}
+static s32 microBeginSize(Runtime*r,JClass*c){(void)c;int w=arg(r,0),h=arg(r,1);if(w<1||h<1||w>512*512/h)return 0;return micro_begin(r,w*h);}
 static float micro_edge(float ax,float ay,float bx,float by,float x,float y){return (x-ax)*(by-ay)-(y-ay)*(bx-ax);}
-static void micro_raster(uint32_t*d,int dw,int dh,float v[3][5],const float*p,const uint32_t*texture,int tw,int th,uint32_t color,int flags,int cx,int cy,int cw,int ch){
+static void micro_raster(uint32_t*d,int dw,int dh,float v[3][5],const float*p,const uint32_t*texture,int tw,int th,uint32_t color,int flags,int cx,int cy,int cw,int ch,float*providedDepth){
  float sx[3],sy[3],q[3];for(int i=0;i<3;i++){q[i]=p[6]?1.f/v[i][2]:1.f;sx[i]=p[0]+v[i][0]*p[4]*q[i];sy[i]=p[1]+v[i][1]*p[5]*q[i];if(!isfinite(sx[i])||!isfinite(sy[i]))return;}
  float area=micro_edge(sx[0],sy[0],sx[1],sy[1],sx[2],sy[2]);if(fabsf(area)<.00001f)return;
  float lx=fminf(sx[0],fminf(sx[1],sx[2])),rx=fmaxf(sx[0],fmaxf(sx[1],sx[2])),ly=fminf(sy[0],fminf(sy[1],sy[2])),ry=fmaxf(sy[0],fmaxf(sy[1],sy[2]));
@@ -13,17 +16,33 @@ static void micro_raster(uint32_t*d,int dw,int dh,float v[3][5],const float*p,co
  if(lx>dw||ly>dh||rx<0||ry<0)return;
  int x0=(int)fmaxf(0,fmaxf(cx,lx)),x1=(int)fminf(dw-1,fminf((float)cx+cw-1,rx));int y0=(int)fmaxf(0,fmaxf(cy,ly)),y1=(int)fminf(dh-1,fminf((float)cy+ch-1,ry));
  if(lx>dw||ly>dh||rx<0||ry<0||x0>x1||y0>y1)return;
+ float*stereo=providedDepth?providedDepth:crimson_stereo_target(d);
  for(int y=y0;y<=y1;y++)for(int x=x0;x<=x1;x++){float a=micro_edge(sx[1],sy[1],sx[2],sy[2],x+.5f,y+.5f)/area,b=micro_edge(sx[2],sy[2],sx[0],sy[0],x+.5f,y+.5f)/area,c=1-a-b;if(a<0||b<0||c<0)continue;float inv=a*q[0]+b*q[1]+c*q[2];if(inv<=0)continue;float depth=p[6]?inv:1.f/(1000000.f+a*v[0][2]+b*v[1][2]+c*v[2][2]);int index=y*dw+x;if(depth<=micro_depth[index])continue;uint32_t pixel=color;
   if(texture){int u=(int)((a*v[0][3]*q[0]+b*v[1][3]*q[1]+c*v[2][3]*q[2])/inv),t=(int)((a*v[0][4]*q[0]+b*v[1][4]*q[1]+c*v[2][4]*q[2])/inv);if(u<0)u=0;if(t<0)t=0;if(u>=tw)u=tw-1;if(t>=th)t=th-1;pixel=texture[t*tw+u];if(!(flags&1))pixel|=0xff000000;}
-  if(!(pixel>>24))continue;d[index]=over(d[index],pixel,1);micro_depth[index]=depth;
+  if(!(pixel>>24))continue;d[index]=over(d[index],pixel,1);micro_depth[index]=depth;if(stereo)stereo[index]=depth;
  }
 }
+static void micro_draw(uint32_t*d,int dw,int dh,float input[3][5],float*p,const uint32_t*tex,int tw,int th,uint32_t color,int flags,int cx,int cy,int cw,int ch,float*providedDepth){
+ if(providedDepth||crimson_stereo_target(d))crimson_stereo_models_drawn();
+ float clipped[6][5];int count=0;
+ if(p[6]){float nearPlane=p[2]>0?p[2]:1.f;for(int i=0;i<3;i++){float*a=input[i],*b=input[(i+1)%3];int ina=a[2]>=nearPlane,inb=b[2]>=nearPlane;if(ina)memcpy(clipped[count++],a,5*sizeof(float));if(ina!=inb){float t=(nearPlane-a[2])/(b[2]-a[2]);for(int k=0;k<5;k++)clipped[count][k]=a[k]+t*(b[k]-a[k]);count++;}}}else{memcpy(clipped,input,15*sizeof(float));count=3;}
+ for(int i=1;i+1<count;i++){float v[3][5];memcpy(v[0],clipped[0],20);memcpy(v[1],clipped[i],20);memcpy(v[2],clipped[i+1],20);micro_raster(d,dw,dh,v,p,tex,tw,th,color,flags,cx,cy,cw,ch,providedDepth);}
+}
 static s32 microTriangle(Runtime*r,JClass*c){
- (void)c;int dw=arg(r,1),dh=arg(r,2);uint32_t*d=target(r,dw,dh);Instance*verts=arr(r,3),*proj=arr(r,4),*tex=arr(r,5);int tw=arg(r,6),th=arg(r,7);if(!micro_depth||!d||!verts||!proj||verts->arr_length<15||proj->arr_length<7||dw*dh>512*512)return 0;
+ (void)c;int dw=arg(r,1),dh=arg(r,2);uint32_t*d=target(r,dw,dh);Instance*verts=arr(r,3),*proj=arr(r,4),*tex=arr(r,5);int tw=arg(r,6),th=arg(r,7);if(!micro_depth||!d||!verts||!proj||verts->arr_length<15||proj->arr_length<7||dw*dh>micro_depth_count)return 0;
  if(tex&&(tw<1||th<1||tw>1024||th>1024||tex->arr_length<tw*th))return 0;
- float input[3][5],p[7],clipped[6][5];memcpy(input,verts->arr_body,sizeof(input));memcpy(p,proj->arr_body,sizeof(p));for(int i=0;i<7;i++)if(!isfinite(p[i]))return 0;for(int i=0;i<15;i++)if(!isfinite(((float*)input)[i]))return 0;
- int count=0;if(p[6]){float nearPlane=p[2]>0?p[2]:1.f;for(int i=0;i<3;i++){float*a=input[i],*b=input[(i+1)%3];int ina=a[2]>=nearPlane,inb=b[2]>=nearPlane;if(ina){memcpy(clipped[count++],a,5*sizeof(float));}if(ina!=inb){float t=(nearPlane-a[2])/(b[2]-a[2]);for(int k=0;k<5;k++)clipped[count][k]=a[k]+t*(b[k]-a[k]);count++;}}}else{memcpy(clipped,input,sizeof(input));count=3;}
- for(int i=1;i+1<count;i++){float v[3][5];memcpy(v[0],clipped[0],20);memcpy(v[1],clipped[i],20);memcpy(v[2],clipped[i+1],20);micro_raster(d,dw,dh,v,p,tex?(uint32_t*)tex->arr_body:NULL,tw,th,(uint32_t)arg(r,8),arg(r,9),arg(r,10),arg(r,11),arg(r,12),arg(r,13));}return 0;
+ float input[3][5],p[7];memcpy(input,verts->arr_body,sizeof(input));memcpy(p,proj->arr_body,sizeof(p));for(int i=0;i<7;i++)if(!isfinite(p[i]))return 0;for(int i=0;i<15;i++)if(!isfinite(((float*)input)[i]))return 0;
+ micro_draw(d,dw,dh,input,p,tex?(uint32_t*)tex->arr_body:NULL,tw,th,(uint32_t)arg(r,8),arg(r,9),arg(r,10),arg(r,11),arg(r,12),arg(r,13),NULL);return 0;
+}
+
+static s32 microMesh(Runtime*r,JClass*c){
+ (void)c;int dw=arg(r,1),dh=arg(r,2);uint32_t*d=target(r,dw,dh);Instance*vertices=arr(r,3),*projection=arr(r,4),*faces=arr(r,5),*textures=arr(r,6),*sizes=arr(r,7);
+ if(!d||!micro_depth||dw*dh>micro_depth_count||!vertices||!projection||projection->arr_length<7||!faces||faces->arr_length%13)return 0;
+ Instance*shadow=arr(r,13);float*providedDepth=crimson_stereo_mode()&&shadow&&shadow->arr_length>=dw*dh?(float*)shadow->arr_body:NULL;float*p=(float*)projection->arr_body,*xyz=(float*)vertices->arr_body;for(int k=0;k<7;k++)if(!isfinite(p[k]))return 0;
+ int*data=(int*)faces->arr_body,pattern=arg(r,8);for(int t=0;t<faces->arr_length;t+=13){int*f=data+t;if((f[12]&pattern)!=f[12])continue;float input[3][5];int valid=1;for(int v=0;v<3;v++){int index=f[v];if(index<0||index>=vertices->arr_length/3){valid=0;break;}for(int k=0;k<3;k++){input[v][k]=xyz[index*3+k];if(!isfinite(input[v][k]))valid=0;}input[v][3]=f[3+v*2];input[v][4]=f[4+v*2];}if(!valid)continue;
+  const uint32_t*texture=NULL;int tw=0,th=0,face=f[11];if(textures&&sizes&&face>=0&&face<textures->arr_length&&face<sizes->arr_length/2){Instance*image=(Instance*)(intptr_t)jarray_get_field(textures,face);tw=((int*)sizes->arr_body)[face*2];th=((int*)sizes->arr_body)[face*2+1];if(image&&tw>0&&th>0&&tw<=1024&&th<=1024&&image->arr_length>=tw*th)texture=(uint32_t*)image->arr_body;}
+  micro_draw(d,dw,dh,input,p,texture,tw,th,(uint32_t)f[9],texture?f[10]:0,arg(r,9),arg(r,10),arg(r,11),arg(r,12),providedDepth);
+ }return 0;
 }
 
 static s32 microTransform(Runtime*r,JClass*c){

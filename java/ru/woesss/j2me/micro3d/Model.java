@@ -20,6 +20,8 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
 class Model {
+	// Immutable triangle descriptors used by the native software renderer.
+	int[] softwareFaces;
 	final int numPatterns;
 	final boolean hasPolyC;
 	final boolean hasPolyT;

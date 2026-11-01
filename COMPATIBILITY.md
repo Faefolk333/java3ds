@@ -1,4 +1,4 @@
-# Compatibility work — 0.3.4
+# Compatibility work — 0.3.6
 
 The user's 0.3.3 console report: Blades 240×320 launches slowly; the 320×240
 variant crashes the system; Outland launches but is impractically slow; Worms
@@ -98,6 +98,17 @@ RMS enumeration/filter/comparator, correct missing-store exceptions, basic
 Form/StringItem/Gauge and Image InputStream improve load/save compatibility.
 Discworld reached its intro dialogue in a 25-second PC test. Several other
 forms, vendor APIs, file/Bluetooth connections and audio controls remain missing.
+
+## 0.3.6 renderer and stereo
+
+Blades uses cached native triangle batches and target-sized depth clears. A PC
+35-second comparison produced 602 reference / 726 batched frames with about 20%
+less CPU time; physical speed remains unmeasured. The game menu adds optional
+model/layer depth reprojection for stereo output. It supports direct-canvas
+Micro3D/M3G and explicit LayerManager ordering, keeps later HUD drawing flat,
+and fills disocclusion gaps approximately. Mutable Images, clones and getRGB/drawRGB preserve depth through a bounded
+readback cache. Arbitrary game-side array copies can still lose it. This is not a GPU renderer or universal automatic
+2D-to-3D conversion. See validation/0.3.6 and README.
 
 ## Experimental 3D
 

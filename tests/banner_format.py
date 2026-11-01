@@ -1,5 +1,6 @@
 """Regression for the HOME Menu crash caused by reordered CGFX DICT entries."""
 import struct
+import json
 import sys
 import unittest
 from pathlib import Path
@@ -15,7 +16,8 @@ class BannerFormatTest(unittest.TestCase):
 
     def test_every_shipped_dictionary_name_resolves(self):
         result = check_cgfx(self.data)
-        self.assertEqual(result['lookups_passed'], 83)
+        manifest=json.loads((root/'assets/banner/manifest.json').read_text())
+        self.assertEqual(result['lookups_passed'], manifest['binary_checks']['lookups_passed'])
 
     def test_reordering_without_rebuilding_branches_is_rejected(self):
         result = check_cgfx(self.data)

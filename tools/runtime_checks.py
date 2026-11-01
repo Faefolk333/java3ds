@@ -7,7 +7,7 @@ os.environ['PATH']='C:/devkitPro/msys64/mingw64/bin;'+os.environ['PATH']
 r=Path(__file__).resolve().parents[1];os.chdir(r);d=r/'work/runtime-checks';d.mkdir(exist_ok=True)
 jdk=Path(args.java_home)/'bin' if args.java_home else Path(shutil.which('javac') or '').parent
 if not (jdk/'javac.exe').exists():raise SystemExit('Set JAVA_HOME or --java-home to a JDK (Windows host checks).')
-names=['RenderCompatibility','MotionCompatibility','M3GCompatibility','M3GSpanCheck','MicroPoseCheck','RmsCompatibility','ControlsCheck','DirectGraphicsCheck','ShutdownReentry']
+names=['RenderCompatibility','MotionCompatibility','M3GCompatibility','M3GSpanCheck','MicroPoseCheck','MicroBatchCheck','RmsCompatibility','ControlsCheck','DirectGraphicsCheck','ShutdownReentry']
 if args.m3g_jar:names.append('M3GAssetProbe')
 subprocess.run([str(jdk/'javac.exe'),'--release','8','-cp','romfs/java/midp.jar;work/minijvm_rt.jar','-d',str(d)]+[f'tests/{n}.java' for n in names],check=True)
 def chunk(kind,data):return struct.pack('>I',len(data))+kind+data+struct.pack('>I',zlib.crc32(kind+data)&0xffffffff)

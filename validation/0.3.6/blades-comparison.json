@@ -1,0 +1,16 @@
+[
+  {
+    "native_batch": false,
+    "wall_seconds": 35.711,
+    "cpu_ms": 21750.0,
+    "published_frames": 602,
+    "exit": 0
+  },
+  {
+    "native_batch": true,
+    "wall_seconds": 35.245,
+    "cpu_ms": 17406.2,
+    "published_frames": 726,
+    "exit": 0
+  }
+]

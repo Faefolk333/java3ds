@@ -8,6 +8,8 @@
 #include "catalog.h"
 #include "updater.h"
 #include "raster.h"
+#include "stereo.h"
+#include "stereo_display.h"
 #include "asset_install.hpp"
 #include "audio/device_3ds.h"
 #include "font8x8.h"
@@ -20,7 +22,7 @@ u32 __stacksize__=1024*1024;
 u32 __ctru_linear_heap_size=4*1024*1024;
 #endif
 static const std::string ROOT="/3ds/java-3ds";
-static LightLock frameLock;static uint32_t front[512*512];static std::atomic<unsigned>held{0},generation{0};
+static LightLock frameLock;static uint32_t front[512*512];static int8_t frontDepth[512*512];static std::atomic<unsigned>held{0},generation{0};
 static std::atomic<bool>done{false},exitRequested{false},failed{false};static int result;static Thread vm;
 static std::string launchConfig,activeJar;static bool popProfile;
 extern "C" const char*crimson_launch_config(){return launchConfig.c_str();}
@@ -31,7 +33,7 @@ static void sensors(){static unsigned attempted=0;static float gyroCoefficient=0
 extern "C" int crimson_buttons(){return held.load();}
 extern "C" void crimson_music(int,int,int){}
 extern "C" void crimson_gc_wait_report(const char*s){fprintf(stderr,"GC %s\n",s);}
-extern "C" void crimson_publish(const uint32_t*p){LightLock_Lock(&frameLock);memcpy(front,p,crimson_width*crimson_height*sizeof(*p));generation.fetch_add(1);LightLock_Unlock(&frameLock);}
+extern "C" void crimson_publish(const uint32_t*p){LightLock_Lock(&frameLock);memcpy(front,p,crimson_width*crimson_height*sizeof(*p));if(crimson_stereo_mode())crimson_stereo_encode(frontDepth,crimson_width*crimson_height);generation.fetch_add(1);LightLock_Unlock(&frameLock);}
 extern "C" void crimson_stage(int s,int d){if(s==80)exitRequested.store(true);if(s==90)failed.store(true);if(s==82&&popProfile)crimson_audio_scene((d>>8)&255,d&255,(d>>16)&1);if(s>=40&&s!=60&&s!=61&&s!=63&&s!=64&&s!=82)fprintf(stderr,"VM stage %d %d\n",s,d);}
 static GameInfo loadingGame;static GameSettings loadingOptions;static std::string loadingError;
 static void worker(void*){if(!prepareGame(loadingGame,loadingOptions,"romfs:/profiles/pop-classic.zip",activeJar,loadingError)||!writeLaunchConfig(loadingGame,loadingOptions,ROOT+"/saves",launchConfig,loadingError)){result=-1;done.store(true);return;}if(held.load()&0x40000000){result=0;done.store(true);return;}crimson_audio_init();std::string cp=ROOT+"/runtime/midp.jar:"+activeJar;result=crimson_run_game((ROOT+"/runtime/minijvm_rt.jar").c_str(),cp.c_str(),"crimson.GameMain");done.store(true);}
@@ -42,17 +44,17 @@ struct Surface{
  void text(int x,int y,const std::string&s,unsigned color=0xe8eef5,int max=48){int n=0;for(unsigned char c:s){if(n++>=max)break;if(c<32||c>126)c='?';for(int row=0;row<8;row++)for(int col=0;col<8;col++)if(font8x8_basic[c][row]&(1<<col))pixel(x+col,y+row,color);x+=8;}}
 };
 // All UI painting is off-screen. Keep both screens across buffer swaps.
-static u8 topImage[400*240*3],bottomImage[320*240*3];
+static u8 topImage[400*240*3],rightImage[400*240*3],bottomImage[320*240*3];static bool topStereo;
 static Surface top(){return {topImage,400};}static Surface bottom(){return {bottomImage,320};}
 static const char*keys[]={"Phone / D-pad","Numeric keypad","PoP: B jump, A action"};
-static void flush(){memcpy(gfxGetFramebuffer(GFX_TOP,GFX_LEFT,nullptr,nullptr),topImage,sizeof(topImage));memcpy(gfxGetFramebuffer(GFX_BOTTOM,GFX_LEFT,nullptr,nullptr),bottomImage,sizeof(bottomImage));gfxFlushBuffers();gfxSwapBuffers();}
+static void flush(){memcpy(gfxGetFramebuffer(GFX_TOP,GFX_LEFT,nullptr,nullptr),topImage,sizeof(topImage));if(topStereo)memcpy(gfxGetFramebuffer(GFX_TOP,GFX_RIGHT,nullptr,nullptr),rightImage,sizeof(rightImage));memcpy(gfxGetFramebuffer(GFX_BOTTOM,GFX_LEFT,nullptr,nullptr),bottomImage,sizeof(bottomImage));gfxFlushBuffers();gfxSwapBuffers();}
 static unsigned blend(unsigned a,unsigned b,int t,int n){unsigned c=0;for(int shift=0;shift<24;shift+=8)c|=(( ((a>>shift)&255)*(n-t)+((b>>shift)&255)*t)/n)<<shift;return c;}
 static void chrome(Surface s,int x,int y,int w,int h,bool selected=false){for(int j=0;j<h;j++)s.rect(x,y+j,w,1,blend(selected?0x78edff:0xe8e9ff,selected?0x3651ab:0x626386,j,h));s.rect(x,y,w,1,0xf6ffff);s.rect(x,y,1,h,0xe4f8ff);s.rect(x+w-1,y,1,h,0x25213f);s.rect(x,y+h-1,w,1,0x25213f);}
 static int parallaxX=0,parallaxY=0;
 static void shell(Surface s,const std::string&title){for(int y=0;y<240;y++)s.rect(0,y,s.width,1,blend(0x21134b,0x071e38,y,240));for(int x=parallaxX-20;x<s.width;x+=20)s.rect(x,33,1,207,0x253558);for(int y=40+parallaxY;y<240;y+=20)s.rect(0,y,s.width,1,0x253558);chrome(s,4,4,s.width-8,26);s.text(12,13,title,0x171b42,(s.width-24)/8);s.rect(8,34,s.width-16,2,0x66e7ff);}
 static unsigned keyLights(unsigned raw,const GameSettings&){return (raw>>16)&0x3fff;}
 static void keypad(unsigned lit=0,bool hidden=false){auto b=bottom();if(hidden){b.rect(0,0,320,240,0);return;}shell(b,"JAVA3DS // TOUCH KEYPAD");const char*soft[]={"LEFT","MENU","RIGHT"};for(int i=0;i<3;i++){int x=13+i*100;bool down=i!=1&&(lit&(1u<<(i==0?12:13)));chrome(b,x,37,94,25,down);b.text(x+47-strlen(soft[i])*4,46,soft[i],0x151c45);}const char*labels[]={"1","2 ABC","3 DEF","4 GHI","5 JKL","6 MNO","7 PQRS","8 TUV","9 WXYZ","*","0","#"};for(int i=0;i<12;i++){int x=13+i%3*100,y=72+i/3*38;bool down=lit&(1u<<i);chrome(b,x,y,94,34,down);if(down){b.rect(x,y,94,2,0x18223c);b.rect(x,y,2,34,0x18223c);b.rect(x+2,y+32,92,2,0xc2faff);}else b.rect(x+3,y+3,88,11,0xc5d4f6);b.text(x+47-strlen(labels[i])*4+(down?1:0),y+14+(down?2:0),labels[i],0x151c45,8);}b.text(44,230,"TAP MENU FOR GAME SETTINGS",0xa1ebff,32);}
-static void infoBottom(const std::string&a,const std::string&b,const std::string&c){auto s=bottom();shell(s,"JAVA3DS // 0.3.5");s.text(10,50,a,0xffffff,37);s.text(10,72,b,0xa1ebff,37);s.text(10,98,c,0xe3c2ff,37);chrome(s,8,134,304,72);s.text(16,146,"A: OPEN / CONFIRM",0x151c45,36);s.text(16,166,"B: BACK    X: REFRESH",0x151c45,36);s.text(16,186,"JAR + JAD // SD LIBRARY",0x151c45,36);s.text(8,222,"JAR: GAME   JAD: DESCRIPTOR",0xa1ebff,38);}
+static void infoBottom(const std::string&a,const std::string&b,const std::string&c){auto s=bottom();shell(s,"JAVA3DS // 0.3.6");s.text(10,50,a,0xffffff,37);s.text(10,72,b,0xa1ebff,37);s.text(10,98,c,0xe3c2ff,37);chrome(s,8,134,304,72);s.text(16,146,"A: OPEN / CONFIRM",0x151c45,36);s.text(16,166,"B: BACK    X: REFRESH",0x151c45,36);s.text(16,186,"JAR + JAD // SD LIBRARY",0x151c45,36);s.text(8,222,"JAR: GAME   JAD: DESCRIPTOR",0xa1ebff,38);}
 static void browser(const std::string&folder,const std::vector<BrowserEntry>&entries,int selected,const std::string&error){auto s=top();shell(s,"JAVA3DS // SD LIBRARY");s.text(12,40,folder,0xb7dcff,47);int start=(selected/9)*9;for(int i=start;i<(int)entries.size()&&i<start+9;i++){int y=60+(i-start)*17;if(i==selected)chrome(s,8,y-4,384,17,true);s.text(14,y,std::string(entries[i].folder?"[+] ":" >  ")+(entries[i].folder?"":(entries[i].name.size()>4&&entries[i].name.substr(entries[i].name.size()-4)==".jad"?"[JAD] ":"[JAR] "))+entries[i].name,i==selected?0x101c41:0xe0e8ff,46);}if(entries.empty())s.text(12,80,"Add JAR / JAD files to this folder.",0xffffff);s.text(12,222,error.empty()?"Y: WI-FI UPDATES    START: EXIT":error,0xffc7e9,47);infoBottom(entries.empty()?"LIBRARY EMPTY":entries[selected].name,"Select a game or open a folder.","UP/DOWN: SELECT  LEFT/RIGHT: PAGE");flush();}
 static void details(const GameInfo&g,const GameSettings&o,int row,const std::string&error){auto s=top();shell(s,g.title);bool wide=o.scale==1;std::string display=wide?(g.pop?"Display: 3DS fullscreen":"Display: Fill screen"):"Display: Native "+std::to_string(o.width)+"x"+std::to_string(o.height)+(g.resolutionKnown?"":" (assumed)");std::string lines[]={"Launch game",display,"Controls / key bindings...","MIDlet: "+g.midlets[o.midlet].title,"Back"};for(int i=0;i<5;i++){int y=59+i*28;if(i==row)chrome(s,8,y-5,384,23,true);s.text(14,y,lines[i],i==row?0x101c41:0xe0e8ff,46);}s.text(10,212,error.empty()?(g.unsupported.empty()?(g.pop?"PoP: wider-camera profile available":"Old / New 3DS: same 400 x 240 output"):g.unsupported):error,0xffc7e9,47);infoBottom(g.midlets[o.midlet].main,"LEFT/RIGHT: CHANGE OPTION",!g.properties.count("launcher.micro3d")&&!g.properties.count("launcher.m3g")?"Built-in MIDI + PCM WAV audio":"Experimental software 3D backend");flush();}
 static const char*physical[]={"D-pad / stick UP","D-pad / stick DOWN","D-pad / stick LEFT","D-pad / stick RIGHT","A","B","SELECT","X","Y","R","L","ZL","ZR","START"};
@@ -63,9 +65,10 @@ static const int timeouts[]={0,15,30,60,120};
 static std::string timeoutLabel(int seconds){return seconds?std::to_string(seconds)+" seconds":"Never";}
 static void changeTimeout(GameSettings&o,int delta){int n=0;for(int i=0;i<5;i++)if(timeouts[i]==o.bottomTimeout)n=i;o.bottomTimeout=timeouts[(n+delta+5)%5];}
 static void controlScreen(const GameSettings&o,int page,int row){auto s=top();shell(s,page==1?"CONTROLS":"CUSTOM BUTTON BINDINGS");if(page==1){std::string lines[]={"Preset: "+std::string(keys[o.keys]),std::string("Start bottom screen: ")+(o.hideBottom?"Asleep":"Awake"),"Sleep after: "+timeoutLabel(o.bottomTimeout),"Remap buttons...","Reset button bindings","Back"};for(int i=0;i<6;i++){int y=53+i*25;if(i==row)chrome(s,8,y-5,384,23,true);s.text(14,y,lines[i],i==row?0x101c41:0xe0e8ff,46);}}else{int start=row/9*9;for(int i=start;i<15&&i<start+9;i++){int y=60+(i-start)*17;if(i==row)chrome(s,8,y-4,384,17,true);std::string line=i==14?"Back":std::string(physical[i])+": "+bindNames[bindingIndex(o.bindings[i])];s.text(14,y,line,i==row?0x101c41:0xe0e8ff,46);}}s.text(10,222,"Touch wakes screen; L + R opens game menu",0xa1ebff,47);infoBottom("PER-GAME CONTROL SETTINGS","LEFT / RIGHT / A: CHANGE","B: BACK     SAVED AUTOMATICALLY");flush();}
-static void gameMenu(const GameSettings&o,int row){auto b=bottom();shell(b,"JAVA3DS // GAME MENU");std::string items[]={"Resume game",o.scale==1?"Display: Fill screen":"Display: Native","Sleep: "+timeoutLabel(o.bottomTimeout),"End game / Library","Close Java3DS"};for(int i=0;i<5;i++){int y=58+i*30;if(i==row)chrome(b,10,y-5,300,24,true);b.text(17,y,items[i],i==row?0x101c41:0xe0e8ff,36);}b.text(16,224,"D-PAD / TOUCH   B: RESUME",0xa1ebff,36);flush();}
-static void loading(u64 now,bool stopping,bool hide){auto s=top();shell(s,stopping?"JAVA3DS // RETURNING":"JAVA3DS // LOADING");s.text(200-14*4,81,stopping?"CLOSING GAME...":"LOADING JAVA...",0xc5f9ff);chrome(s,44,111,312,29);s.rect(48,115,304,21,0x14152b);int phase=(now/70)%36;for(int i=0;i<30;i++){int distance=(i-phase+36)%36;if(distance<8)s.rect(51+i*10,118,7,15,blend(0x9c82ef,0x72f5ff,distance,8));}s.text(200-24*4,162,"VIRTUAL MACHINE // READY",0xc6b2f7);if(hide)bottom().rect(0,0,320,240,0);else{shell(bottom(),"JAVA3DS // SYSTEM");bottom().text(32,90,stopping?"RELEASING GAME MEMORY":"INITIALIZING RUNTIME",0x9ef4ff);bottom().text(32,116,"START + SELECT: CANCEL",0xe3c2ff);}flush();}
-static void updateScreen(){auto s=top();shell(s,"JAVA3DS // WI-FI UPDATES");s.text(16,51,"Installed version: 0.3.5",0xb7dcff);s.text(16,76,"Private: Faefolk333/java3ds",0xe3c2ff);std::string m=updaterMessage();if(m.empty())m="A: check for updates";for(size_t i=0;i<m.size();i+=45)s.text(16,106+(i/45)*16,m.substr(i,45),0xffffff,45);int st=updaterState();if(st==3){chrome(s,16,160,368,20);s.rect(19,163,362*updaterPercent()/100,14,0x65edff);}s.text(16,211,st==2?"A: INSTALL    B: LATER":st==3?"PLEASE WAIT...":st==4?"START: EXIT / REOPEN APP":"A: CHECK    B: BACK",0x9ef4ff,46);infoBottom("PRIVATE UPDATES OVER WI-FI","Token file on SD:","/3ds/java-3ds/github-token.txt");flush();}
+static const char*stereoLabels[]={"Off","Models","Layers","Auto"};
+static void gameMenu(const GameSettings&o,int row){auto b=bottom();shell(b,"JAVA3DS // GAME MENU");std::string items[]={"Resume game",o.scale==1?"Display: Fill screen":"Display: Native","Sleep: "+timeoutLabel(o.bottomTimeout),"Stereo 3D: "+std::string(stereoLabels[o.stereo]),"3D strength: "+std::to_string(o.stereoStrength),"End game / Library","Close Java3DS"};for(int i=0;i<7;i++){int y=50+i*24;if(i==row)chrome(b,10,y-5,300,23,true);b.text(17,y,items[i],i==row?0x101c41:0xe0e8ff,36);}b.text(16,224,"3D SLIDER + MODELS / LAYERS",0xa1ebff,36);flush();}
+static void loading(u64 now,bool stopping,bool hide){topStereo=false;gfxSet3D(false);auto s=top();shell(s,stopping?"JAVA3DS // RETURNING":"JAVA3DS // LOADING");s.text(200-14*4,81,stopping?"CLOSING GAME...":"LOADING JAVA...",0xc5f9ff);chrome(s,44,111,312,29);s.rect(48,115,304,21,0x14152b);int phase=(now/70)%36;for(int i=0;i<30;i++){int distance=(i-phase+36)%36;if(distance<8)s.rect(51+i*10,118,7,15,blend(0x9c82ef,0x72f5ff,distance,8));}s.text(200-24*4,162,"VIRTUAL MACHINE // READY",0xc6b2f7);if(hide)bottom().rect(0,0,320,240,0);else{shell(bottom(),"JAVA3DS // SYSTEM");bottom().text(32,90,stopping?"RELEASING GAME MEMORY":"INITIALIZING RUNTIME",0x9ef4ff);bottom().text(32,116,"START + SELECT: CANCEL",0xe3c2ff);}flush();}
+static void updateScreen(){auto s=top();shell(s,"JAVA3DS // WI-FI UPDATES");s.text(16,51,"Installed version: 0.3.6",0xb7dcff);s.text(16,76,"Private: Faefolk333/java3ds",0xe3c2ff);std::string m=updaterMessage();if(m.empty())m="A: check for updates";for(size_t i=0;i<m.size();i+=45)s.text(16,106+(i/45)*16,m.substr(i,45),0xffffff,45);int st=updaterState();if(st==3){chrome(s,16,160,368,20);s.rect(19,163,362*updaterPercent()/100,14,0x65edff);}s.text(16,211,st==2?"A: INSTALL    B: LATER":st==3?"PLEASE WAIT...":st==4?"START: EXIT / REOPEN APP":"A: CHECK    B: BACK",0x9ef4ff,46);infoBottom("PRIVATE UPDATES OVER WI-FI","Token file on SD:","/3ds/java-3ds/github-token.txt");flush();}
 static void setDisplay(GameInfo&g,GameSettings&o,bool wide){o.scale=wide?1:2;o.width=wide&&g.pop?400:g.nativeWidth;o.height=wide&&g.pop?240:g.nativeHeight;}
 static bool folder(const std::string&p){struct stat st;if(!stat(p.c_str(),&st))return S_ISDIR(st.st_mode);return mkdir(p.c_str(),0777)==0;}
 static bool prepare(){if(R_FAILED(romfsInit())||chdir("sdmc:/"))return false;for(const char*p:{"/3ds","/3ds/java-3ds","/3ds/java-3ds/runtime","/3ds/java-3ds/cache","/3ds/java-3ds/games","/3ds/java-3ds/settings","/3ds/java-3ds/saves"})if(!folder(p))return false;
@@ -81,13 +84,14 @@ static unsigned buttons(u32 k,bool allowTouch){unsigned b=0;if(k&(KEY_UP|KEY_CPA
 static bool lcdReady;static std::atomic<bool>backlightOn{true};static aptHookCookie lcdHook;
 static void bottomBacklight(bool on){if(backlightOn.exchange(on)==on)return;if(lcdReady){Result r=on?GSPLCD_PowerOnBacklight(GSPLCD_SCREEN_BOTTOM):GSPLCD_PowerOffBacklight(GSPLCD_SCREEN_BOTTOM);if(R_FAILED(r))fprintf(stderr,"Bottom backlight change failed: %08lx\n",(unsigned long)r);}}
 static void lcdLifecycle(APT_HookType type,void*){if(type==APTHOOK_ONSUSPEND||type==APTHOOK_ONEXIT)bottomBacklight(true);}
-static void gameFrame(int mode){
- auto s=top();s.rect(0,0,400,240,0);int dw=400,dh=240;
+static void gameFrame(int mode,int stereoMode,int strength){
+ topStereo=stereoMode&&osGet3DSliderState()>.01f;gfxSet3D(topStereo);
+ auto s=top();s.rect(0,0,400,240,0);if(topStereo)memset(rightImage,0,sizeof(rightImage));int dw=400,dh=240;
  if(mode!=1){double ratio=std::min(400.0/crimson_width,240.0/crimson_height);if(mode==2&&ratio>1)ratio=1;dw=(int)(crimson_width*ratio);dh=(int)(crimson_height*ratio);}
  int ox=(400-dw)/2,oy=(240-dh)/2;int xs[400],ys[240];for(int x=0;x<dw;x++)xs[x]=x*crimson_width/dw;for(int y=0;y<dh;y++)ys[y]=(y*crimson_height/dh)*crimson_width;
  LightLock_Lock(&frameLock);
- // Small tiles keep the source and rotated 3DS framebuffer in cache together.
- for(int by=0;by<dh;by+=8)for(int bx=0;bx<dw;bx+=8)for(int x=bx;x<std::min(bx+8,dw);x++)for(int y=by;y<std::min(by+8,dh);y++){
+ if(topStereo){uint32_t row[400],left[400],right[400];int8_t z[400];int amount=(int)(strength*osGet3DSliderState()*16);for(int y=0;y<dh;y++){for(int x=0;x<dw;x++){int i=ys[y]+xs[x];row[x]=front[i];z[x]=frontDepth[i];}stereo_line(row,z,dw,amount,1,left);stereo_line(row,z,dw,amount,-1,right);for(int x=0;x<dw;x++){int offset=((x+ox)*240+239-y-oy)*3;unsigned a=left[x],b=right[x];topImage[offset]=a;topImage[offset+1]=a>>8;topImage[offset+2]=a>>16;rightImage[offset]=b;rightImage[offset+1]=b>>8;rightImage[offset+2]=b>>16;}}}
+ else for(int by=0;by<dh;by+=8)for(int bx=0;bx<dw;bx+=8)for(int x=bx;x<std::min(bx+8,dw);x++)for(int y=by;y<std::min(by+8,dh);y++){
   unsigned c=front[ys[y]+xs[x]];int offset=((x+ox)*240+239-y-oy)*3;topImage[offset]=c;topImage[offset+1]=c>>8;topImage[offset+2]=c>>16;
  }
  LightLock_Unlock(&frameLock);flush();
@@ -105,26 +109,28 @@ int main(int argc,char**argv){
    if(openMenu){menu=true;menuRow=0;held.store(0);crimson_pause_game(1);crimson_audio_pause(1);screen.update(now,false,true);bottomBacklight(true);uiAudioPlay(UI_CONFIRM);gameMenu(options,menuRow);}
    else if(menu&&!quitAt){
     bool up=press&KEY_UP,down=press&KEY_DOWN;int delta=(press&KEY_LEFT)?-1:(press&KEY_RIGHT)?1:0;bool activate=press&KEY_A;
-    if(up)menuRow=(menuRow+4)%5;if(down)menuRow=(menuRow+1)%5;if(tap&&tp.px>=10&&tp.px<310&&tp.py>=53&&tp.py<203){int hit=(tp.py-53)/30;if(hit<5&&(tp.py-53)%30<24){menuRow=hit;activate=true;}}
+    if(up)menuRow=(menuRow+6)%7;if(down)menuRow=(menuRow+1)%7;if(tap&&tp.px>=10&&tp.px<310&&tp.py>=45&&tp.py<213){int hit=(tp.py-45)/24;if(hit<7&&(tp.py-45)%24<23){menuRow=hit;activate=true;}}
     if(up||down||delta)uiAudioPlay(UI_NAVIGATION);if(activate)uiAudioPlay(UI_CONFIRM);
     if((press&KEY_B)||menuChord||(activate&&menuRow==0)){menu=false;releaseGameInput=true;crimson_pause_game(0);crimson_audio_pause(0);lastLights=~0u;screen.lastTouch=now;}
-    else if((activate||delta)&&menuRow==1){options.scale=options.scale==1?2:1;saveSettings(ROOT+"/settings/"+game.id+".cfg",options);gameFrame(options.scale);}
+    else if((activate||delta)&&menuRow==1){options.scale=options.scale==1?2:1;saveSettings(ROOT+"/settings/"+game.id+".cfg",options);gameFrame(options.scale,options.stereo,options.stereoStrength);}
     else if((activate||delta)&&menuRow==2){changeTimeout(options,delta?delta:1);saveSettings(ROOT+"/settings/"+game.id+".cfg",options);}
-    else if(activate&&menuRow>=3){closeAfterGame=menuRow==4;menu=false;quitAt=now;crimson_pause_game(0);crimson_audio_pause(0);held.store(0x40000000);}
+    else if((activate||delta)&&menuRow==3){int next=(options.stereo+(delta?delta:1)+4)%4;if(crimson_stereo_config(next))options.stereo=next;saveSettings(ROOT+"/settings/"+game.id+".cfg",options);}
+    else if((activate||delta)&&menuRow==4){options.stereoStrength=(options.stereoStrength-1+(delta?delta:1)+6)%6+1;saveSettings(ROOT+"/settings/"+game.id+".cfg",options);}
+    else if(activate&&menuRow>=5){closeAfterGame=menuRow==6;menu=false;quitAt=now;crimson_pause_game(0);crimson_audio_pause(0);held.store(0x40000000);}
     if(menu)gameMenu(options,menuRow);
    }
    if(menu){crimson_pause_game(1);crimson_audio_pause(1);}
    if((k&(KEY_START|KEY_SELECT))==(KEY_START|KEY_SELECT)&&!quitAt){menu=false;crimson_pause_game(0);crimson_audio_pause(0);quitAt=now;held.store(0x40000000);}else if(!quitAt&&!menu){if(!(k&(KEY_A|KEY_B|KEY_L|KEY_R|KEY_TOUCH|KEY_UP|KEY_DOWN|KEY_LEFT|KEY_RIGHT)))releaseGameInput=false;held.store(openMenu||releaseGameInput?0:buttons(k,allowTouch));}
    if(exitRequested.load()&&!quitAt){menu=false;crimson_pause_game(0);crimson_audio_pause(0);quitAt=now;held.store(0x40000000);}
    if(quitAt&&now-quitAt>750)crimson_request_stop();
-   unsigned current=generation.load(),lights=keyLights(held.load(),options);
+   static int sliderWas=-1;int sliderNow=(int)(osGet3DSliderState()*100);if(sliderNow!=sliderWas){shown=~0u;sliderWas=sliderNow;}unsigned current=generation.load(),lights=keyLights(held.load(),options);
    if(!menu){if(!current||quitAt){if(now-uiAt>=80){loading(now,quitAt!=0,screen.asleep);uiAt=now;}}
-    else if(current!=shown||lights!=lastLights){if(lights!=lastLights)keypad(lights,screen.asleep);gameFrame(options.scale);shown=current;lastLights=lights;}}
-   if(done.load()){threadJoin(vm,U64_MAX);threadFree(vm);vm=nullptr;crimson_audio_shutdown();run=false;detail=false;menu=false;redraw=true;bottomBacklight(true);error=loadingError.empty()?(result||failed.load()?"Game failed. See output.log / runtime.log":""):loadingError;if(quitAt)error.clear();quitAt=0;held.store(0);if(closeAfterGame)break;}
+    else if(current!=shown||lights!=lastLights){if(lights!=lastLights)keypad(lights,screen.asleep);gameFrame(options.scale,options.stereo,options.stereoStrength);shown=current;lastLights=lights;}}
+   if(done.load()){threadJoin(vm,U64_MAX);threadFree(vm);vm=nullptr;crimson_stereo_release();crimson_audio_shutdown();run=false;detail=false;menu=false;redraw=true;bottomBacklight(true);error=loadingError.empty()?(result||failed.load()?"Game failed. See output.log / runtime.log":""):loadingError;if(quitAt)error.clear();quitAt=0;held.store(0);if(closeAfterGame)break;}
    else if(quitAt&&now-quitAt>12000){auto s=top();s.text(16,196,"Native call is still stopping.",0xffc7e9);s.text(16,214,"START: CLOSE APPLICATION",0xffc7e9);flush();if(press&KEY_START){bottomBacklight(true);svcExitProcess();}}
    gspWaitForVBlank();continue;
   }
-  bottomBacklight(true);if(press&KEY_A)uiAudioPlay(UI_CONFIRM);if(press&(KEY_UP|KEY_DOWN|KEY_LEFT|KEY_RIGHT))uiAudioPlay(UI_NAVIGATION);
+  topStereo=false;gfxSet3D(false);bottomBacklight(true);if(press&KEY_A)uiAudioPlay(UI_CONFIRM);if(press&(KEY_UP|KEY_DOWN|KEY_LEFT|KEY_RIGHT))uiAudioPlay(UI_NAVIGATION);
   if(now-uiAt>=16){circlePosition c;hidCircleRead(&c);static float px=0,py=0;px+=(c.dx/20.f-px)*.18f;py+=(c.dy/20.f-py)*.18f;parallaxX=(int)(now/80)%20+(int)px;parallaxY=(int)py;uiAt=now;redraw=true;}
   int us=updaterState();if(us!=updateSeen){if(us==2)updates=true;if(us==4)uiAudioPlay(UI_ACHIEVEMENT);updateSeen=us;redraw=true;}
   if(updates){if((press&KEY_START)&&us!=3)break;if((press&KEY_B)&&us!=3&&us!=4){updates=false;redraw=true;}else{if(press&KEY_A){if(us==2)updaterInstall();else if(us!=1&&us!=3&&us!=4)updaterCheck();redraw=true;}if(redraw){updateScreen();redraw=false;}gspWaitForVBlank();continue;}}
@@ -149,7 +155,7 @@ int main(int argc,char**argv){
    if((press&KEY_A)&&row==0&&!game.unsupported.empty()){error=game.unsupported;redraw=true;}
    else if((press&KEY_A)&&row==0&&(updaterState()==1||updaterState()==3)){error="Wait for Wi-Fi update check to finish";redraw=true;}
    else if((press&KEY_A)&&row==0){
-    error.clear();activeJar=ROOT+"/cache/active.jar";launchConfig=ROOT+"/cache/launch.cfg";saveSettings(ROOT+"/settings/"+game.id+".cfg",options);loadingGame=game;loadingOptions=options;loadingError.clear();crimson_width=options.width;crimson_height=options.height;memset(front,0,sizeof(front));held.store(0);generation.store(0);shown=0;lastLights=~0u;done.store(false);exitRequested.store(false);failed.store(false);popProfile=game.pop&&options.width==400&&options.height==240;menu=false;closeAfterGame=false;screen.start(now,options.bottomTimeout,options.hideBottom);
+    error.clear();activeJar=ROOT+"/cache/active.jar";launchConfig=ROOT+"/cache/launch.cfg";saveSettings(ROOT+"/settings/"+game.id+".cfg",options);loadingGame=game;loadingOptions=options;loadingError.clear();crimson_width=options.width;crimson_height=options.height;if(!crimson_stereo_config(options.stereo))options.stereo=0;memset(front,0,sizeof(front));held.store(0);generation.store(0);shown=0;lastLights=~0u;done.store(false);exitRequested.store(false);failed.store(false);popProfile=game.pop&&options.width==400&&options.height==240;menu=false;closeAfterGame=false;screen.start(now,options.bottomTimeout,options.hideBottom);
     loading(now,false,options.hideBottom);vm=threadCreate(worker,nullptr,1024*1024,0x30,-2,false);if(vm)run=true;else error="Cannot create game thread";redraw=true;
    }
   }

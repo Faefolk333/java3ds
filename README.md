@@ -1,4 +1,4 @@
-# Java3DS — private alpha 0.3.5
+# Java3DS — private alpha 0.3.6
 
 Java ME / JAR / JAD launcher for Nintendo 3DS, with a shared MIDI synthesizer.
 Extract the installation ZIP to the root of the SD card, replacing
@@ -6,6 +6,36 @@ Extract the installation ZIP to the root of the SD card, replacing
 with Java Pocket 3DS. Games, settings and saves are retained. Start **Java3DS**
 from Homebrew Launcher; add your JAR/JAD files under `/3ds/java-3ds/games/`.
 A JAD also needs its matching local JAR. Original game JARs are not bundled.
+
+## Changes in 0.3.6
+
+Nokia int drawPixels without rotation now goes directly to the native RGB
+blitter instead of allocating and filling two temporary images. Micro3D caches immutable triangle descriptors and submits a figure in one native
+batch, avoiding Java's per-triangle coordinate gathering and JNI calls. Depth
+clearing uses the actual target area. A same-host, 35-second Blades 320x240
+comparison published 726 frames versus 602, using about 20% less process CPU.
+These are PC results, not measured 3DS frame rates.
+
+The game menu (L+R or touch MENU) adds **Stereo 3D: Off / Models / Layers / Auto**
+and strength 1–6. Default is Off. Raise the hardware 3D slider after enabling it.
+Models use the existing Micro3D/M3G depth buffer; Layers uses explicit JSR-118
+LayerManager ordering; Auto enables both. Single-pass depth reprojection produces
+the two eye images and keeps later 2D HUD drawing on the screen plane. This is an
+experimental approximation: newly exposed hidden pixels are filled from nearby
+surfaces. It cannot infer layers from an already flattened bitmap. Depth follows mutable
+Images, image clones/regions, and a bounded two-slot getRGB/drawRGB readback
+cache. Arbitrary game-side pixel-array copies or custom renderers can still lose
+that information.
+The depth buffer is allocated on demand and released after the VM worker exits.
+Settings persist per game. Stereo rendering adds work; use Off for best speed.
+This feature is inspired by [gpSP 3D](https://github.com/bheppe/gpsp-3d)'s layer
+separation; Java ME does not expose the GBA's BG/sprite registers.
+
+The banner now visibly says **BUILD 0.3.6**. Its four animation channels and
+supplied WAV are retained; this marker distinguishes the installed asset from
+a stale HOME Menu banner. After updating, fully restart the console before
+checking it. If the marker is visible but the motion is wrong, that is an
+animation conversion/framing issue rather than this old cached asset.
 
 ## Changes in 0.3.5 — HOME Menu banner hotfix
 
@@ -62,7 +92,7 @@ actual game ZIPs, including binary files with a misleading .jad suffix.
 * Touch keys highlight only on touch; menu parallax updates more often and
   filters the stick movement. The banner is unchanged.
 
-## CIA installation (0.3.5)
+## CIA installation (0.3.6)
 
 Install `java3ds.cia` with FBI to launch directly from HOME Menu. The package
 includes a native animated 3D banner converted from the supplied Blender scene

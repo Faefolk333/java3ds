@@ -1,4 +1,23 @@
-# Java3DS 0.3.5 — privátní alpha
+# Java3DS 0.3.6 — privátní alpha
+
+Nově v 0.3.6: Nokia drawPixels bez rotace používá přímé nativní kopírování
+místo vytváření dočasných obrázků. Micro3D posílá celé sady trojúhelníků do nativního rendereru a
+maže jen používanou část hloubkového bufferu. Stejný 35sekundový test Blades na
+PC vykreslil 726 snímků místo 602 a spotřeboval asi o 20 % méně času CPU.
+Výkon na 3DS je ještě nutné změřit.
+
+L+R nebo dotykové MENU > Stereo 3D: Off / Models / Layers / Auto. Přibyla také
+síla 1–6; efekt ovládá posuvník 3D konzole. Výchozí stav je Off. Models používá
+hloubku Micro3D/M3G, Layers skutečné vrstvy LayerManager, Auto obojí. Efekt je
+experimentální reprojekce hotového obrazu: odkryté části ploch jen přibližuje.
+Hloubka se přenáší i s pomocnými obrázky, jejich kopiemi a přes dvoumístnou
+cache getRGB/drawRGB. Libovolné vlastní kopírování pixelových polí ji stále může
+ztratit. Ze slitého obrázku nelze poznat původní vrstvy. Pro nejvyšší výkon ponech 3D vypnuté. Volby se ukládají pro hru.
+
+Banner obsahuje viditelné BUILD 0.3.6. Po instalaci konzoli úplně restartuj.
+Pokud označení chybí, může HOME Menu ještě ukazovat starý banner; pokud je vidět,
+ale pohyb je chybný, je problém v převodu nebo rámování animace. Původní modelová
+animace a dodaný WAV zůstávají. Originální Blender soubor na ploše se nemění.
 
 CIA nainstaluj přes FBI; zachová hry a uložené pozice v /3ds/java-3ds.
 Pro Homebrew Launcher rozbal instalační ZIP do kořene SD karty.

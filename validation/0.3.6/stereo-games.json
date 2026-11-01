@@ -1,0 +1,18 @@
+[
+  {
+    "game": "blades",
+    "mode": "Auto",
+    "exit": 0,
+    "foreground_pixels": 21965,
+    "background_pixels": 38185,
+    "hud_pixels": 15555
+  },
+  {
+    "game": "outland",
+    "mode": "Auto",
+    "exit": 0,
+    "foreground_pixels": 5823,
+    "background_pixels": 5441,
+    "hud_pixels": 133
+  }
+]

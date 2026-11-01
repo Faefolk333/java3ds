@@ -1,0 +1,25 @@
+RAM cache ready: 3 JARs, 1868915 bytes
+RAM cache hits: 783
+STAGE 40 0
+STAGE 41 3
+Java3DS: Outland 3D 320x240
+STEREO_FRAME frame=1 nonzero=0 min=0 max=0
+STEREO_FRAME frame=2 nonzero=0 min=0 max=0
+STEREO_FRAME frame=3 nonzero=0 min=0 max=0
+STEREO_FRAME frame=4 nonzero=0 min=0 max=0
+STEREO_FRAME frame=5 nonzero=0 min=0 max=0
+STEREO_FRAME frame=50 nonzero=0 min=0 max=0
+STEREO_FRAME frame=100 nonzero=0 min=0 max=0
+STEREO_FRAME frame=150 nonzero=0 min=0 max=0
+STEREO_FRAME frame=200 nonzero=0 min=0 max=0
+STEREO_FRAME frame=250 nonzero=0 min=0 max=0
+STEREO_FRAME frame=300 nonzero=0 min=0 max=0
+STEREO_FRAME frame=350 nonzero=0 min=0 max=0
+STEREO_FRAME frame=400 nonzero=0 min=0 max=0
+M3G_PROFILE native_spans=1870 native_pixels=22862 fallback_pixels=0
+STAGE 80 0
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+STEREO_VISIBLE_FRAMES 3
+VM_EXIT run=0 result=0 frames=409 peak=0

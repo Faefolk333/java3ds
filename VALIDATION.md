@@ -1,4 +1,32 @@
-# Java3DS 0.3.5 validation — 2026-11-01
+# Java3DS 0.3.6 validation — 2026-11-01
+
+- Nokia drawPixels direct path checks reverse scan, clip and alpha against
+  the prior image/region route (alpha rounding can differ by one channel level).
+- Micro3D native batch versus per-triangle reference: exact pixel comparisons
+  for perspective/parallel projection, near clipping, texture alpha, flat color,
+  clips and pattern masks. Invalid indices and NaN inputs remain bounded.
+- Blades 320x240, same host/config/input script, 35 seconds each, batch disabled
+  then enabled: 602 / 726 published frames, process CPU 21750 / 17406 ms,
+  wall time 35.711 / 35.245 s. Both exit 0 and render the forest/tutorial.
+  This is not a 3DS FPS claim. The synthetic gather/submit test is separate.
+- Stereo compositor unit checks flat identity, opposite eye shifts, gap filling,
+  model/layer depth selection, stationary HUD priority and release after stop.
+- Blades and Outland capture positive/negative depth in real gameplay frames,
+  with later HUD tags preserved, and stop with exit 0. Captures use a rendered
+  scene frame; the shutdown repaint can legitimately be flat.
+- VM integration captures depth from LayerManager, Micro3D and M3G direct-canvas
+  paths. Colors use the existing rasterizer; stereo only changes presentation.
+  Mutable-image/clone/region/getRGB propagation is exercised separately.
+  Reconstruction of hidden geometry and arbitrary array-copy tracking are absent.
+- Settings preserve older files and round-trip stereo choices/strength; invalid
+  values fall back to defaults. UI preview includes the seven-row game menu.
+- Banner: 502712 bytes, 105 serialized dictionary lookups pass, four animated
+  members, same five-second loop. A static BUILD 0.3.6 marker distinguishes it
+  from earlier assets. Supplied PCM16 WAV retained. The Desktop source is intact.
+- Physical HOME Menu cache/framing, stereo comfort, speed and Old/New 3DS output
+  still require a console test. PC validation cannot establish those results.
+
+## Previous 0.3.5 validation — 2026-11-01
 
 - Dumps 29/30: process `menu`, identical PC 0x187d58 / LR 0x20b940 /
   FAR 0x8, before application startup. No HOME Menu symbols are available;

@@ -26,6 +26,9 @@ for name in cgfx.data.models:
   model.materials[material].material_color.emission=ColorFloat(.08,.16,.13,1)
   model.materials[material].material_color.specular[0]=ColorFloat(.95,1,1,1)
   model.materials[material].material_color.ambient=ColorFloat(.22,.28,.25,1)
+  if material=='Build marker':
+   model.materials[material].material_color.specular[0]=ColorFloat(0,0,0,1)
+   model.materials[material].material_color.emission=ColorFloat(.6,.6,.6,1)
 animations=[]
 for name in cgfx.data.skeletal_animations:
  a=cgfx.data.skeletal_animations[name];a.looping=True

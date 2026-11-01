@@ -1,0 +1,8 @@
+{
+  "qr_decodes_to_installer": true,
+  "http_download_sha256": "692185e672a9b4262af7a4d6f1dc7a3f712175e4eac93c675baa8efc70e26c14",
+  "cia_size": 19776448,
+  "head_size_matches": true,
+  "range_matches": true,
+  "other_paths_return_404": true
+}

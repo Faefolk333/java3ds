@@ -1,0 +1,15 @@
+RAM cache ready: 3 JARs, 1491299 bytes
+RAM cache hits: 514
+STAGE 40 0
+STAGE 41 3
+STEREO_FRAME frame=1 nonzero=76800 min=-95 max=95
+STEREO_FRAME frame=2 nonzero=2641 min=-63 max=63
+STEREO_FRAME frame=3 nonzero=11380 min=-63 max=63
+STEREO_FRAME frame=4 nonzero=2641 min=-63 max=63
+STEREO_FRAME frame=5 nonzero=2641 min=-63 max=63
+STEREO_INTEGRATION_PASS LayerManager Micro3D M3G offscreen_image clone transform
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+STEREO_VISIBLE_FRAMES 8
+VM_EXIT run=0 result=0 frames=8 peak=0

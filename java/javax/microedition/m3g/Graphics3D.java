@@ -525,7 +525,7 @@ public class Graphics3D
 		/* Ignore the call if no render target is bound. */
 		if(this.target != null)
 		{
-			if(this.target instanceof Graphics)((Graphics)this.target).commitFrameBuffer(rasterData);
+			if(this.target instanceof Graphics)((Graphics)this.target).commitFrameBuffer(rasterData,depthEnabled?this.depthBuffer:null);
             /* If there is a render target, release it */
 			this.target = null;
 		}

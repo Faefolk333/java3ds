@@ -1,7 +1,7 @@
 {
-  "cgfx_bytes": 484616,
+  "cgfx_bytes": 502712,
   "binary_checks": {
-    "cgfx_bytes": 484616,
+    "cgfx_bytes": 502712,
     "dictionaries": [
       {
         "offset": 148,
@@ -13,50 +13,54 @@
       },
       {
         "offset": 532,
+        "entries": 6
+      },
+      {
+        "offset": 960,
+        "entries": 6
+      },
+      {
+        "offset": 1412,
+        "entries": 64
+      },
+      {
+        "offset": 6152,
         "entries": 5
       },
       {
-        "offset": 900,
+        "offset": 13836,
+        "entries": 6
+      },
+      {
+        "offset": 15304,
+        "entries": 1
+      },
+      {
+        "offset": 15440,
+        "entries": 1
+      },
+      {
+        "offset": 15516,
         "entries": 5
       },
       {
-        "offset": 1288,
-        "entries": 48
-      },
-      {
-        "offset": 4884,
-        "entries": 4
-      },
-      {
-        "offset": 10948,
-        "entries": 5
-      },
-      {
-        "offset": 12176,
+        "offset": 15724,
         "entries": 1
       },
       {
-        "offset": 12252,
-        "entries": 4
-      },
-      {
-        "offset": 12424,
+        "offset": 16076,
         "entries": 1
       },
       {
-        "offset": 12776,
+        "offset": 16200,
         "entries": 1
       },
       {
-        "offset": 12900,
-        "entries": 1
-      },
-      {
-        "offset": 12984,
+        "offset": 16284,
         "entries": 4
       }
     ],
-    "lookups_passed": 83
+    "lookups_passed": 105
   },
   "audio": {
     "channels": 2,
@@ -109,6 +113,7 @@
     ],
     "source_camera_max_delta": 0,
     "camera_motion_detected": false,
-    "camera_space_baked": true
+    "camera_space_baked": true,
+    "visible_build_marker": "0.3.6"
   }
 }

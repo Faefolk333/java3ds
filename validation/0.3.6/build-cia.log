@@ -1,0 +1,64 @@
+{
+  "cgfx_bytes": 502712,
+  "dictionaries": [
+    {
+      "offset": 148,
+      "entries": 1
+    },
+    {
+      "offset": 420,
+      "entries": 3
+    },
+    {
+      "offset": 532,
+      "entries": 6
+    },
+    {
+      "offset": 960,
+      "entries": 6
+    },
+    {
+      "offset": 1412,
+      "entries": 64
+    },
+    {
+      "offset": 6152,
+      "entries": 5
+    },
+    {
+      "offset": 13836,
+      "entries": 6
+    },
+    {
+      "offset": 15304,
+      "entries": 1
+    },
+    {
+      "offset": 15440,
+      "entries": 1
+    },
+    {
+      "offset": 15516,
+      "entries": 5
+    },
+    {
+      "offset": 15724,
+      "entries": 1
+    },
+    {
+      "offset": 16076,
+      "entries": 1
+    },
+    {
+      "offset": 16200,
+      "entries": 1
+    },
+    {
+      "offset": 16284,
+      "entries": 4
+    }
+  ],
+  "lookups_passed": 105
+}
+[INFO] Created banner "C:/Users/Administrator/Desktop/game/java-3ds-launcher/assets/banner/banner.bnr".
+[INFO] Created SMDH "C:/Users/Administrator/Desktop/game/java-3ds-launcher/work/arm/java3ds-cia.smdh".
