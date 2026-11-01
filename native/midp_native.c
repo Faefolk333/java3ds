@@ -70,6 +70,17 @@ static s32 text(Runtime*r,JClass*c){
  for(int y=0;y<8*scale;y++){int yy=dy+y;if(yy<0||yy>=th||yy<cy||yy>=cy+ch)continue;for(int x=0;x<8*scale;x++){int xx=dx+i*8*scale+x;if(xx<0||xx>=tw||xx<cx||xx>=cx+cw)continue;if(bits&((uint64_t)1<<((y/scale)*8+x/scale))){d[yy*tw+xx]=color;if(z)z[yy*tw+xx]=layer;}}}}return 0;
 }
 
+static s32 flushBuffer(Runtime*r,JClass*c){
+ (void)c;Instance*image=arr(r,0),*meta=arr(r,7);int sw=arg(r,1),sh=arg(r,2),x=arg(r,3),y=arg(r,4),w=arg(r,5),h=arg(r,6);
+ if(!image||sw!=crimson_width||sh!=crimson_height||sw<1||sh<1||(int64_t)sw*sh>image->arr_length||w<=0||h<=0)return 0;
+ int64_t right=(int64_t)x+w,bottom=(int64_t)y+h;int x0=x<0?0:x,y0=y<0?0:y,x1=right>sw?sw:(int)right,y1=bottom>sh?sh:(int)bottom;if(x0>=x1||y0>=y1)return 0;
+ uint32_t*source=(uint32_t*)image->arr_body;float*depth=crimson_stereo_target(crimson_pixels),*from=meta&&meta->arr_length>=sw*sh?(float*)meta->arr_body:NULL;
+ float layer=depth&&!from?crimson_stereo_tag_2d(sw,sh,0,0,sw,sh):0;int count=x1-x0;
+ // MIDP GameCanvas buffers are opaque mutable images; no alpha compositing or
+ // coordinate transform is required. Copy color/depth once, row by row.
+ for(int yy=y0;yy<y1;yy++){int at=yy*sw+x0;memcpy(crimson_pixels+at,source+at,(size_t)count*4);if(depth){if(from)memcpy(depth+at,from+at,(size_t)count*4);else for(int xx=0;xx<count;xx++)depth[at+xx]=layer;}}
+ if(depth&&from)crimson_stereo_content_drawn();return 0;
+}
 static s32 stereoAuto2D(Runtime*r,JClass*c){(void)c;crimson_stereo_auto_2d(arg(r,0));return 0;}
 static s32 stereoMode(Runtime*r,JClass*c){(void)c;push_int(r->stack,crimson_stereo_mode());return 0;}
 static s32 stereoRect(Runtime*r,JClass*c){(void)c;Instance*depth=arr(r,0);int w=arg(r,1),h=arg(r,2),x=arg(r,3),y=arg(r,4),rw=arg(r,5),rh=arg(r,6);if(!crimson_stereo_mode()||!depth||w<1||h<1||(int64_t)w*h>depth->arr_length)return 0;float*z=(float*)depth->arr_body,layer=crimson_stereo_layer();int x0=x>0?x:0,y0=y>0?y:0,x1=(int64_t)x+rw<w?x+rw:w,y1=(int64_t)y+rh<h?y+rh:h;if(x0==0&&y0==0&&x1==w&&y1==h&&layer==-4){layer=0;crimson_stereo_finish_frame();}for(int yy=y0;yy<y1;yy++)for(int xx=x0;xx<x1;xx++)z[yy*w+xx]=layer;return 0;}
@@ -115,6 +126,7 @@ int crimson_gc_completed(void){return __atomic_load_n(&crimson_gc_cycles,__ATOMI
 static s32 gcCycles(Runtime*r,JClass*c){(void)c;push_int(r->stack,crimson_gc_completed());return 0;}
 static s32 snapshot(Runtime*r,JClass*c){Instance*a=jarray_create_by_type_index(r,crimson_width*crimson_height,DATATYPE_INT);if(a)memcpy(a->arr_body,crimson_pixels,crimson_width*crimson_height*4);push_ref(r->stack,a);return 0;}
 static java_native_method methods[]={
+ {"crimson/Native","flushBuffer","([IIIIIII[F)V",flushBuffer},
  {"crimson/Native","readPixels","([III[IIIIIII[F[F)V",readPixels},
  {"crimson/Native","motion","(I[I)Z",motion},
  {"crimson/Native","m3gSpan","([I[SIII[F[I[I)V",m3gSpan},

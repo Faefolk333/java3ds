@@ -1,4 +1,36 @@
-# Java3DS 0.3.7 validation — 2026-11-02
+# Java3DS 0.3.8 validation — 2026-11-02
+
+PC checks completed; physical-console verification remains pending:
+
+- CIA/3DSX build, same title 000400000F3A3D00, version 56 (0.3.8).
+  Container, extracted assets and local QR checks are in validation/0.3.8.
+- All runtime checks pass twice, including GameCanvas partial/hidden flush,
+  rendering, Micro3D, M3G, media callbacks, controls and stop. Stereo integration
+  records nine frames with real depth, including the direct buffer flush.
+- 1,000 opaque 320x240 flushes, three host runs per variant. Stereo off:
+  0.3.7 150/136/147 ms; 0.3.8 42/29/28 ms. Stereo instrumentation:
+  845/730/848 ms vs 243/333/280 ms. Both check resulting color pixels.
+  These are buffer-transfer timings, not whole-game or physical 3DS FPS.
+- Six 35-second scripted probes exit 0: Blades 320x240, Soul, Moorhuhn,
+  Yeti, Orcs & Elves II and Witcher. Blades starts MIDI and produces PCM.
+- Audio device stubs cover New-core-2 success, denied-core fallback, Old
+  fallback, thread/allocation/DSP failures, mixing, pause and shutdown.
+  CIA requests CanAccessCore2. Device scheduling remains untested.
+- Seven CRT modes preserve settings. LUT output equals reference math over
+  all phases/channel values; alpha/black and dark contrast checks pass.
+  Preview uses the actual C++ filter. UI remains unfiltered.
+- Banner: 264216 bytes, 86 dictionary lookups. Four original source tracks
+  repeat every five seconds. A separate root channel counters an assumed
+  eight-second external orbit, combined period 40 seconds. Serialized paths
+  and matrices match GLB at 640 samples within 0.00004203. This assumes the
+  user's approximate orbit estimate, not verified HOME Menu timing.
+
+**Banner is still experimental.** A timed inverse orbit is not a universal
+rotation-disable flag. Different speeds or microphone/motion response can
+cause drift. Console playback over several cycles is required before calling
+this fixed. The original source motion/artwork and sound are retained.
+
+## Previous 0.3.7 validation — 2026-11-02
 
 Completed on PC; physical-console checks remain pending:
 

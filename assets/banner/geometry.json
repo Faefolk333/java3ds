@@ -35,5 +35,5 @@
   "source_camera_max_delta": 0,
   "camera_motion_detected": false,
   "camera_space_baked": true,
-  "facing_anchor": "YAxial billboard parent"
+  "facing_anchor": "ordinary unanimated source parent; CGFX adds orbit compensation"
 }

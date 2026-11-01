@@ -1,0 +1,8 @@
+{
+  "serialized_TRS_samples": 640,
+  "max_matrix_error": 4.202952505494295e-05,
+  "assumed_HOME_orbit_seconds": 8,
+  "authored_loop_seconds": 5,
+  "hardware_timing_verified": false,
+  "CGFX_bytes": 264216
+}

@@ -1,0 +1,17 @@
+TITLE Compatibility probes MIDLETS 1 POP 0
+NATIVE 320x240 KNOWN 0 BACKEND
+RenderCompatibility PASS
+MotionCompatibility PASS
+M3GCompatibility PASS
+M3GSpanCheck PASS
+MicroPoseCheck PASS
+MicroBatchCheck PASS
+MicroBlendCheck PASS
+ArcCheck PASS
+GameCanvasFlushCheck PASS
+MediaPlayerCheck PASS
+RmsCompatibility PASS
+ControlsCheck PASS
+DirectGraphicsCheck PASS
+ShutdownReentry PASS
+M3GAssetProbe PASS

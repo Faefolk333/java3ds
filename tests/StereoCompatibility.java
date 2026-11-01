@@ -14,6 +14,7 @@ public class StereoCompatibility {
   int[] readback=new int[320*240];offscreen.getRGB(readback,0,320,0,0,320,240);canvas.drawRGB(readback,0,320,0,0,320,240,false);Native.present();
   com.nokia.mid.ui.DirectGraphics dg=com.nokia.mid.ui.DirectUtils.getDirectGraphics(canvas);int[] nokia=new int[320*240];dg.getPixels(nokia,0,320,0,0,320,240,8888);dg.drawPixels(nokia,true,0,320,0,0,320,240,0,8888);Native.present();
   short[] packed=new short[320*240];dg.getPixels(packed,0,320,0,0,320,240,565);dg.drawPixels(packed,false,0,320,0,0,320,240,0,565);Native.present();
-  System.out.println("STEREO_INTEGRATION_PASS LayerManager Micro3D M3G offscreen_image clone transform");
+  Graphics.flushImage(offscreen,0,0,320,240);
+  System.out.println("STEREO_INTEGRATION_PASS LayerManager Micro3D M3G offscreen_image clone transform fast_flush");
  }
 }

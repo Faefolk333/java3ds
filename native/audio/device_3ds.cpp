@@ -67,9 +67,11 @@ extern "C" int crimson_audio_init(){
  memset(waves,0,sizeof(waves));ndspSetOutputMode(NDSP_OUTPUT_STEREO);ndspChnReset(0);
  ndspChnSetInterp(0,NDSP_INTERP_LINEAR);ndspChnSetRate(0,RATE);ndspChnSetFormat(0,NDSP_FORMAT_MONO_PCM16);
  float mix[12]={};mix[0]=mix[1]=1.f;ndspChnSetMix(0,mix);
- running.store(true);audioThread=threadCreate(stream,nullptr,64*1024,0x2f,-2,false);
+ running.store(true);bool newModel=false;int audioCore=-2;
+ if(!R_FAILED(APT_CheckNew3DS(&newModel))&&newModel){audioThread=threadCreate(stream,nullptr,64*1024,0x2f,2,false);if(audioThread)audioCore=2;}
+ if(!audioThread)audioThread=threadCreate(stream,nullptr,64*1024,0x2f,-2,false);
  if(!audioThread){running.store(false);crimson_audio_shutdown();return -4;}
- fprintf(stderr,"AUDIO ready: lazy SF2 MIDI + PCM WAV, %d Hz, 32 voices\n",RATE);return 0;
+ fprintf(stderr,"AUDIO ready: MIDI/WAV/AMR, %d Hz, core %d\n",RATE,audioCore);return 0;
 }
 extern "C" void crimson_audio_shutdown(){
  running.store(false);if(audioThread){threadJoin(audioThread,U64_MAX);threadFree(audioThread);audioThread=nullptr;}

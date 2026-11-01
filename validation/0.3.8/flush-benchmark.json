@@ -1,0 +1,74 @@
+[
+  {
+    "version": "037",
+    "stereo": "0",
+    "run": 0,
+    "ms": 150
+  },
+  {
+    "version": "037",
+    "stereo": "0",
+    "run": 1,
+    "ms": 136
+  },
+  {
+    "version": "037",
+    "stereo": "0",
+    "run": 2,
+    "ms": 147
+  },
+  {
+    "version": "038",
+    "stereo": "0",
+    "run": 0,
+    "ms": 42
+  },
+  {
+    "version": "038",
+    "stereo": "0",
+    "run": 1,
+    "ms": 29
+  },
+  {
+    "version": "038",
+    "stereo": "0",
+    "run": 2,
+    "ms": 28
+  },
+  {
+    "version": "037",
+    "stereo": "3",
+    "run": 0,
+    "ms": 845
+  },
+  {
+    "version": "037",
+    "stereo": "3",
+    "run": 1,
+    "ms": 730
+  },
+  {
+    "version": "037",
+    "stereo": "3",
+    "run": 2,
+    "ms": 848
+  },
+  {
+    "version": "038",
+    "stereo": "3",
+    "run": 0,
+    "ms": 243
+  },
+  {
+    "version": "038",
+    "stereo": "3",
+    "run": 1,
+    "ms": 333
+  },
+  {
+    "version": "038",
+    "stereo": "3",
+    "run": 2,
+    "ms": 280
+  }
+]

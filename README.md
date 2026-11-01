@@ -1,4 +1,4 @@
-# Java3DS — private alpha 0.3.7
+# Java3DS — private alpha 0.3.8
 
 Java ME / JAR / JAD launcher for Nintendo 3DS, with a shared MIDI synthesizer.
 Extract the installation ZIP to the root of the SD card, replacing
@@ -7,7 +7,34 @@ with Java Pocket 3DS. Games, settings and saves are retained. Start **Java3DS**
 from Homebrew Launcher; add your JAR/JAD files under `/3ds/java-3ds/games/`.
 A JAD also needs its matching local JAR. Original game JARs are not bundled.
 
-## Changes in 0.3.7
+## Changes in 0.3.8
+
+Four stronger CRT profiles join the two soft filters: Scanlines, RGB grille,
+Shadow mask and Color TV. A phosphor brightness curve lifts dark colors before
+applying the beam/color mask, while keeping black black. Masks remain fixed to
+physical pixels and match between eyes. Lookup tables avoid per-pixel filter
+arithmetic during presentation. Settings retain all seven choices including Off.
+
+GameCanvas publishes opaque buffer rows and depth directly, avoiding alpha
+blending followed by another metadata pass. A host benchmark of 1,000 flushes
+has medians 147 -> 29 ms with stereo off and 845 -> 280 ms with Auto test
+instrumentation. This measures buffer transfer, not whole-game or device FPS.
+On New 3DS, the mixer first tries application core 2, with the required CIA
+permission enabled. Unsupported loaders and Old 3DS fall back to the original
+core. Actual device speed and audio headroom still need testing.
+
+**Banner remains a hardware-test candidate.** The 0.3.7 billboard was on a
+parent without a mesh; rigid mesh draw billboarding does not inherit that flag.
+A new ordinary root channel counters the observed approximately eight-second
+HOME orbit while the four original five-second motion tracks repeat unchanged.
+The combined cycle is 40 seconds, with no duplicated source keys. Serialized
+TRS evaluation cancels an assumed eight-second orbit and matches GLB source
+matrices within 0.000043 over 640 samples. It does not prove the console orbit
+has exactly this timing. Microphone/motion-driven changes can cause drift;
+this is not a universal orbit-disable switch. No badge or new artistic motion
+was added. Console playback remains necessary before calling the banner fixed.
+
+## Changes in 0.3.7 (historical)
 
 GameCanvas flush now publishes its buffer directly instead of calling the
 application's paint method twice. Moorhuhn again renders its menu, chickens,
@@ -37,14 +64,13 @@ II, still need renderer-specific depth integration. Depth from mutable images
 and the bounded getRGB/drawRGB cache remains supported. Older default-Off
 settings migrate to Auto once; a newly saved Off choice is retained.
 
-L+R or touch MENU offers CRT **Off / Soft scanlines / Soft grid**. Filters affect
+L+R or touch MENU offers CRT **Off / Soft scanlines / Soft grid** (expanded in 0.3.8). Filters affect
 only the game image, share the same phase in both eyes and preserve settings
 per game. Yeti Sports' golf club now uses the requested five-degree fillArc
 instead of an incorrectly filled oval.
 
-The banner has no version badge. An unanimated Y-axis billboard parent
-counteracts HOME Menu's rotation of the entire model while retaining the four
-authored model animation channels. Single-sided closed meshes reduce CGFX
+The banner has no version badge. The attempted Y-axis billboard parent failed the subsequent console test;
+0.3.8 replaces it with a separate orbit-compensation channel. Single-sided closed meshes reduce CGFX
 from 502,712 to 264,072 bytes. The supplied quiet WAV is normalized to -1 dBFS
 and resampled to 32 kHz; its original is retained. No significant leading
 silence was present. HOME Menu controls startup timing. Motion, sound and
@@ -111,7 +137,7 @@ actual game ZIPs, including binary files with a misleading .jad suffix.
 * Touch keys highlight only on touch; menu parallax updates more often and
   filters the stick movement. The banner is unchanged.
 
-## CIA installation (0.3.7)
+## CIA installation (0.3.8)
 
 Install `java3ds.cia` with FBI to launch directly from HOME Menu. The package
 includes a native animated 3D banner converted from the supplied Blender scene

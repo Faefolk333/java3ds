@@ -1,4 +1,4 @@
-# Compatibility work — 0.3.7
+# Compatibility work — 0.3.8
 
 The user's 0.3.3 console report: Blades 240×320 launches slowly; the 320×240
 variant crashes the system; Outland launches but is impractically slow; Worms
@@ -170,3 +170,13 @@ lighting fidelity are incomplete. Stereo layer hints work on ordinary image
 and sprite draws, not arbitrary flattened pixel arrays. Orcs' custom software
 3D renderer exposes no Micro3D/M3G depth. No raycaster-specific adapter exists.
 CRT filters are presentation-only. All new changes require device validation.
+
+## 0.3.8 presentation/performance follow-up
+
+Opaque GameCanvas color/depth rows publish directly. Six scripted games still
+reach rendered scenes and exit normally. Host transfer benchmarks and device
+stub checks cover the optimization and New-core-2/denied-core/Old fallback.
+Actual 3DS frame rates are not yet measured. Four stronger CRT masks are
+presentation-only; the UI remains unfiltered. Banner 0.3.7's parent billboard
+failed on console; 0.3.8's timed counter-orbit is experimental and not yet a
+confirmed fix. See CIA.md for its timing limitation.

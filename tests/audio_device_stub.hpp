@@ -15,6 +15,9 @@ struct LightLock{std::mutex value;};
 struct ndspWaveBuf{int16_t*data_pcm16;uint32_t nsamples;unsigned status;};
 typedef std::thread* Thread;
 extern int audioFailure,audioDspExits,audioLinearFrees;
+extern bool audioNewModel,audioDenyCore2;
+extern int audioLastCore,audioCore2Attempts;
+inline Result APT_CheckNew3DS(bool*newModel){*newModel=audioNewModel;return 0;}
 extern std::atomic<unsigned> audioBuffers,audioNonzero;
 inline void LightLock_Init(LightLock*){}
 inline void LightLock_Lock(LightLock*l){l->value.lock();}
@@ -33,6 +36,6 @@ inline void ndspChnSetMix(int,float*m){assert(m[0]==1&&m[1]==1);}
 inline Result DSP_FlushDataCache(void*,size_t n){assert(n==2048);return audioFailure==4?-1:0;}
 inline void ndspChnWaveBufAdd(int c,ndspWaveBuf*w){assert(c==0&&w->nsamples==1024&&w->data_pcm16);audioBuffers++;for(unsigned i=0;i<w->nsamples;i++)if(w->data_pcm16[i])audioNonzero++;w->status=NDSP_WBUF_DONE;std::this_thread::sleep_for(std::chrono::milliseconds(1));}
 inline void svcSleepThread(int64_t n){std::this_thread::sleep_for(std::chrono::nanoseconds(n));}
-inline Thread threadCreate(void(*fn)(void*),void*p,size_t,int,int,bool){return audioFailure==3?nullptr:new std::thread(fn,p);}
+inline Thread threadCreate(void(*fn)(void*),void*p,size_t,int,int core,bool){if(core==2){audioCore2Attempts++;if(audioDenyCore2)return nullptr;}audioLastCore=core;return audioFailure==3?nullptr:new std::thread(fn,p);}
 inline int threadJoin(Thread t,uint64_t){t->join();return 0;}
 inline void threadFree(Thread t){delete t;}

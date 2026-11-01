@@ -1,7 +1,7 @@
 {
-  "cgfx_bytes": 264072,
+  "cgfx_bytes": 264216,
   "binary_checks": {
-    "cgfx_bytes": 264072,
+    "cgfx_bytes": 264216,
     "dictionaries": [
       {
         "offset": 148,
@@ -53,10 +53,10 @@
       },
       {
         "offset": 13288,
-        "entries": 4
+        "entries": 5
       }
     ],
-    "lookups_passed": 85
+    "lookups_passed": 86
   },
   "audio": {
     "channels": 2,
@@ -68,11 +68,20 @@
   "animations": [
     {
       "name": "COMMON",
-      "frames_at_60_hz": 300.0,
+      "frames_at_60_hz": 2400,
       "looping": true,
-      "members": 4
+      "members": 5
     }
   ],
+  "orbit_compensation": {
+    "seconds_per_turn": 8,
+    "source_seconds": 5,
+    "combined_seconds": 40.0,
+    "axis": "Y",
+    "radians": -31.41592653589793,
+    "billboard": false,
+    "hardware_verified": false
+  },
   "geometry": {
     "fps": 24.0,
     "frames": 120,
@@ -110,6 +119,6 @@
     "source_camera_max_delta": 0,
     "camera_motion_detected": false,
     "camera_space_baked": true,
-    "facing_anchor": "YAxial billboard parent"
+    "facing_anchor": "ordinary unanimated source parent; CGFX adds orbit compensation"
   }
 }

@@ -3,7 +3,7 @@ public final class Graphics {
  public static final int HCENTER=1,VCENTER=2,LEFT=4,RIGHT=8,TOP=16,BOTTOM=32,BASELINE=64;
  public void readPixels(int[] dst,int o,int scan,int x,int y,int w,int h){x+=tx;y+=ty;if(x<0||y<0||w<0||h<0||x+w>width||y+h>height)throw new IllegalArgumentException();if(dst==null)throw new NullPointerException();if(w==0||h==0)return;long last=(long)o+(long)(h-1)*scan;if(Math.min(o,last)<0||Math.max(o,last)+w>dst.length)throw new ArrayIndexOutOfBoundsException();crimson.Native.readPixels(target,width,height,dst,o,scan,x,y,w,h,depth(false),crimson.RasterDepth.prepare(dst));}
  public static int images;
- public static void flushImage(Image image,int x,int y,int w,int h){if(w<=0||h<=0)return;Graphics screen=new Graphics(null,crimson.GameMain.width,crimson.GameMain.height,0);screen.setClip(x,y,w,h);screen.drawImage(image,0,0,TOP|LEFT);crimson.Native.present();}
+ public static void flushImage(Image image,int x,int y,int w,int h){if(w<=0||h<=0)return;crimson.Native.flushBuffer(image.pixels,image.w,image.h,x,y,w,h,image.stereoDepth);crimson.Native.present();}
  private Image image;
  private float[] depth(boolean create){if(image==null)return null;if(create&&image.stereoDepth==null&&width*height<=512*512&&crimson.Native.stereoMode()!=0){try{image.stereoDepth=new float[width*height];}catch(OutOfMemoryError e){return null;}}return image.stereoDepth;}
  Graphics(Image image){this(image.pixels,image.w,image.h,0);this.image=image;}

@@ -1,0 +1,17 @@
+RAM cache ready: 3 JARs, 1798314 bytes
+RAM cache hits: 700
+STAGE 40 0
+STAGE 41 3
+Java3DS: The Witcher 320x240
+loadAnimationFile Exception: Błąd pliku o nazwie:  s.ani
+loadImages Exception: B??d pliku o nazwie:  s.bgs
+loadImages Exception: Błąd pliku o nazwie:  /mg
+VM_AUDIO_LOAD handle=0 bytes=4877
+VM_AUDIO_START 0 result 0
+VM_AUDIO_LOAD handle=0 bytes=5654
+VM_AUDIO_START 0 result 0
+STAGE 80 0
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+VM_EXIT run=0 result=0 frames=319 peak=6446

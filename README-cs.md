@@ -1,4 +1,24 @@
-# Java3DS 0.3.7 — privátní alpha
+# Java3DS 0.3.8 — privátní alpha
+
+CRT má čtyři výraznější volby: Scanlines, RGB grille, Shadow mask a Color TV.
+Jsou viditelné i v tmavších barevných plochách; černá zůstává černá. Staré jemné
+filtry i Off zůstávají. Barevné masky se počítají předem do tabulek.
+
+Zrychlilo se předání obrazu GameCanvas: hotový obraz i hloubka se kopírují přímo
+po řádcích. PC benchmark 1 000 předání: medián 147 -> 29 ms bez stereo a
+845 -> 280 ms s měřicí stereo cestou. Není to násobek FPS celé hry ani měření 3DS.
+Na New 3DS zvuk zkusí další jádro CPU (core 2); při nedostupnosti se vrátí na
+původní cestu. Old 3DS nevyžaduje toto dodatečné jádro.
+
+Banner zatím není potvrzený jako opravený na konzoli. Minulý billboard na
+pomocném rodiči nezastavil otáčení připojených modelů. Nový export přidává
+samostatnou korekci oběhu podle odhadovaných osmi sekund, původní pětisekundová
+animace je zachovaná. Test hotového CGFX porovnává 640 transformací s GLB.
+Při jiném časování HOME Menu nebo vlivu mikrofonu/pohybu může vzniknout drift.
+Nejde o univerzální vypnutí otáčení. Prosím ověř hlavně delší přehrávání banneru.
+Originály na ploše a vzhled modelů se nemění. Číslo verze na banneru není.
+
+Předchozí opravy 0.3.7:
 
 GameCanvas nyní zveřejní hotový obraz bez druhého volání kreslení hry. V PC testu
 Moorhuhn funguje menu, kuřata, zaměřovač a střelba. Skryté plátno nemůže přepsat
@@ -21,13 +41,8 @@ ne o obnovenou geometrii. Orcs & Elves II předává hotový obraz z vlastního 
 pro skutečnou hloubku jeho scény je stále potřeba zvláštní adaptér. Nově uložené
 Off zůstane zachované, starý výchozí stav Off se jednou převede na Auto.
 
-V herním menu je CRT: Off / Soft scanlines / Soft grid. Jemné filtry ovlivňují jen
+V herním menu je CRT, v 0.3.8 rozšířené o výraznější barevné profily. Jemné filtry ovlivňují jen
 hru a ukládají se pro titul. L+R nebo dotykové MENU otevře nastavení.
-
-Banner už neobsahuje číslo verze. Přidaný pevný rodič potlačuje otáčení celého
-modelu v HOME Menu a zachovává původní čtyři animační kanály. Zvuk je zesílený
-na špičku -1 dBFS a převedený na 32 kHz. Originály na ploše se nemění. Přesný pohyb,
-načasování zvuku a vzhled materiálů musí potvrdit konzole.
 
 CIA nainstaluj přes FBI. Hry a pozice v /3ds/java-3ds se zachovají. Pro Homebrew
 Launcher rozbal instalační ZIP do kořene SD karty.

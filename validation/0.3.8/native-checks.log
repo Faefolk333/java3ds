@@ -1,0 +1,22 @@
+DISPLAY_FILTER_PASS 7_modes lookup_exact dark_beam_color_contrast black_alpha_preserved
+SETTINGS_PASS stereo_roundtrip older_settings invalid_values
+AUDIO ndspInit failed ffffffff (check /3ds/dspfirm.cdc)
+AUDIO ready: MIDI/WAV/AMR, 22050 Hz, core 2
+AUDIO background enabled=1 state=10 level=0
+AUDIO background PCM peak=4080
+AUDIO load handle=32 bytes=4630 type=WAV
+AUDIO command handle=32 op=1 value=-1 result=0
+AUDIO command handle=32 op=2 value=0 result=0
+AUDIO background enabled=0 state=15 level=0
+AUDIO background enabled=1 state=10 level=0
+AUDIO background PCM peak=4530
+AUDIO background enabled=0 state=10 level=0
+AUDIO command handle=32 op=3 value=0 result=0
+AUDIO load handle=0 bytes=295 type=MIDI
+AUDIO command handle=0 op=1 value=1 result=0
+AUDIO midi PCM handle=0 peak=17416
+AUDIO ready: MIDI/WAV/AMR, 22050 Hz, core 2
+AUDIO cache failure
+AUDIO ready: MIDI/WAV/AMR, 22050 Hz, core -2
+AUDIO ready: MIDI/WAV/AMR, 22050 Hz, core -2
+AUDIO_DEVICE_PASS MIDI_background WAV_overlay pause resume SOUND_OFF cache_failure DSP_failure allocation_failure thread_failure clean_shutdown

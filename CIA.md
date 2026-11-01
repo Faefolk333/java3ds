@@ -30,7 +30,7 @@ Python executable if `python3` is not on PATH. With devkitARM,
 libctru and the same portlibs as the 3DSX build, run `bash build-cia.sh`.
 The checked-in generated banner is sufficient; Blender is not needed for a
 normal application rebuild. Output: `work/arm/java3ds.cia`, title ID
-`000400000F3A3D00`, product code `CTR-P-J3DS`, title version 55 (0.3.7).
+`000400000F3A3D00`, product code `CTR-P-J3DS`, title version 56 (0.3.8).
 Keep this title ID for future updates. The executable supports Old/New 3DS;
 64 MiB/124 MiB memory profiles are encoded in its exheader. The CIA build
 reserves 4 MiB of linear memory and caps the regular heap at 48 MiB (Old) / 80 MiB (New), with resource-limit checks.
@@ -40,15 +40,18 @@ reserves 4 MiB of linear memory and caps the regular heap at 48 MiB (Old) / 80 M
 The supplied Desktop Blender scene has a fixed camera: sampled frames 1/30/60/90/120
 have identical camera matrices. Its 120 frames at 24 fps form a five-second loop.
 Model transforms are baked into the fixed HOME Menu perspective and closed by a
-matching final pose. The native CGFX animation has 300 ticks at 60 Hz.
+matching final pose. Its source tracks use 300 ticks at 60 Hz; the CGFX
+container cycle is 2400 ticks to align source motion and orbit compensation.
 
 `assets/banner/source.blend` is now a compact derived scene imported from the
 optimized GLB; the user's Desktop original was not modified. `banner.glb`,
-`geometry.json` and `manifest.json` reproduce the shipped asset. Its closed meshes use single-sided triangles and a static Y-axis billboard
-parent cancels the whole-model rotation added by HOME Menu. Children retain
-their authored motion. There is no version badge. The CGFX is 264,072 bytes,
-below the 512 KiB limit. The 0.3.4 bone dictionary was malformed after opacity
-sorting; the converter rebuilds it and validates serialized name lookups. Glass shells use alpha
+`geometry.json` and `manifest.json` reproduce the shipped asset. Its closed meshes use single-sided triangles. The 0.3.7 billboard-only parent
+failed on console and is no longer used. A separate root rotation compensates
+an approximately eight-second observed orbit; original five-second source
+tracks use repeat curves. The combined cycle is 40 seconds. This timing still
+needs hardware verification and may drift with microphone/motion inputs.
+There is no version badge. The CGFX is 264,216 bytes, below 512 KiB.
+Serialized dictionary and TRS/source comparisons are build gates. Glass shells use alpha
 blending, bright specular material and a Phong lookup table. HOME Menu cannot
 reproduce Blender's physical refraction. Preview PNGs are an approximation.
 
@@ -71,16 +74,17 @@ to PCM16/32000. `banner-source.wav` preserves the supplied original;
 `prepare_banner_audio.py` reproduces processing.
 Navigation sounds play independently inside Java3DS itself.
 
-`Facing anchor` is an unanimated identity parent in banner.glb. The converter
-marks it as YAxial and clears the identity optimization so HOME Menu evaluates
-its billboard. Re-exporting a new source requires retaining this parent. Do not
-add global rotations or a version marker to the authored model animation.
+`Facing anchor` stays an identity parent in the source GLB. The converter adds
+its separate compensation channel in CGFX. No billboard is applied to animated
+mesh bones, so their authored rotations are not flattened. `banner_motion.py`
+compares serialized transforms with the source at 640 samples assuming the
+specified external orbit, and explicitly does not verify hardware timing.
 
 ## Recovery from the 0.3.4 HOME Menu crash
 
 Open FBI directly without highlighting Java3DS, and install the replacement
 CIA over the existing title. Do not delete game/save folders. The replacement
-uses the same title ID and version 55. Dumps 29/30 both identify process `menu`,
+uses the same title ID and version 56. Dumps 29/30 both identify process `menu`,
 PC 0x187d58, LR 0x20b940, FAR 0x8; these are HOME Menu addresses, not VM code.
 The malformed dictionary is independently reproduced in the shipped 0.3.4 CGFX;
 the precise HOME function is not symbolicated. See validation/0.3.5.
@@ -92,3 +96,13 @@ to source. Ticket/TMD/access-descriptor signature failures are expected for
 an unsigned homebrew CIA and require the same custom firmware used for FBI.
 Physical HOME Menu playback, first launch and CIA self-updating still require
 a console test. See VALIDATION.md for the exact completed checks.
+
+## Implementation references for 0.3.8
+
+- Rigid-submesh billboard evaluation uses the bound bone:
+  https://github.com/gdkchan/SPICA/blob/master/SPICA.Rendering/Mesh.cs
+- libctru documents core 2 permission and Old/New thread restrictions:
+  https://github.com/devkitPro/libctru/blob/master/libctru/include/3ds/thread.h
+
+The eight-second compensation period comes from this console user's estimate,
+not from a verified universal HOME Menu timing constant.

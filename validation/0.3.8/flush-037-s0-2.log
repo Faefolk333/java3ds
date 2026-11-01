@@ -1,0 +1,9 @@
+RAM cache ready: 3 JARs, 1492527 bytes
+RAM cache hits: 335
+STAGE 40 0
+STAGE 41 3
+FLUSH_BENCH_PASS frames=1000 ms=147
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+VM_EXIT run=0 result=0 frames=1000 peak=0

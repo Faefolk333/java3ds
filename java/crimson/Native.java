@@ -1,6 +1,7 @@
 package crimson;
 public final class Native {
  public static native int[] snapshot();
+ public static native void flushBuffer(int[] pixels,int width,int height,int x,int y,int w,int h,float[] depth);
  public static native void readPixels(int[] target,int tw,int th,int[] dst,int offset,int scan,int x,int y,int w,int h,float[] sourceDepth,float[] destinationDepth);
  public static native int[] decode(byte[] bytes,int offset,int length,int[] dimensions);
  public static native void fill(int[] target,int width,int height,int x,int y,int w,int h,int color);
