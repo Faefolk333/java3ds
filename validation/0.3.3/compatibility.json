@@ -1,0 +1,882 @@
+[
+  {
+    "game": "Age of Heroes III - Orcs Retribution [320x240] (E61 E71) (andrew-lviv.net).jar",
+    "inspect": "TITLE Age of Heroes 3 MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=145 peak=0"
+    ],
+    "missing": [],
+    "index": 0,
+    "exceptions": []
+  },
+  {
+    "game": "loco_roco_145244_2875.jar",
+    "inspect": "TITLE LocoRoco Hi_freemobilejavagames.blogspot.com MIDLETS 1 POP 0\nNATIVE 240x320 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=423 peak=0"
+    ],
+    "missing": [],
+    "index": 1,
+    "exceptions": []
+  },
+  {
+    "game": "The Dark Knight Rises [320x240] (E71) (andrew-lviv.net).jar",
+    "inspect": "TITLE The Dark Knight Rises MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=74 peak=0"
+    ],
+    "missing": [],
+    "index": 2,
+    "exceptions": []
+  },
+  {
+    "game": "Worms 2011 Armageddon [320x240] (E71) (andrew-lviv.net).jar",
+    "inspect": "TITLE Worms 2011 Armageddon MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=108 peak=0"
+    ],
+    "missing": [],
+    "index": 3,
+    "exceptions": []
+  },
+  {
+    "game": "Discworld - The Colour of Magic [208x208] (andrew-lviv.net).jar",
+    "inspect": "TITLE Discworld - TCOM MIDLETS 1 POP 0\nNATIVE 208x208 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=107 peak=0"
+    ],
+    "missing": [],
+    "index": 4,
+    "exceptions": []
+  },
+  {
+    "game": "Blades and Magic [240x320] (SonyEricsson K800i, K790i) (andrew-lviv.net).jar",
+    "inspect": "TITLE Blades and Magic MIDLETS 1 POP 0\nNATIVE 240x320 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=142 peak=0"
+    ],
+    "missing": [],
+    "index": 5,
+    "exceptions": []
+  },
+  {
+    "game": "blades_and_magic_320x240_135586.jar",
+    "inspect": "TITLE Blades and Magic (mobilegamesarena.net) MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=140 peak=0"
+    ],
+    "missing": [],
+    "index": 6,
+    "exceptions": []
+  },
+  {
+    "game": "Gladiator 3D [240x320] (Nokia 6280, 5300) (andrew-lviv.net).jar",
+    "inspect": "TITLE Gladiator MIDLETS 1 POP 0\nNATIVE 240x320 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=335 peak=0"
+    ],
+    "missing": [],
+    "index": 7,
+    "exceptions": []
+  },
+  {
+    "game": "Outland 3D [320x240] (Nokia E61) (andrew-lviv.net).jar",
+    "inspect": "TITLE Outland 3D MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=64 peak=0"
+    ],
+    "missing": [],
+    "index": 8,
+    "exceptions": []
+  },
+  {
+    "game": "Age of Heroes V - Warriors Way [320x240] (Nokia E61, E71) (andrew-lviv.net).jar",
+    "inspect": "TITLE AHV Warrior's Way MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=439 peak=0"
+    ],
+    "missing": [],
+    "index": 9,
+    "exceptions": []
+  },
+  {
+    "game": "Age of Heroes VII - Chimaeras Heart [320x240] (E61 E71) (andrew-lviv.net).jar",
+    "inspect": "TITLE AHVII Chimaera's Heart MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=440 peak=0"
+    ],
+    "missing": [],
+    "index": 10,
+    "exceptions": []
+  },
+  {
+    "game": "Assassins Creed - Brotherhood [320x240] (Nokia E71) (andrew-lviv.net).jar",
+    "inspect": "TITLE Assassin's Creed Brotherhood MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=88 peak=0"
+    ],
+    "missing": [],
+    "index": 11,
+    "exceptions": []
+  },
+  {
+    "game": "Assassins Creed [320x240] (Nokia E71, E72) (andrew-lviv.net).jar",
+    "inspect": "TITLE Assassins Creed MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=105 peak=0"
+    ],
+    "missing": [],
+    "index": 12,
+    "exceptions": []
+  },
+  {
+    "game": "Assassins Creed II [320x240] (Nokia E71) (andrew-lviv.net).jar",
+    "inspect": "TITLE Assassin's Creed 2 MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=95 peak=0"
+    ],
+    "missing": [],
+    "index": 13,
+    "exceptions": []
+  },
+  {
+    "game": "Assassins Creed Revelations [320x240] (Nokia E71) (andrew-lviv.net).jar",
+    "inspect": "TITLE Assassin's Creed Revelations MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=83 peak=0"
+    ],
+    "missing": [],
+    "index": 14,
+    "exceptions": []
+  },
+  {
+    "game": "Carcassonne [320x240] (E71) (andrew-lviv.net).jar",
+    "inspect": "TITLE Carcassonne MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=147 peak=6589"
+    ],
+    "missing": [],
+    "index": 15,
+    "exceptions": []
+  },
+  {
+    "game": "Castlevania - Aria of Sorrow [320x240] (Nokia E61, E71) (andrew-lviv.net).jar",
+    "inspect": "TITLE Castlevania Aria Of Sorrow MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=63 peak=0"
+    ],
+    "missing": [],
+    "index": 16,
+    "exceptions": []
+  },
+  {
+    "game": "Clash of the Titans The Movie [320x240] (Nokia C3-00, E61, E71) (andrew-lviv.net).jar",
+    "inspect": "TITLE Clash of Titans Movie MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=113 peak=0"
+    ],
+    "missing": [],
+    "index": 17,
+    "exceptions": []
+  },
+  {
+    "game": "Dark Thrones [320x240] (Nokia C3-00, E61) (andrew-lviv.net).jar",
+    "inspect": "TITLE Dark Thrones MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=99 peak=0"
+    ],
+    "missing": [],
+    "index": 18,
+    "exceptions": []
+  },
+  {
+    "game": "Disciples [240x320] (Nokia 6280) (andrew-lviv.net).jar",
+    "inspect": "TITLE Disciples TEGOS MIDLETS 1 POP 0\nNATIVE 240x320 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=205 peak=0"
+    ],
+    "missing": [],
+    "index": 19,
+    "exceptions": []
+  },
+  {
+    "game": "Dungeon Hunter 3 [320x240] (E71) (andrew-lviv.net).jar",
+    "inspect": "TITLE Dungeon Hunter 3 MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=82 peak=0"
+    ],
+    "missing": [],
+    "index": 20,
+    "exceptions": []
+  },
+  {
+    "game": "Dungeon Hunter Curse of Heaven [320x240] (Nokia E71 [ES]) (andrew-lviv.net).jar",
+    "inspect": "TITLE Dungeon Hunter Curse of Heaven MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=74 peak=0"
+    ],
+    "missing": [
+      "method not exist :javax/microedition/io/file/FileConnection.openInputStream()Ljava/io/InputStream;"
+    ],
+    "index": 21,
+    "exceptions": []
+  },
+  {
+    "game": "Dungeon Storm [208x208] (andrew-lviv.net).jar",
+    "inspect": "TITLE DungeonStorm MIDLETS 1 POP 0\nNATIVE 208x208 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=47 peak=0"
+    ],
+    "missing": [],
+    "index": 22,
+    "exceptions": []
+  },
+  {
+    "game": "Dungeon Storm [240x320] (andrew-lviv.net).jar",
+    "inspect": "TITLE DungeonStorm MIDLETS 1 POP 0\nNATIVE 240x320 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=46 peak=0"
+    ],
+    "missing": [],
+    "index": 23,
+    "exceptions": []
+  },
+  {
+    "game": "Galaxy on Fire 2 [240x320] (N95) (andrew-lviv.net).jar",
+    "inspect": "TITLE Galaxy on Fire 2 MIDLETS 1 POP 0\nNATIVE 240x320 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=337 peak=0"
+    ],
+    "missing": [
+      "method not exist :javax/microedition/lcdui/AlertType.playSound(Ljavax/microedition/lcdui/Display;)Z"
+    ],
+    "index": 24,
+    "exceptions": []
+  },
+  {
+    "game": "gishreload_cjnwmcsr.jar",
+    "inspect": "TITLE Gish Reloaded MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 0 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=3 peak=0"
+    ],
+    "missing": [
+      "method not exist :javax/bluetooth/DataElement.<init>(IJ)V",
+      "method not exist :javax/bluetooth/DataElement.getValue()Ljava/lang/Object;",
+      "method not exist :javax/bluetooth/DiscoveryAgent.searchServices([I[Ljavax/bluetooth/UUID;Ljavax/bluetooth/RemoteDevice;Ljavax/bluetooth/DiscoveryListener;)I",
+      "method not exist :javax/bluetooth/DiscoveryAgent.startInquiry(ILjavax/bluetooth/DiscoveryListener;)Z",
+      "method not exist :javax/bluetooth/LocalDevice.getDiscoveryAgent()Ljavax/bluetooth/DiscoveryAgent;",
+      "method not exist :javax/bluetooth/LocalDevice.getFriendlyName()Ljava/lang/String;",
+      "method not exist :javax/bluetooth/LocalDevice.getLocalDevice()Ljavax/bluetooth/LocalDevice;",
+      "method not exist :javax/bluetooth/LocalDevice.getRecord(Ljavax/microedition/io/Connection;)Ljavax/bluetooth/ServiceRecord;",
+      "method not exist :javax/bluetooth/LocalDevice.setDiscoverable(I)Z",
+      "method not exist :javax/bluetooth/UUID.<init>(Ljava/lang/String;Z)V",
+      "method not exist :javax/bluetooth/L2CAPConnection.close()V",
+      "method not exist :javax/bluetooth/L2CAPConnection.getReceiveMTU()I",
+      "method not exist :javax/bluetooth/L2CAPConnection.getTransmitMTU()I",
+      "method not exist :javax/bluetooth/L2CAPConnection.ready()Z",
+      "method not exist :javax/bluetooth/L2CAPConnection.receive([B)I",
+      "method not exist :javax/bluetooth/L2CAPConnection.send([B)V",
+      "method not exist :javax/bluetooth/L2CAPConnectionNotifier.acceptAndOpen()Ljavax/bluetooth/L2CAPConnection;",
+      "method not exist :javax/bluetooth/L2CAPConnectionNotifier.close()V",
+      "method not exist :javax/bluetooth/ServiceRecord.getAttributeValue(I)Ljavax/bluetooth/DataElement;",
+      "method not exist :javax/bluetooth/ServiceRecord.getConnectionURL(IZ)Ljava/lang/String;",
+      "method not exist :javax/bluetooth/ServiceRecord.setAttributeValue(ILjavax/bluetooth/DataElement;)Z",
+      "method not exist :javax/bluetooth/ServiceRecord.setDeviceServiceClasses(I)V"
+    ],
+    "index": 25,
+    "exceptions": []
+  },
+  {
+    "game": "godofwar32_cckmqw3u.jar",
+    "inspect": "TITLE God Of War MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 0 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=124 peak=0"
+    ],
+    "missing": [],
+    "index": 26,
+    "exceptions": []
+  },
+  {
+    "game": "Hellboy Mobile [352x416] (N80) (andrew-lviv.net).jar",
+    "inspect": "TITLE Hellboy MIDLETS 1 POP 0\nNATIVE 352x416 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=135 peak=0"
+    ],
+    "missing": [],
+    "index": 27,
+    "exceptions": []
+  },
+  {
+    "game": "hero_of_sparta_253103.jar",
+    "inspect": "TITLE Hero Of Sparta MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 0 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=62 peak=0"
+    ],
+    "missing": [
+      "method not exist :javax/microedition/media/control/MIDIControl.shortMidiEvent(III)V"
+    ],
+    "index": 28,
+    "exceptions": []
+  },
+  {
+    "game": "holy_wars_-_sons_of_enoch_320x240_samsung-287188.jar",
+    "inspect": "TITLE HolyWars MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=92 peak=0"
+    ],
+    "missing": [],
+    "index": 29,
+    "exceptions": []
+  },
+  {
+    "game": "Icy Tower Jump [320x240] (E71) (andrew-lviv.net).jar",
+    "inspect": "TITLE Icy Tower Jump MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=117 peak=0"
+    ],
+    "missing": [
+      "method not exist :javax/microedition/lcdui/TextBox.<init>(Ljava/lang/String;Ljava/lang/String;II)V",
+      "method not exist :javax/microedition/lcdui/TextBox.getString()Ljava/lang/String;"
+    ],
+    "index": 30,
+    "exceptions": []
+  },
+  {
+    "game": "Icy Tower Me [240x320] (andrew-lviv.net).jar",
+    "inspect": "TITLE Icy Tower ME MIDLETS 1 POP 0\nNATIVE 240x320 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=120 peak=0"
+    ],
+    "missing": [
+      "method not exist :javax/microedition/lcdui/TextBox.<init>(Ljava/lang/String;Ljava/lang/String;II)V",
+      "method not exist :javax/microedition/lcdui/TextBox.getString()Ljava/lang/String;"
+    ],
+    "index": 31,
+    "exceptions": []
+  },
+  {
+    "game": "Immortals [320x240] (E71) (andrew-lviv.net).jar",
+    "inspect": "TITLE Immortals MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=143 peak=0"
+    ],
+    "missing": [],
+    "index": 32,
+    "exceptions": []
+  },
+  {
+    "game": "Medieval Combat - Age of Glory [240x320] (SonyEricsson W910i) (andrew-lviv.net).jar",
+    "inspect": "TITLE Medieval Combat: Age of Glory MIDLETS 1 POP 0\nNATIVE 240x320 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=112 peak=0"
+    ],
+    "missing": [],
+    "index": 33,
+    "exceptions": []
+  },
+  {
+    "game": "Messenger - Mobile [240x320] (Nokia 6280, 6300, X2-00, X3-02) (andrew-lviv.net).jar",
+    "inspect": "TITLE Messenger MIDLETS 1 POP 0\nNATIVE 240x320 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=0 peak=0"
+    ],
+    "missing": [
+      "method not exist :javax/microedition/lcdui/AlertType.playSound(Ljavax/microedition/lcdui/Display;)Z",
+      "method not exist :javax/microedition/lcdui/TextBox.<init>(Ljava/lang/String;Ljava/lang/String;II)V",
+      "method not exist :javax/microedition/lcdui/TextBox.addCommand(Ljavax/microedition/lcdui/Command;)V",
+      "method not exist :javax/microedition/lcdui/TextBox.setCommandListener(Ljavax/microedition/lcdui/CommandListener;)V",
+      "method not exist :javax/microedition/lcdui/TextBox.setConstraints(I)V",
+      "method not exist :javax/microedition/lcdui/TextBox.setMaxSize(I)I",
+      "method not exist :javax/microedition/lcdui/TextBox.setString(Ljava/lang/String;)V",
+      "method not exist :javax/microedition/lcdui/TextBox.getString()Ljava/lang/String;"
+    ],
+    "index": 34,
+    "exceptions": [
+      "java/lang/ClassNotFoundException: ",
+      "java.lang.NullPointerException: "
+    ]
+  },
+  {
+    "game": "Might and Magic II [320x240] (E62 E71) (andrew-lviv.net).jar",
+    "inspect": "TITLE MightAndMagicII MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=123 peak=0"
+    ],
+    "missing": [],
+    "index": 35,
+    "exceptions": []
+  },
+  {
+    "game": "Moorhuhn DeluXe [320x240] (E71 E72) (andrew-lviv.net).jar",
+    "inspect": "TITLE MoorhuhnDeluXe MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=59 peak=10833"
+    ],
+    "missing": [],
+    "index": 36,
+    "exceptions": []
+  },
+  {
+    "game": "Orcs & Elves 2-5320x24082.jar",
+    "inspect": "TITLE Orcs & Elves II MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 0 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=0 peak=0"
+    ],
+    "missing": [
+      "method not exist :javax/microedition/lcdui/Alert.<init>(Ljava/lang/String;)V",
+      "method not exist :javax/microedition/lcdui/Alert.setString(Ljava/lang/String;)V",
+      "method not exist :javax/microedition/lcdui/Alert.setTimeout(I)V",
+      "method not exist :javax/microedition/lcdui/Alert.setType(Ljavax/microedition/lcdui/AlertType;)V"
+    ],
+    "index": 37,
+    "exceptions": [
+      "java.lang.NoClassDefFoundError: javax/wireless/messaging/TextMessage"
+    ]
+  },
+  {
+    "game": "orcs_elves_2_320x240_187600.jar",
+    "inspect": "TITLE Orcs & Elves II MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=0 peak=0"
+    ],
+    "missing": [
+      "method not exist :javax/microedition/lcdui/Alert.<init>(Ljava/lang/String;)V",
+      "method not exist :javax/microedition/lcdui/Alert.setString(Ljava/lang/String;)V",
+      "method not exist :javax/microedition/lcdui/Alert.setTimeout(I)V",
+      "method not exist :javax/microedition/lcdui/Alert.setType(Ljavax/microedition/lcdui/AlertType;)V"
+    ],
+    "index": 38,
+    "exceptions": [
+      "java.lang.NoClassDefFoundError: javax/wireless/messaging/TextMessage"
+    ]
+  },
+  {
+    "game": "Prince of Persia Classic [320x240] (Nokia E71) (andrew-lviv.net).jar",
+    "inspect": "TITLE Prince of Persia Classic MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=167 peak=0"
+    ],
+    "missing": [],
+    "index": 39,
+    "exceptions": []
+  },
+  {
+    "game": "Shadowalker [320x240] (E61) (andrew-lviv.net).jar",
+    "inspect": "TITLE Shadowalker MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=171 peak=0"
+    ],
+    "missing": [],
+    "index": 40,
+    "exceptions": []
+  },
+  {
+    "game": "Soul Calibur [320x240] (E71 E72) (andrew-lviv.net).jar",
+    "inspect": "TITLE SOULCALIBUR Mobile by Namco MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=90 peak=0"
+    ],
+    "missing": [],
+    "index": 41,
+    "exceptions": []
+  },
+  {
+    "index": 42,
+    "game": "Soul of Darkness [320x240] (SGH-i617) (andrew-lviv.net).jar",
+    "inspect": "TITLE Soul Of Darkness MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=59 peak=0"
+    ],
+    "missing": [],
+    "exceptions": []
+  },
+  {
+    "index": 43,
+    "game": "Tekken Mobile [320x240] (Nokia E71) (andrew-lviv.net).jar",
+    "inspect": "TITLE TEKKEN MOBILE MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=146 peak=0"
+    ],
+    "missing": [],
+    "exceptions": []
+  },
+  {
+    "index": 44,
+    "game": "Temple Rush 3 [320x240] (Nokia C3-00) (andrew-lviv.net).jar",
+    "inspect": "TITLE TempleRush3 free MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=87 peak=0"
+    ],
+    "missing": [
+      "method not exist :javax/microedition/lcdui/Alert.<init>(Ljava/lang/String;Ljava/lang/String;Ljavax/microedition/lcdui/Image;Ljavax/microedition/lcdui/AlertType;)V",
+      "method not exist :javax/microedition/lcdui/Alert.addCommand(Ljavax/microedition/lcdui/Command;)V",
+      "method not exist :javax/microedition/lcdui/Alert.setCommandListener(Ljavax/microedition/lcdui/CommandListener;)V",
+      "method not exist :javax/microedition/lcdui/Alert.setTimeout(I)V",
+      "method not exist :javax/microedition/lcdui/TextBox.<init>(Ljava/lang/String;Ljava/lang/String;II)V",
+      "method not exist :javax/microedition/lcdui/TextBox.addCommand(Ljavax/microedition/lcdui/Command;)V",
+      "method not exist :javax/microedition/lcdui/TextBox.getString()Ljava/lang/String;",
+      "method not exist :javax/microedition/lcdui/TextBox.setCommandListener(Ljavax/microedition/lcdui/CommandListener;)V",
+      "method not exist :javax/microedition/lcdui/TextField.<init>(Ljava/lang/String;Ljava/lang/String;II)V",
+      "method not exist :javax/microedition/lcdui/TextField.getString()Ljava/lang/String;",
+      "method not exist :javax/microedition/lcdui/Alert.<init>(Ljava/lang/String;Ljava/lang/String;Ljavax/microedition/lcdui/Image;Ljavax/microedition/lcdui/AlertType;)V",
+      "method not exist :javax/microedition/lcdui/Alert.addCommand(Ljavax/microedition/lcdui/Command;)V",
+      "method not exist :javax/microedition/lcdui/Alert.setCommandListener(Ljavax/microedition/lcdui/CommandListener;)V",
+      "method not exist :javax/microedition/lcdui/Alert.setTimeout(I)V"
+    ],
+    "exceptions": [
+      "java.lang.NoSuchMethodException: getSupportedContentTypes",
+      "java.lang.NoSuchMethodException: getSupportedContentTypes",
+      "java.lang.NullPointerException",
+      "java.lang.NoSuchMethodException: getSupportedContentTypes",
+      "java.lang.NullPointerException"
+    ]
+  },
+  {
+    "index": 45,
+    "game": "The Chronicles of Narnia - The Voyage of the Dawn Treader [320x240] (E71) (andrew-lviv.net).jar",
+    "inspect": "TITLE Narnia 3 MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=171 peak=0"
+    ],
+    "missing": [],
+    "exceptions": []
+  },
+  {
+    "index": 46,
+    "game": "The Dark Knight [320x240] (Nokia E71) (andrew-lviv.net).jar",
+    "inspect": "TITLE The Dark Knight MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=175 peak=0"
+    ],
+    "missing": [],
+    "exceptions": []
+  },
+  {
+    "index": 47,
+    "game": "The Great Bible Game [352x416] (N90 N80) (andrew-lviv.net).jar",
+    "inspect": "TITLE TheGreatBibleGame MIDLETS 1 POP 0\nNATIVE 352x416 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=64 peak=0"
+    ],
+    "missing": [],
+    "exceptions": []
+  },
+  {
+    "index": 48,
+    "game": "The Lord of the Rings - Middle-Earth Defence [320x240] (E71 E72) (andrew-lviv.net).jar",
+    "inspect": "TITLE LOTR Middle-earth Defence MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=212 peak=0"
+    ],
+    "missing": [],
+    "exceptions": []
+  },
+  {
+    "index": 49,
+    "game": "The Simpsons 2 - Itchy and Scratchy Land [320x240] (Nokia C3-00) (andrew-lviv.net).jar",
+    "inspect": "TITLE The Simpsons 2 MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=302 peak=0"
+    ],
+    "missing": [],
+    "exceptions": []
+  },
+  {
+    "index": 50,
+    "game": "The Sims 3 [320x240] (CZ E71) (andrew-lviv.net).jar",
+    "inspect": "TITLE The Sims 3 MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=0 peak=0"
+    ],
+    "missing": [
+      "method not exist :javax/microedition/lcdui/Alert.<init>(Ljava/lang/String;Ljava/lang/String;Ljavax/microedition/lcdui/Image;Ljavax/microedition/lcdui/AlertType;)V",
+      "method not exist :javax/microedition/lcdui/Alert.setTimeout(I)V"
+    ],
+    "exceptions": [
+      "java/lang/NoSuchMethodException: getSupportedContentTypes",
+      "java/lang/NullPointerException: ",
+      "java.lang.NullPointerException: "
+    ]
+  },
+  {
+    "index": 51,
+    "game": "The Sims Medieval [320x240] (E61 E71 E72) (andrew-lviv.net).jar",
+    "inspect": "TITLE The Sims Medieval MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=69 peak=0"
+    ],
+    "missing": [],
+    "exceptions": [
+      "java/lang/NoSuchMethodException: getSupportedContentTypes",
+      "java/lang/NullPointerException: "
+    ]
+  },
+  {
+    "index": 52,
+    "game": "The Witcher - Crimson Trail [320x240] (Nokia E61) (andrew-lviv.net) (1).jar",
+    "inspect": "TITLE The Witcher MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=64 peak=0"
+    ],
+    "missing": [],
+    "exceptions": []
+  },
+  {
+    "index": 53,
+    "game": "The Witcher - Crimson Trail [320x240] (Nokia E61) (andrew-lviv.net).jar",
+    "inspect": "TITLE The Witcher MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=63 peak=0"
+    ],
+    "missing": [],
+    "exceptions": []
+  },
+  {
+    "index": 54,
+    "game": "The Wolfman [320x240] (E61 E71) (andrew-lviv.net).jar",
+    "inspect": "TITLE The Wolfman by Namco MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=86 peak=0"
+    ],
+    "missing": [],
+    "exceptions": []
+  },
+  {
+    "index": 55,
+    "game": "the_elder_scrolls_iv_320x240_136049.jar",
+    "inspect": "TITLE Elder Scrolls MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=0 peak=0"
+    ],
+    "missing": [],
+    "exceptions": [
+      "java.lang.NullPointerException: ",
+      "java.lang.NullPointerException: "
+    ]
+  },
+  {
+    "index": 56,
+    "game": "Tony Hawks Project 8 [320x240] (Nokia E61) (andrew-lviv.net).jar",
+    "inspect": "TITLE TonyHawksP8 MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=63 peak=0"
+    ],
+    "missing": [
+      "method not exist :javax/microedition/media/control/ToneControl.setSequence([B)V"
+    ],
+    "exceptions": []
+  },
+  {
+    "index": 57,
+    "game": "Tower Defence - Wrath of Gods [240x320] (Nokia 6280) (andrew-lviv.net).jar",
+    "inspect": "TITLE TowerDefence EN MIDLETS 1 POP 0\nNATIVE 240x320 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=166 peak=11308"
+    ],
+    "missing": [],
+    "exceptions": []
+  },
+  {
+    "index": 58,
+    "game": "Townsmen 4 [320x240] (Nokia C3-00, E61, E71 [CZECH]) (andrew-lviv.net).jar",
+    "inspect": "TITLE Townsmen4 MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=64 peak=0"
+    ],
+    "missing": [],
+    "exceptions": []
+  },
+  {
+    "index": 59,
+    "game": "Townsmen 6 - Revolution [320x240] (E71) (andrew-lviv.net).jar",
+    "inspect": "TITLE Townsmen 6 MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=145 peak=0"
+    ],
+    "missing": [],
+    "exceptions": []
+  },
+  {
+    "index": 60,
+    "game": "Warcraft III [240x320] (RUS) (andrew-lviv.net).jar",
+    "inspect": "TITLE Warcraft III MIDLETS 1 POP 0\nNATIVE 240x320 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=58 peak=15830"
+    ],
+    "missing": [],
+    "exceptions": []
+  },
+  {
+    "index": 61,
+    "game": "Worms City Attack Pro [320x240] (Nokia C3-00, E61) (andrew-lviv.net).jar",
+    "inspect": "TITLE Worm's City Attack MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=399 peak=17988"
+    ],
+    "missing": [],
+    "exceptions": []
+  },
+  {
+    "index": 62,
+    "game": "Worms Reloaded [320x240] (E71) (andrew-lviv.net).jar",
+    "inspect": "TITLE Worms Reloaded MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=78 peak=0"
+    ],
+    "missing": [],
+    "exceptions": []
+  },
+  {
+    "index": 63,
+    "game": "Wrath of The Titans [320x240] (E71) (andrew-lviv.net).jar",
+    "inspect": "TITLE Wrath of the Titans MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=87 peak=0"
+    ],
+    "missing": [],
+    "exceptions": []
+  },
+  {
+    "index": 64,
+    "game": "Yeti Sports - Summer Games [320x240] (E71) (andrew-lviv.net).jar",
+    "inspect": "TITLE YetiSports Summer Games MIDLETS 1 POP 0\nNATIVE 320x240 KNOWN 1 BACKEND",
+    "status": "returned",
+    "exit": 0,
+    "vm_exit": [
+      "VM_EXIT run=0 result=0 frames=138 peak=0"
+    ],
+    "missing": [
+      "method not exist :javax/microedition/lcdui/TextBox.<init>(Ljava/lang/String;Ljava/lang/String;II)V",
+      "method not exist :javax/microedition/lcdui/TextBox.getString()Ljava/lang/String;"
+    ],
+    "exceptions": []
+  }
+]

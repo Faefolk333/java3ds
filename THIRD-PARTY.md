@@ -13,7 +13,7 @@
   in `tools/prepare_bank.py` and `third-party/GeneralUser-GS/mobile-bank.json`.
   https://schristiancollins.com/generaluser.php
 * stb_image: Sean Barrett and contributors, MIT/public-domain dual license
-  in the end of `third-party/stb_image.h`. PNG decode only in this application.
+  in the end of `third-party/stb_image.h`. PNG and JPEG decoding in this application.
   https://github.com/nothings/stb
 * font8x8_basic: public-domain font data, https://github.com/dhepper/font8x8 .
   Original header and pinned revision supplied in `third-party/font8x8/`.
@@ -31,3 +31,14 @@ JAR, graphics and levels are not part of the install archive.
 
 * libcurl 8.4.0 and mbedTLS 2.28.8: devkitPro 3DS portlibs; external static libraries used by the updater. Licenses copied to third-party/curl/LICENSE and third-party/mbedtls/LICENSE. https://curl.se / https://github.com/Mbed-TLS/mbedtls
 * The HTTPS CA bundle contains public USERTrust ECC and ISRG Root X1 certificates; provenance and fingerprints in UPDATES.md. zlib is an external devkitPro dependency (zlib license).
+
+## Additional APIs and 3D backends (0.3.3)
+
+Micro3D API, MBAC/MTRA decoders, animation utilities and sensor API types are
+adapted from individually Apache-2.0 licensed J2ME-Loader source files. Original
+headers are retained; see third-party/J2ME-Loader-API/LICENSE and NOTICE.
+
+M3G scene graph, loader and software renderer are adapted from FreeJ2ME-Plus
+under GPL-3.0-or-later. Original headers are retained. See
+third-party/FreeJ2ME-M3G/LICENSE and NOTICE. Complete corresponding modified
+source and build scripts are in this private repository and source ZIP.

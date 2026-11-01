@@ -1,33 +1,37 @@
-# Java3DS 0.3.2 (privátní alpha)
+# Java3DS 0.3.3 — privátní alpha
 
-CIA: soubor java3ds.cia nainstaluj přes FBI. Java3DS se objeví v HOME Menu
-s animovaným bannerem. Hry, MIDI i ukládání používají stejnou složku na SD.
-QR: v FBI vyber Remote Install > Scan QR Code. Počítač musí běžet
-a konzole musí být ve stejné domácí síti. Lokální QR platí 24 hodin;
-Start-QR-Install.ps1 v instalační složce vytvoří nový a spustí server.
+Nainstaluj `java3ds.cia` přes FBI; nahradí předchozí Java3DS se stejným ID.
+Hry, nastavení a uložené pozice zůstávají v `/3ds/java-3ds` na SD.
+Pro Homebrew Launcher rozbal instalační ZIP do kořene SD.
 
-Pro verzi do Homebrew Launcheru: rozbal instalační ZIP do kořene SD karty a nahraď starý java_pocket.3dsx.
-Složka /3ds/java-3ds se nemění; hry, nastavení a uložené pozice zůstanou zachované.
-V Homebrew Launcheru se aplikace nově jmenuje Java3DS.
+QR: FBI > Remote Install > Scan QR Code. Počítač musí zůstat zapnutý a 3DS
+musí být ve stejné domácí síti. QR platí 24 hodin. `Start-QR-Install.ps1`
+v této složce spustí nový server a vytvoří nový QR.
 
-Nově: soukromé Wi-Fi aktualizace (Y v knihovně), mapování tlačítek pro každou hru,
-skrytí spodního displeje v Controls, vycentrovaná klávesnice s reakcí na stisk,
-paralax pozadí a animované Y2K načítání. Doplněno Nokia DirectGraphics pro
-Might and Magic II a ošetřeno ukončování zaseknutých Java vláken.
+Nové v 0.3.3:
 
-Native obraz centruje. Režim 3DS screen u běžných her zvětšuje hotový obraz se
-zachováním proporcí, takže mohou zůstat černé okraje; nemění interní rozlišení
-hry. Širší kamera vyžaduje profil konkrétní hry — známý PoP Classic jej má.
-Blades and Magic (K800i) stále vyžaduje nepodporovaný Mascot Capsule Micro3D.
+- Ošetřené selhání alokace z dumpu Age of Heroes III, méně dočasných obrázků
+  a méně práce při každém vykreslení. Úplné odstranění pádu ověř až na konzoli.
+- Worms: opravené dlouhé obrázkové pásy se sprity; na PC jsou vidět i těla červů.
+- Hudba a efekty MIDI/PCM WAV se přehrávají nezávisle. AMR/AAC/MP3 zatím ne.
+- Experimentální skutečné 3D: Micro3D v3 (Blades and Magic) a M3G
+  (Outland, Gladiator). Výkon na 3DS ještě není změřen; některé efekty chybí.
+- Discworld se v testu dostal do úvodního dialogu. Doplněny RMS enumerace
+  a základní formuláře. Krátké testy nejsou zárukou dohratelnosti.
+- Rozlišení LocoRoco se rozpoznává jako 240×320 z LGE manifestu.
+- Native centruje obraz; Fill screen vyplní 400×240 roztažením hotového obrazu.
+  Poměr stran se může změnit. Okraje uvnitř grafiky hry se neodstraňují.
+- Spodní klávesy reagují vizuálně pouze na dotyk. Plynulejší aktualizace paralaxu.
+- Senzory jsou přístupné hrám přes JSR-256 a Sony API. Gyroskop a akcelerometr
+  jsou odlišné senzory; hra je musí sama používat. Tento LocoRoco build je nevolá.
 
-Wi-Fi: vytvoř na GitHubu fine-grained token pouze pro Faefolk333/java3ds,
-oprávnění Contents: Read-only. Samotný token ulož na jeden řádek do souboru
-/3ds/java-3ds/github-token.txt na SD (prostý text, bez uvozovek a BOM).
-Token neposílej do chatu ani nepřidávej do repozitáře. Podrobný postup je UPDATES.md.
-Po startu se zkontroluje nová verze; A ji nainstaluje, B nabídku odloží.
-Po instalaci aplikaci ukonči a znovu otevři. Verze 0.3.2 bude zatím aktuální;
-Wi-Fi instalace se uplatní u příštího vydání. U verze 3DSX zůstává starší binárka jako .previous. CIA aktualizuje instalovaný titul.
+Širší kamera je stále profil konkrétní hry (PoP Classic); univerzální Fill screen
+nemění herní svět. Ovládání a skrytí spodního displeje nastavíš v Controls.
+Banner se při této aktualizaci neměnil.
 
-Sestavení a testy proběhly na počítači. Wi-Fi, blikání displeje a skutečné hraní
-ještě ověř na 3DS. Při problému zkopíruj runtime.log a output.log ze složky
-/3ds/java-3ds před dalším spuštěním. Další podrobnosti: README.md a VALIDATION.md.
+Soukromé Wi-Fi aktualizace používají token na SD v
+`/3ds/java-3ds/github-token.txt`; postup je v UPDATES.md. Lokální QR funguje
+bez tokenu. Zveřejněné GitHub vydání a místní testovací sestavení se mohou lišit.
+
+Testováno na počítači, fyzická konzole zatím ne. Po chybě zkopíruj runtime.log,
+output.log a nový Luma dump před dalším spuštěním. Podrobnosti: VALIDATION.md.

@@ -8,7 +8,7 @@ export PATH="$DEVKITARM/bin:$DEVKITPRO/tools/bin:$PATH"
 OUT="$ROOT/work/runtime-arm"
 mkdir -p "$OUT"
 cd "$SRC"
-FLAGS=(-std=gnu99 -O1 -march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft
+FLAGS=(-std=gnu99 -O2 -fno-strict-aliasing -fwrapv -march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft
   -D__3DS__ -DJIT_ENABLE=0 -D__JVM_PRI_ALLOC__=0 -ffunction-sections -fdata-sections
   -Ijvm -Iutils -Iutils/https -Iutils/https/mbedtls/include -I"$DEVKITPRO/libctru/include")
 SOURCES=(jvm/*.c utils/*.c)

@@ -2,21 +2,22 @@ package javax.microedition.lcdui;
 import java.io.*;
 public final class Image {
  final int[] pixels;final int w,h;public static int loaded;
- private Image(int w,int h,int[] data){if(w<1||h<1||w>1024||h>1024||data.length!=w*h)throw new IllegalArgumentException();this.w=w;this.h=h;pixels=data;loaded++;}
+ private Image(int w,int h,int[] data){if(w<1||h<1||w>16384||h>16384||(long)w*h>1048576||data.length!=w*h)throw new IllegalArgumentException();this.w=w;this.h=h;pixels=data;loaded++;}
  public static Image createImage(byte[] b,int offset,int n){
   if(b==null||offset<0||n<0||offset>b.length-n)throw new IllegalArgumentException();
   crimson.Native.stage(10,n);
-  int[] decoded=crimson.Native.decode(b,offset,n);if(decoded==null)throw new IllegalArgumentException("PNG decode failed");
+  int[] size=new int[2];int[] decoded=crimson.Native.decode(b,offset,n,size);if(decoded==null)throw new IllegalArgumentException("Image decode failed");
   crimson.Native.stage(11,loaded+1);
-  int[] p=new int[decoded.length-2];System.arraycopy(decoded,2,p,0,p.length);return new Image(decoded[0],decoded[1],p);
+  return new Image(size[0],size[1],decoded);
  }
+ public static Image createImage(InputStream in)throws IOException{if(in==null)throw new NullPointerException();ByteArrayOutputStream out=new ByteArrayOutputStream();byte[] buf=new byte[1024];int n;while((n=in.read(buf))!=-1)out.write(buf,0,n);byte[] bytes=out.toByteArray();return createImage(bytes,0,bytes.length);}
  public static Image createImage(String name)throws IOException{
   InputStream in=crimson.Resources.open(Image.class,name);if(in==null)throw new IOException(name);
   ByteArrayOutputStream out=new ByteArrayOutputStream();try{byte[] buf=new byte[1024];int n;while((n=in.read(buf))!=-1)out.write(buf,0,n);}finally{in.close();}
   byte[] b=out.toByteArray();return createImage(b,0,b.length);
  }
- public static Image createImage(int w,int h){if(w<1||h<1||w>1024||h>1024)throw new IllegalArgumentException();int[] p=new int[w*h];for(int i=0;i<p.length;i++)p[i]=0xffffffff;return new Image(w,h,p);}
- public static Image createRGBImage(int[] rgb,int w,int h,boolean alpha){if(w<1||h<1||w>1024||h>1024||rgb.length<w*h)throw new IllegalArgumentException();int[] p=new int[w*h];for(int i=0;i<p.length;i++)p[i]=alpha?rgb[i]:rgb[i]|0xff000000;return new Image(w,h,p);}
+ public static Image createImage(int w,int h){if(w<1||h<1||w>16384||h>16384||(long)w*h>1048576)throw new IllegalArgumentException();int[] p=new int[w*h];for(int i=0;i<p.length;i++)p[i]=0xffffffff;return new Image(w,h,p);}
+ public static Image createRGBImage(int[] rgb,int w,int h,boolean alpha){if(w<1||h<1||w>16384||h>16384||(long)w*h>1048576||rgb.length<w*h)throw new IllegalArgumentException();int[] p=new int[w*h];for(int i=0;i<p.length;i++)p[i]=alpha?rgb[i]:rgb[i]|0xff000000;return new Image(w,h,p);}
  public int getWidth(){return w;}public int getHeight(){return h;}
  public Graphics getGraphics(){return new Graphics(pixels,w,h,0);}
  public static Image createImage(Image src){int[]p=new int[src.pixels.length];System.arraycopy(src.pixels,0,p,0,p.length);return new Image(src.w,src.h,p);}

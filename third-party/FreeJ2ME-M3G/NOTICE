@@ -1,0 +1,7 @@
+M3G software scene graph, loader and renderer adapted from FreeJ2ME-Plus.
+Upstream: https://github.com/TASEmulators/freej2me-plus
+Commit: 3933e75ef927a95eab9f5e065f0b76dabf336069
+License: GNU GPL version 3 or later (see LICENSE and original per-file headers).
+Java3DS adaptations: MIDP image/graphics bridge, resource access, platform
+configuration, optional JPEG decoding and releaseTarget framebuffer commit.
+The complete corresponding adapted source is included in the source ZIP.

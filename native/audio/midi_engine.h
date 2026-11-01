@@ -4,7 +4,7 @@
 extern "C" {
 #endif
 /* Portable SF2/MIDI + PCM WAV player. Caller serializes access; no platform or VM dependency.
- * One active player mirrors this MIDlet's mixer. Slots retain parsed sequences only. */
+ * Active MIDI and PCM slots mix independently; synthesizers share SoundFont samples. */
 typedef struct MidiEngine MidiEngine;
 enum { MIDI_START=1,MIDI_STOP,MIDI_CLOSE,MIDI_SEEK,MIDI_VOLUME,MIDI_STATE,MIDI_POSITION,MIDI_KIND };
 MidiEngine* midi_engine_open(const char* soundfont,int sample_rate);

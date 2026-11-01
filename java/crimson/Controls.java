@@ -15,7 +15,8 @@ public final class Controls {
  }
  public static final int[] CODES={-1,-2,-3,-4,-5,-7,-6,48,35,49,50,51,55,57,42,52,53,54,56};
  private static int key(int mask,int code){for(int i=0;i<CODES.length;i++)if(CODES[i]==code)return mask|(1<<i);return mask;}
- private static int generic(int held){int result=0;int[] codes=GameMain.keyProfile==1?new int[]{50,56,52,54,53,48,-6,42,35,51,49,55,57,-7}:new int[]{-1,-2,-3,-4,-5,48,-6,42,35,51,49,55,57,-7};int[]bits={1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192};for(int i=0;i<bits.length;i++)if((held&bits[i])!=0)result=key(result,codes[i]);int[] touch={49,50,51,52,53,54,55,56,57,42,48,35};for(int i=0;i<12;i++)if((held&(1<<(16+i)))!=0)result=key(result,touch[i]);return result;}
+ private static final int[] NUMERIC={50,56,52,54,53,48,-6,42,35,51,49,55,57,-7},PHONE={-1,-2,-3,-4,-5,48,-6,42,35,51,49,55,57,-7},TOUCH={49,50,51,52,53,54,55,56,57,42,48,35};
+ private static int generic(int held){int result=0;int[] codes=GameMain.keyProfile==1?NUMERIC:PHONE;for(int i=0;i<14;i++)if((held&(1<<i))!=0)result=key(result,codes[i]);for(int i=0;i<12;i++)if((held&(1<<(16+i)))!=0)result=key(result,TOUCH[i]);return result;}
  public static int keys(int held,boolean gameplay){
   int explicit=0,remapped=held&0x7fff0000;for(int i=0;i<14;i++)if((held&(1<<i))!=0){int b=bindings[i];if(b==0)remapped|=1<<i;else if(b==1001)remapped|=32;else if(b==1002)remapped|=16;else explicit=key(explicit,b);}held=remapped;raw=held;if((held&0x70000)!=0)raw|=32;
   if(!GameMain.popProfile||GameMain.keyProfile!=2)return generic(held)|explicit;
@@ -33,7 +34,7 @@ public final class Controls {
    keys&=~15; // B supplies one jump command, without a second direction command.
    keys|=1<<(((held&4)!=0&&(held&8)==0)?9:((held&8)!=0&&(held&4)==0)?11:10);
   }
-  int[]touch={49,50,51,52,53,54,55,56,57,42,48,35};for(int i=0;i<12;i++)if((held&(1<<(16+i)))!=0)keys=key(keys,touch[i]);
+  int[]touch=TOUCH;for(int i=0;i<12;i++)if((held&(1<<(16+i)))!=0)keys=key(keys,touch[i]);
   return keys|explicit;
  }
 }

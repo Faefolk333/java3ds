@@ -1,0 +1,2 @@
+import javax.microedition.m3g.*;
+public class M3GAssetProbe {public static void main(String[]a)throws Exception{System.setProperty("java3ds.m3g.diagnostics","true");Object3D[] objects=Loader.load("/prize.m3g");boolean group=false;for(Object3D o:objects)if(o instanceof Group)group=true;if(!group)throw new Exception("Missing root Group in final file section");for(Object3D o:objects)System.out.println("M3G_ROOT "+o.getClass().getName()+" id="+o.getUserID());}}

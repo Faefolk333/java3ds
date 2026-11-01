@@ -6,33 +6,36 @@
 #include "audio/device_3ds.h"
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_ONLY_PNG
+#define STBI_ONLY_JPEG
 #define STBI_NO_STDIO
-#define STBI_MAX_DIMENSIONS 1024
+#define STBI_MAX_DIMENSIONS 16384
 #include "../third-party/stb_image.h"
 static int arg(Runtime*r,int n){return localvar_getInt(r->localvar,n);}
 static Instance* arr(Runtime*r,int n){return localvar_getRefer(r->localvar,n);}
 static s32 decode(Runtime*r,JClass*c){
- (void)c;Instance*b=arr(r,0);int o=arg(r,1),n=arg(r,2),w,h,channels;
+ (void)c;Instance*b=arr(r,0);int o=arg(r,1),n=arg(r,2),w=0,h=0,channels;
  if(!b||o<0||n<0||o>b->arr_length-n){push_ref(r->stack,NULL);return 0;}
+ if(!stbi_info_from_memory((unsigned char*)b->arr_body+o,n,&w,&h,&channels)||w<1||h<1||w>16384||h>16384||(uint64_t)w*h>1048576){jvm_printf("IMAGE: invalid or oversized dimensions %dx%d\n",w,h);push_ref(r->stack,NULL);return 0;}
  unsigned char*p=stbi_load_from_memory((unsigned char*)b->arr_body+o,n,&w,&h,&channels,4);
- if(!p){jvm_printf("PNG: %s\n",stbi_failure_reason());push_ref(r->stack,NULL);return 0;}
- Instance*result=jarray_create_by_type_index(r,w*h+2,DATATYPE_INT);
+ if(!p){jvm_printf("IMAGE: %s\n",stbi_failure_reason());push_ref(r->stack,NULL);return 0;}
+ Instance*dims=arr(r,3);if(!dims||dims->arr_length<2){stbi_image_free(p);push_ref(r->stack,NULL);return 0;}
+ Instance*result=jarray_create_by_type_index(r,w*h,DATATYPE_INT);
  if(!result){stbi_image_free(p);push_ref(r->stack,NULL);return 0;}
- s32*d=(s32*)result->arr_body;d[0]=w;d[1]=h;
- for(int i=0;i<w*h;i++)d[i+2]=(u32)p[i*4+3]<<24|(u32)p[i*4]<<16|(u32)p[i*4+1]<<8|p[i*4+2];
+ s32*d=(s32*)result->arr_body;((s32*)dims->arr_body)[0]=w;((s32*)dims->arr_body)[1]=h;
+ for(int i=0;i<w*h;i++)d[i]=(u32)p[i*4+3]<<24|(u32)p[i*4]<<16|(u32)p[i*4+1]<<8|p[i*4+2];
  stbi_image_free(p);push_ref(r->stack,result);return 0;
 }
 static uint32_t* target(Runtime*r,int w,int h){
- Instance*t=arr(r,0);if(w<1||h<1||w>1024||h>1024)return NULL;
+ Instance*t=arr(r,0);if(w<1||h<1||w>16384||h>16384||(uint64_t)w*h>1048576)return NULL;
  if(t)return t->arr_length>=w*h?(uint32_t*)t->arr_body:NULL;
  return w==crimson_width&&h==crimson_height?crimson_pixels:NULL;
 }
 static s32 fill(Runtime*r,JClass*c){(void)c;int w=arg(r,1),h=arg(r,2);uint32_t*d=target(r,w,h);if(d)crimson_fill(d,w,h,arg(r,3),arg(r,4),arg(r,5),arg(r,6),arg(r,7));return 0;}
-static s32 blit(Runtime*r,JClass*c){(void)c;int w=arg(r,1),h=arg(r,2),sw=arg(r,4),sh=arg(r,5);uint32_t*d=target(r,w,h);Instance*s=arr(r,3);if(d&&s&&sw>0&&sh>0&&sw<=1024&&sh<=1024&&s->arr_length>=sw*sh)crimson_blit(d,w,h,(uint32_t*)s->arr_body,sw,sh,arg(r,6),arg(r,7),arg(r,8),arg(r,9),arg(r,10),arg(r,11));return 0;}
+static s32 blit(Runtime*r,JClass*c){(void)c;int w=arg(r,1),h=arg(r,2),sw=arg(r,4),sh=arg(r,5);uint32_t*d=target(r,w,h);Instance*s=arr(r,3);if(d&&s&&sw>0&&sh>0&&sw<=16384&&sh<=16384&&(uint64_t)sw*sh<=1048576&&s->arr_length>=sw*sh)crimson_blit(d,w,h,(uint32_t*)s->arr_body,sw,sh,arg(r,6),arg(r,7),arg(r,8),arg(r,9),arg(r,10),arg(r,11));return 0;}
 static s32 region(Runtime*r,JClass*c){
  (void)c;int tw=arg(r,1),th=arg(r,2);uint32_t*d=target(r,tw,th);Instance*src=arr(r,3);
  int sw=arg(r,4),sh=arg(r,5),sx=arg(r,6),sy=arg(r,7),w=arg(r,8),h=arg(r,9),t=arg(r,10),dx=arg(r,11),dy=arg(r,12),cx=arg(r,13),cy=arg(r,14),cw=arg(r,15),ch=arg(r,16);
- if(!d||!src||sw<1||sh<1||src->arr_length<sw*sh||sx<0||sy<0||w<1||h<1||sx+w>sw||sy+h>sh||t<0||t>8)return 0;
+ if(!d||!src||sw<1||sh<1||sw>16384||sh>16384||(uint64_t)sw*sh>1048576||src->arr_length<sw*sh||sx<0||sy<0||w<1||h<1||sx+w>sw||sy+h>sh||t<0||t>8)return 0;
  int dw=t==8?w+80:(t>=4?h:w),dh=t==8?h:(t>=4?w:h);uint32_t*a=(uint32_t*)src->arr_body;
  for(int y=0;y<dh;y++){int yy=dy+y;if(yy<0||yy>=th||yy<cy||yy>=cy+ch)continue;
  for(int x=0;x<dw;x++){int xx=dx+x;if(xx<0||xx>=tw||xx<cx||xx>=cx+cw)continue;
@@ -40,7 +43,34 @@ static s32 region(Runtime*r,JClass*c){
  uint32_t col=a[(sy+v)*sw+sx+u],alpha=col>>24;if(alpha==255)d[yy*tw+xx]=col;else if(alpha){uint32_t old=d[yy*tw+xx],inv=255-alpha;unsigned red=(((col>>16)&255)*alpha+((old>>16)&255)*inv)/255,green=(((col>>8)&255)*alpha+((old>>8)&255)*inv)/255,blue=((col&255)*alpha+(old&255)*inv)/255;d[yy*tw+xx]=0xff000000|(red<<16)|(green<<8)|blue;}
  }}return 0;
 }
+static uint32_t over(uint32_t dst,uint32_t src,int alpha){
+ unsigned a=alpha?src>>24:255;if(a==255)return src|0xff000000;if(!a)return dst;unsigned inv=255-a,out=0xff000000;
+ for(int n=0;n<24;n+=8)out|=((((src>>n)&255)*a+((dst>>n)&255)*inv)/255)<<n;return out;
+}
+static s32 readPixels(Runtime*r,JClass*c){
+ (void)c;int tw=arg(r,1),th=arg(r,2);uint32_t*source=target(r,tw,th);Instance*dst=arr(r,3);int off=arg(r,4),scan=arg(r,5),x=arg(r,6),y=arg(r,7),w=arg(r,8),h=arg(r,9);if(!source||!dst||x<0||y<0||w<0||h<0||w>tw-x||h>th-y)return 0;
+ for(int row=0;row<h;row++){int64_t index=(int64_t)off+(int64_t)row*scan;if(index<0||index+w>dst->arr_length)return 0;memmove((uint32_t*)dst->arr_body+index,source+(y+row)*tw+x,w*4);}return 0;
+}
+static s32 rgb(Runtime*r,JClass*c){
+ (void)c;int tw=arg(r,1),th=arg(r,2);uint32_t*d=target(r,tw,th);Instance*src=arr(r,3);if(!d||!src)return 0;
+ int off=arg(r,4),scan=arg(r,5),dx=arg(r,6),dy=arg(r,7),w=arg(r,8),h=arg(r,9),alpha=arg(r,10),cx=arg(r,11),cy=arg(r,12),cw=arg(r,13),ch=arg(r,14);
+ int x0=dx>cx?dx:cx,y0=dy>cy?dy:cy,x1=(int64_t)dx+w<(int64_t)cx+cw?dx+w:cx+cw,y1=(int64_t)dy+h<(int64_t)cy+ch?dy+h:cy+ch;
+ if(x0<0)x0=0;if(y0<0)y0=0;if(x1>tw)x1=tw;if(y1>th)y1=th;
+ uint32_t*p=(uint32_t*)src->arr_body;
+ for(int y=y0;y<y1;y++)for(int x=x0;x<x1;x++){int64_t index=(int64_t)off+(int64_t)(y-dy)*scan+x-dx;if(index>=0&&index<src->arr_length)d[y*tw+x]=over(d[y*tw+x],p[index],alpha);}
+ return 0;
+}
+static s32 text(Runtime*r,JClass*c){
+ (void)c;int tw=arg(r,1),th=arg(r,2);uint32_t*d=target(r,tw,th);Instance*font=arr(r,3),*str=arr(r,4);if(!d||!font||!str)return 0;
+ int dx=arg(r,5),dy=arg(r,6),scale=arg(r,7),color=arg(r,8)|0xff000000,cx=arg(r,9),cy=arg(r,10),cw=arg(r,11),ch=arg(r,12);if(scale<1||scale>4)return 0;
+ int length=jstring_get_count(str,r);for(int i=0;i<length;i++){unsigned code=jstring_char_at(str,i,r);if(code>127)code=63;if(code>=font->arr_length)continue;uint64_t bits;memcpy(&bits,font->arr_body+code*8,8);
+ for(int y=0;y<8*scale;y++){int yy=dy+y;if(yy<0||yy>=th||yy<cy||yy>=cy+ch)continue;for(int x=0;x<8*scale;x++){int xx=dx+i*8*scale+x;if(xx<0||xx>=tw||xx<cx||xx>=cx+cw)continue;if(bits&((uint64_t)1<<((y/scale)*8+x/scale)))d[yy*tw+xx]=color;}}}return 0;
+}
+
+#include "software3d.h"
 static s32 present(Runtime*r,JClass*c){(void)c;jthread_block_enter(r);crimson_publish(crimson_pixels);jthread_block_exit(r);return 0;}
+extern int crimson_motion(int kind,int sample[3]);
+static s32 motion(Runtime*r,JClass*c){(void)c;Instance*a=arr(r,1);int v[3],ok=a&&a->arr_length>=3&&crimson_motion(arg(r,0),v);if(ok)memcpy(a->arr_body,v,sizeof(v));push_int(r->stack,ok);return 0;}
 static s32 buttons(Runtime*r,JClass*c){(void)c;push_int(r->stack,crimson_buttons());return 0;}
 static s32 music(Runtime*r,JClass*c){(void)c;crimson_music(arg(r,0),arg(r,1),arg(r,2));return 0;}
 static s32 audioLoad(Runtime*r,JClass*c){
@@ -65,8 +95,14 @@ int crimson_gc_completed(void){return __atomic_load_n(&crimson_gc_cycles,__ATOMI
 static s32 gcCycles(Runtime*r,JClass*c){(void)c;push_int(r->stack,crimson_gc_completed());return 0;}
 static s32 snapshot(Runtime*r,JClass*c){Instance*a=jarray_create_by_type_index(r,crimson_width*crimson_height,DATATYPE_INT);if(a)memcpy(a->arr_body,crimson_pixels,crimson_width*crimson_height*4);push_ref(r->stack,a);return 0;}
 static java_native_method methods[]={
+ {"crimson/Native","readPixels","([III[IIIIIII)V",readPixels},
+ {"crimson/Native","motion","(I[I)Z",motion},
+ {"crimson/Native","microBegin","()V",microBegin},
+ {"crimson/Native","microTriangle","([III[F[F[IIIIIIIII)V",microTriangle},
+ {"crimson/Native","rgb","([III[IIIIIIIZIIII)V",rgb},
+ {"crimson/Native","text","([III[JLjava/lang/String;IIIIIIII)V",text},
  {"crimson/Native","snapshot","()[I",snapshot},
- {"crimson/Native","decode","([BII)[I",decode},
+ {"crimson/Native","decode","([BII[I)[I",decode},
  {"crimson/Native","fill","([IIIIIIII)V",fill},
  {"crimson/Native","blit","([III[IIIIIIIII)V",blit},
  {"crimson/Native","region","([III[IIIIIIIIIIIIII)V",region},
@@ -81,6 +117,8 @@ static java_native_method methods[]={
 extern MethodInfo *pop_last_method;extern unsigned pop_method_calls;
 static unsigned pop_sample_lock,pop_sample_disabled;
 extern const char* crimson_launch_config(void);
+static void*oom_reserve;
+void crimson_release_oom_reserve(void){free(oom_reserve);oom_reserve=NULL;}
 static MiniJVM*active_vm;static unsigned vm_lock;
 void crimson_request_stop(void){while(__atomic_exchange_n(&vm_lock,1,__ATOMIC_ACQUIRE)){}if(active_vm)__atomic_store_n(&active_vm->crimson_stop,1,__ATOMIC_RELEASE);__atomic_store_n(&vm_lock,0,__ATOMIC_RELEASE);}
 static void active_set(MiniJVM*j){while(__atomic_exchange_n(&vm_lock,1,__ATOMIC_ACQUIRE)){}active_vm=j;__atomic_store_n(&vm_lock,0,__ATOMIC_RELEASE);}
@@ -105,7 +143,8 @@ int crimson_run_game(const char*boot,const char*cp,const char*mainclass){
   if(!end)break;part=end+1;
  }
  jvm_printf("RAM cache ready: %d JARs, %lld bytes\n",jars,crimson_zip_cache_bytes());crimson_stage(41,jars);
- jvm_init_mem_alloc();MiniJVM*j=jvm_create();if(!j){crimson_zip_cache_clear();jvm_destroy_mem_alloc();return -1;}j->jdwp_enable=0;j->max_heap_size=24*1024*1024;
+ oom_reserve=malloc(128*1024);
+ jvm_init_mem_alloc();MiniJVM*j=jvm_create();if(!j){crimson_zip_cache_clear();jvm_destroy_mem_alloc();crimson_release_oom_reserve();return -1;}j->jdwp_enable=0;j->max_heap_size=24*1024*1024;
  int result=jvm_init(j,(char*)boot,(char*)cp);
  const char*configuration=crimson_launch_config();if(configuration)sys_properties_set_c(j,"launcher.config",configuration);
 #ifndef __3DS__
@@ -117,7 +156,7 @@ int crimson_run_game(const char*boot,const char*cp,const char*mainclass){
  while(__atomic_exchange_n(&pop_sample_lock,1,__ATOMIC_ACQUIRE)){}
  __atomic_store_n(&pop_sample_disabled,1,__ATOMIC_RELAXED);
  __atomic_store_n(&pop_sample_lock,0,__ATOMIC_RELEASE);
- active_set(NULL);crimson_stage(71,result);set_jvm_state(j,JVM_STATUS_STOPED);thread_stop_all(j);jvm_destroy(j);crimson_stage(72,result);jvm_printf("RAM cache hits: %lld\n",crimson_zip_cache_hits());crimson_zip_cache_clear();jvm_destroy_mem_alloc();return result;
+ active_set(NULL);crimson_stage(71,result);set_jvm_state(j,JVM_STATUS_STOPED);thread_stop_all(j);jvm_destroy(j);crimson_stage(72,result);jvm_printf("RAM cache hits: %lld\n",crimson_zip_cache_hits());crimson_zip_cache_clear();jvm_destroy_mem_alloc();micro_reset();crimson_release_oom_reserve();return result;
 }
 
 extern MethodInfo *pop_last_method;

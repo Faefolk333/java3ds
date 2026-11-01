@@ -23,8 +23,8 @@ for a new release at startup. **Y → Wi-Fi updates** also checks manually.
 Exit and reopen Java3DS after installation. The current running process does
 not replace itself in memory.
 
-The first v0.3.0 installation will report up to date. The automatic path can
-install a later release such as v0.3.1 or v0.4.0.
+Only published releases are offered. A local test build does not become a
+Wi-Fi update until its matching assets are attached to a newer release.
 
 ## Publishing a later version
 
@@ -35,7 +35,8 @@ install a later release such as v0.3.1 or v0.4.0.
    channel, and the updater uses GitHub's latest-release endpoint.
 4. Attach the standalone 3DSX with the exact asset name **java3ds.3dsx**.
    It must include the complete RomFS, runtime, SoundFont, profiles and CA bundle.
-   Also attach the SD installation ZIP and optionally the full source ZIP.
+   Attach **java3ds.cia** for HOME Menu installations, the SD installation ZIP
+   and the complete corresponding source ZIP (including component licenses).
 5. GitHub's release asset metadata must contain a `sha256:` digest. Releases
    without a digest, invalid tag, or compatible asset are rejected.
 

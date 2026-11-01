@@ -1,0 +1,18 @@
+package javax.microedition.sensor;
+import java.io.IOException;
+public class HidSensorConnection extends com.sonyericsson.accelerometer.AccelerometerSensorConnection {
+ private final SensorInfo info;private final int kind;private volatile int state=STATE_OPENED;private volatile int listenerGeneration;
+ public HidSensorConnection(String url)throws IOException {SensorInfo[] found=SensorManager.findSensors(url);if(found.length==0)throw new javax.microedition.io.ConnectionNotFoundException(url);info=found[0];kind=info.getQuantity().equals("acceleration")?0:1;}
+ public int getState(){return state;}public SensorInfo getSensorInfo(){return info;}public int[] getErrorCodes(){return new int[0];}public String getErrorText(int code){return null;}
+ public Channel getChannel(final ChannelInfo c){boolean found=false;for(ChannelInfo v:info.getChannelInfos())if(v==c)found=true;if(!found)throw new IllegalArgumentException();return new Channel(){public ChannelInfo getChannelInfo(){return c;}public String getChannelUrl(){return info.getUrl()+";channel="+c.getName();}public Condition[] getConditions(ConditionListener l){return new Condition[0];}public void addCondition(ConditionListener l,Condition condition){throw new UnsupportedOperationException("condition push unavailable");}public void removeAllConditions(){}public void removeCondition(ConditionListener l,Condition condition){}public void removeConditionListener(ConditionListener l){}};}
+ public Data[] getData(int count)throws IOException{return getData(count,0,true,false,true);}
+ public Data[] getData(int count,long period,boolean timestamp,boolean uncertainty,boolean validity)throws IOException{
+  if(state==STATE_CLOSED)throw new IOException("sensor closed");if(count<1||count>1024||period<0)throw new IllegalArgumentException();int[][] values=new int[3][count];long[] times=timestamp?new long[count]:null;int[] sample=new int[3];
+  for(int i=0;i<count;i++){if(state==STATE_CLOSED)throw new IOException("sensor closed");boolean ok=false;for(int retry=0;retry<20&&!ok;retry++){ok=crimson.Native.motion(kind,sample);if(!ok)pause(10);}if(!ok)throw new IOException("HID sensor unavailable");for(int axis=0;axis<3;axis++)values[axis][i]=sample[axis];if(times!=null)times[i]=System.currentTimeMillis();if(i+1<count)pause(period>0?Math.max(1,period/count):20);}
+  Data[] result=new Data[3];for(int axis=0;axis<3;axis++)result[axis]=new DataImpl(info.getChannelInfos()[axis],values[axis],times);return result;
+ }
+ private static void pause(long time)throws IOException{try{Thread.sleep(time);}catch(InterruptedException e){throw new IOException("sensor interrupted");}}
+ public void setDataListener(DataListener l,int count){setDataListener(l,count,100,false,false,false);}
+ public synchronized void setDataListener(final DataListener l,final int count,final long period,final boolean t,final boolean u,final boolean v){if(l==null||count<1||count>1024||period<0||state==STATE_CLOSED)throw new IllegalArgumentException();final int generation=++listenerGeneration;state=STATE_LISTENING;Thread worker=new Thread(new Runnable(){public void run(){while(state==STATE_LISTENING&&listenerGeneration==generation&&!crimson.GameMain.stopped){try{Data[] data=getData(count,period,t,u,v);if(listenerGeneration==generation&&state==STATE_LISTENING)l.dataReceived(HidSensorConnection.this,data,false);pause(Math.max(20,period));}catch(IOException e){break;}}}},"HID sensor");worker.setDaemon(true);worker.start();}
+ public synchronized void removeDataListener(){listenerGeneration++;if(state!=STATE_CLOSED)state=STATE_OPENED;}public synchronized void close(){listenerGeneration++;state=STATE_CLOSED;}
+}

@@ -1166,12 +1166,22 @@ s32 check_suspend_and_pause(Runtime *runtime) {
 }
 
 //===============================    实例化数组  ==================================
+// Retry a failed object allocation after giving the collector a safe point.
+static void *crimson_object_calloc(Runtime *runtime,u32 size){
+ void *p=jvm_calloc(size);if(p||!runtime||!runtime->jvm->collector||runtime->thrd_info->type==THREAD_TYPE_GC)return p;
+ runtime->jvm->collector->lastgc=0;
+ jthread_block_enter(runtime);threadSleep(150);jthread_block_exit(runtime);
+ p=jvm_calloc(size);if(!p){extern void crimson_release_oom_reserve(void);crimson_release_oom_reserve();}
+ return p;
+}
 Instance *jarray_create_by_class(Runtime *runtime, s32 count, JClass *clazz) {
     if (count < 0 || !clazz)return NULL;
     s32 typeIdx = clazz->mb.arr_type_index;
     s32 width = DATA_TYPE_BYTES[typeIdx];
+    if(width<1 || (u64)count*width>0x7fffffff-instance_base_size())return NULL;
     s32 insSize = instance_base_size() + (width * count);
-    Instance *arr = jvm_calloc(insSize);
+    Instance *arr = crimson_object_calloc(runtime,insSize);
+    if(!arr)return NULL;
     arr->mb.heap_size = insSize;
     arr->mb.type = MEM_TYPE_ARR;
     arr->mb.clazz = clazz;
@@ -1228,6 +1238,8 @@ Instance *jarray_multi_create(Runtime *runtime, s32 *dim, s32 dim_size, Utf8Stri
     }
     JClass *cl = array_class_create_get(runtime, runtime->clazz->jloader, pdesc);
     Instance *arr = jarray_create_by_class(runtime, len, cl);
+    if(!arr)return NULL;
+    instance_hold_to_thread(arr,runtime);
     Utf8String *desc = utf8_create_part(pdesc, 1, pdesc->length - 1);
 
     c8 ch = utf8_char_at(desc, 0);
@@ -1239,11 +1251,13 @@ Instance *jarray_multi_create(Runtime *runtime, s32 *dim, s32 dim_size, Utf8Stri
         s64 val;
         for (i = 0; i < len; i++) {
             Instance *elem = jarray_multi_create(runtime, dim, dim_size, desc, deep + 1);
+            if(!elem && deep+1<dim_size){instance_release_from_thread(arr,runtime);utf8_destroy(desc);return NULL;}
             val = (intptr_t) elem;
             jarray_set_field(arr, i, val);
         }
     }
     utf8_destroy(desc);
+    instance_release_from_thread(arr,runtime);
     return arr;
 }
 
@@ -1310,7 +1324,8 @@ s32 instance_base_size() {
 
 Instance *instance_create(Runtime *runtime, JClass *clazz) {
     s32 insSize = instance_base_size() + clazz->field_instance_len;
-    Instance *ins = jvm_calloc(insSize);
+    Instance *ins = crimson_object_calloc(runtime,insSize);
+    if(!ins)return NULL;
     ins->mb.type = MEM_TYPE_INS;
     ins->mb.clazz = clazz;
     ins->mb.heap_size = insSize;

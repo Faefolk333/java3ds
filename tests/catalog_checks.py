@@ -36,3 +36,11 @@ with zipfile.ZipFile(original) as a,zipfile.ZipFile('work/catalog-test.jar') as 
   if name in profile.namelist():assert b.read(name)==profile.read(name),name
   elif not name.endswith('.class'):assert a.read(name)==b.read(name),name
 print('CATALOG_PASS JAR JAD URL_decoding continuation multi_MIDlet invalid_input source_unchanged resource_rewrite PoP_profile')
+
+with zipfile.ZipFile(demo) as src,zipfile.ZipFile(p/'lge.jar','w') as dest:
+ for name in src.namelist():
+  content=src.read(name)
+  if name=='META-INF/MANIFEST.MF':content+=b'LGE-MIDlet-TargetLCD-Width: 240\r\nLGE-MIDlet-TargetLCD-Height: 320\r\n'
+  dest.writestr(name,content)
+assert 'NATIVE 240x320 KNOWN 1' in invoke(p/'lge.jar').stdout
+print('CATALOG_PASS LGE_native_240x320')

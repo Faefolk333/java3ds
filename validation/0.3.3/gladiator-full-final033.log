@@ -1,0 +1,307 @@
+RAM cache ready: 3 JARs, 2519061 bytes
+STAGE 40 0
+STAGE 41 3
+Java3DS: Gladiator 240x320
+VM_AUDIO_LOAD handle=-1 bytes=358
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:19)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:22)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (0) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=870
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:19)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:22)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (1) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=582
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:19)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:22)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (2) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=710
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:19)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:22)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (3) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=5158
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:19)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:22)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (4) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=1382
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:19)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:22)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (5) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=646
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:19)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:22)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (6) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=934
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:19)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:22)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (7) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=742
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:19)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(MaGC_WAIT T=000001c90bed7230 status=1 suspend=1 no_pause=0
+last=crimson/GameMain.gameplay native=0
+T=000001c90bed7a50 status=1 suspend=1 no_pause=0
+last=java/lang/Thread.sleep native=1
+
+GC_WAIT T=000001c90bed7230 status=1 suspend=1 no_pause=0
+last=crimson/Native.buttons native=1
+T=000001c90bed7a50 status=1 suspend=1 no_pause=0
+last=java/lang/Math.max native=0
+
+GC_WAIT T=000001c90bed7230 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+T=000001c90bed7a50 status=1 suspend=1 no_pause=0
+last=java/lang/System.arraycopy native=1
+
+nager.java:22)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (8) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=678
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:19)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:22)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (9) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=582
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:19)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:22)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (10) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=998
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:19)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:22)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (11) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=230
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:19)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:22)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (12) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=230
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:19)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:22)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (13) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=5542
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:19)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:22)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (14) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+VM_AUDIO_LOAD handle=-1 bytes=2790
+javax.microedition.media.MediaException: MIDI/WAV output unavailable
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:19)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:22)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (15) javax.microedition.media.MediaException: MIDI/WAV output unavailable
+AEResourceManager | loading /data/3d/jsr/colosseum_skybox ...
+Image /data/3d/jsr/provincial_arena_floor.m3g ist nicht verschlüsselt!
+AEResourceManager | loading /data/3d/jsr/provincial_arena_floor ...
+||| javax.microedition.m3g.Group@cc0f059
+AEResourceManager | loading /data/3d/jsr/provincial_arena_arcs ...
+||| javax.microedition.m3g.Mesh@ce1c909
+AEResourceManager | loading /data/3d/jsr/provincial_arena_main_populated ...
+Image /data/3d/jsr/provincial_arena_heads.m3g ist nicht verschlüsselt!
+AEResourceManager | loading /data/GC_WAIT T=000001c90bed7230 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+T=000001c90bed7a50 status=1 suspend=1 no_pause=0
+last=java/io/ByteArrayInputStream.read native=0
+
+GC_WAIT T=000001c90bed7230 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+T=000001c90bed7a50 status=1 suspend=1 no_pause=0
+last=java/io/ByteArrayInputStream.read native=0
+T=000001c90cb7b640 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.repaint native=0
+
+GC_WAIT T=000001c90bed7230 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+T=000001c90bed7a50 status=1 suspend=1 no_pause=0
+last=java/io/ByteArrayInputStream.read native=0
+
+GC_WAIT T=000001c90bed7230 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+T=000001c90bed7a50 status=1 suspend=1 no_pause=0
+last=java/lang/String.regionMatches native=0
+
+GC_WAIT T=000001c90bed7230 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+T=000001c90bed7a50 status=1 suspend=1 no_pause=0
+last=javax/microedition/m3g/Graphics3DPipelines$TextureWrappers$1.wrap native=0
+
+GC_WAIT T=000001c90bed7230 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+T=000001c90bed7a50 status=1 suspend=1 no_pause=0
+last=javax/microedition/m3g/Object3D.<init> native=0
+
+GC_WAIT T=000001c90bed7230 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+T=000001c90bed7a50 status=1 suspend=1 no_pause=0
+last=crimson/Native.decode native=1
+
+GC_WAIT T=000001c90bed7230 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+T=000001c90bed7a50 status=1 suspend=1 no_pause=0
+last=javax/microedition/m3g/M3GMath.scaleVec native=0
+
+GC_WAIT T=000001c90bed7230 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+T=000001c90bed7a50 status=1 suspend=1 no_pause=0
+last=org/mini/fs/InnerFile.loadFS native=1
+
+GC_WAIT T=000001c90bed7230 status=1 suspend=1 no_pause=0
+last=crimson/Native.buttons native=1
+
+GC_WAIT T=000001c90bed7230 status=1 suspend=1 no_pause=0
+last=java/lang/Thread.sleep native=1
+T=000001c90bed7a50 status=1 suspend=1 no_pause=0
+last=aw.a native=0
+
+GC_WAIT T=000001c90bed7230 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+T=000001c90bed7a50 status=1 suspend=1 no_pause=0
+last=javax/microedition/m3g/Transform.multiply native=0
+
+GC_WAIT T=000001c90bed7a50 status=1 suspend=1 no_pause=0
+last=javax/microedition/m3g/Graphics3DPipelines$TextureWrappers$1.wrap native=0
+
+GC_WAIT T=000001c90bed7230 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+T=000001c90bed7a50 status=1 suspend=1 no_pause=0
+last=javax/microedition/m3g/Graphics3DPipelines$TextureWrappers$1.wrap native=0
+
+RAM cache hits: 1009
+3d/jsr/provincial_arena_heads ...
+Image /data/3d/jsr/provincial_arena_flags.m3g ist nicht verschlüsselt!
+AEResourceManager | loading /data/3d/jsr/provincial_arena_flags ...
+||| javax.microedition.m3g.Group@cc0fdd9
+AEResourceManager | loading /data/3d/jsr/provincial_arena_fence ...
+||| javax.microedition.m3g.Mesh@ce1d979
+AEResourceManager | loading /data/3d/jsr/provincial_arena_awnings_01 ...
+||| javax.microedition.m3g.Mesh@ce1eb09
+AEResourceManager | loading /data/3d/jsr/provincial_arena_awnings_02 ...
+||| javax.microedition.m3g.Group@cc0ed99
+AEResourceManager | loading /data/3d/jsr/provincial_arena_garlend ...
+||| javax.microedition.m3g.Group@cc0f189
+AEResourceManager | loading /data/3d/jsr/dirt_01 ...
+||| javax.microedition.m3g.Group@cc0f329
+AEResourceManager | loading /data/3d/jsr/dirt_02 ...
+||| javax.microedition.m3g.Group@cc0fca9
+AEResourceManager | loading /data/3d/jsr/dirt_03 ...
+||| javax.microedition.m3g.SkinnedMesh@cedeb39
+	ANIMATION FOUND: 28100 frames
+AEResourceManager | loading /data/3d/jsr/mace ...
+||| javax.microedition.m3g.SkinnedMesh@cedf239
+	ANIMATION FOUND: 28100 frames
+AEResourceManager | loading /data/3d/jsr/mace_shadow ...
+Image /data/3d/jsr/mace_trails.m3g ist nicht verschlüsselt!
+AEResourceManager | loading /data/3d/jsr/mace_trails ...
+Image /data/3d/jsr/mace_trails.m3g ist nicht verschlüsselt!
+AEResourceManager | loading /data/3d/jsr/mace_trails ...
+||| javax.microedition.m3g.Group@cc0ac99
+	ANIMATION FOUND: 600 frames
+AEResourceManager | loading /data/3d/jsr/blood ...
+||| javax.microedition.m3g.Group@cc09869
+	ANIMATION FOUND: 250 frames
+AEResourceManager | loading /data/3d/jsr/sparks ...
+||| javax.microedition.m3g.SkinnedMesh@cedf7f9
+	ANIMATION FOUND: 26000 frames
+AEResourceManager | loading /data/3d/jsr/maximus ...
+||| javax.microedition.m3g.SkinnedMesh@cede499
+	ANIMATION FOUND: 26000 frames
+AEResourceManager | loading /data/3d/jsr/maximus_shadow ...
+Image /data/3d/jsr/maximus_trails.m3g ist nicht verschlüsselt!
+AEResourceManager | loading /data/3d/jsr/maximus_trails ...
+Image /data/3d/jsr/maximus_trails.m3g ist nicht verschlüsselt!
+AEResourceManager | loading /data/3d/jsr/maximus_trails ...
+||| javax.microedition.m3g.SkinnedMesh@cacc019
+	ANIMATION FOUND: 25500 frames
+AEResourceManager | loading /data/3d/jsr/amazon ...
+||| javax.microedition.m3g.Group@c1d3179
+	ANIMATION FOUND: 850 frames
+AEResourceManager | loading /data/3d/jsr/amazon_dagger ...
+Image /data/3d/jsr/amazon_dagger_trail.m3g ist nicht verschlüsselt!
+AEResourceManager | loading /data/3d/jsr/amazon_dagger_trail ...
+||| javax.microedition.m3g.SkinnedMesh@cacb4b9
+	ANIMATION FOUND: 25500 frames
+AEResourceManager | loading /data/3d/jsr/amazon_shadow ...
+Image /data/3d/jsr/amazon_trails.m3g ist nicht verschlüsselt!
+AEResourceManager | loading /data/3d/jsr/amazon_trails ...
+Image /data/3d/jsr/amazon_trails.m3g ist nicht verschlüsselt!
+AEResourceManager | loading /data/3d/jsr/amazon_trails ...
+||| javax.microedition.m3g.SkinnedMesh@cacc6b9
+	ANIMATION FOUND: 2000 frames
+AEResourceManager | loading /data/3d/jsr/commodus_mercy ...
+STAGE 80 0
+STAGE 80 0
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+VM_EXIT run=0 result=0 frames=694 peak=0

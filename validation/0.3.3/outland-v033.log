@@ -1,0 +1,56 @@
+RAM cache ready: 3 JARs, 1857758 bytes
+GC_WAIT T=0000010fda694790 status=1 suspend=1 no_pause=0
+last=crimson/Native.buttons native=1
+T=0000010fdaeb57f0 status=1 suspend=1 no_pause=0
+last=crimson/Native.fill native=1
+
+GC_WAIT T=0000010fdaeb57f0 status=1 suspend=1 no_pause=0
+last=org/mini/zip/Zip.getEntryIndex0 native=1
+
+GC_WAIT T=0000010fda694790 status=1 suspend=1 no_pause=0
+last=crimson/Native.buttons native=1
+T=0000010fdaeb57f0 status=1 suspend=1 no_pause=0
+last=java/lang/Integer.getChars native=0
+
+GC_WAIT T=0000010fda694790 status=1 suspend=1 no_pause=0
+last=crimson/Native.buttons native=1
+T=0000010fdaeb57f0 status=1 suspend=1 no_pause=0
+last=java/lang/String.startsWith native=0
+
+GC_WAIT T=0000010fdaeb57f0 status=1 suspend=1 no_pause=0
+last=java/io/ByteArrayInputStream.read native=0
+
+GC_WAIT T=0000010fda694790 status=1 suspend=1 no_pause=0
+last=crimson/Native.buttons native=1
+T=0000010fdaeb57f0 status=1 suspend=1 no_pause=0
+last=java/io/ByteArrayInputStream.read native=0
+
+GC_WAIT T=0000010fda694790 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+T=0000010fdaeb57f0 status=1 suspend=1 no_pause=0
+last=java/io/ByteArrayInputStream.read native=0
+
+GC_WAIT T=0000010fdaeb57f0 status=1 suspend=1 no_pause=0
+last=java/io/ByteArrayInputStream.read native=0
+
+GC_WAIT T=0000010fda694790 status=1 suspend=1 no_pause=0
+last=crimson/Native.blit native=1
+
+GC_WAIT T=0000010fda694790 status=1 suspend=1 no_pause=0
+last=crimson/Native.buttons native=1
+
+GC_WAIT T=0000010fda694790 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC_WAIT T=0000010fdaeb57f0 status=1 suspend=1 no_pause=0
+last=java/util/Arrays.rangeCheck native=0
+
+RAM cache hits: 737
+STAGE 40 0
+STAGE 41 3
+Java3DS: Outland 3D 320x240
+STAGE 80 0
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+VM_EXIT run=0 result=0 frames=285 peak=0

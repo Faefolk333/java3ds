@@ -1,0 +1,7 @@
+Adapted from J2ME-Loader, https://github.com/nikita36078/J2ME-Loader, commit 4baada3fe6a99598b83ec83d37a6185d59071e68.
+Apache-2.0 licensed individual source files by Yury Kharchenko and Nikita Shakarun.
+Original copyright/license headers retained in imported API, loader and animation files.
+Java3DS replaces Android/OpenGL/JNI platform code with a software rasterizer,
+heap-backed buffers, a small platform adapter and HID sensor input.
+Experimental Micro3D omits lighting, toon/sphere effects and command-list primitives.
+The original J2ME-Loader repository's separate GPL components are not included.

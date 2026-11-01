@@ -1,0 +1,143 @@
+RAM cache ready: 3 JARs, 2463506 bytes
+GC_WAIT T=000001cfd1aba5c0 status=1 suspend=1 no_pause=0
+last=java/lang/System.currentTimeMillis native=1
+T=000001cfd20f16e0 status=1 suspend=1 no_pause=0
+last=java/io/ByteArrayInputStream.read native=0
+
+GC_WAIT T=000001cfd1aba5c0 status=1 suspend=1 no_pause=0
+last=crimson/Native.buttons native=1
+T=000001cfd20f16e0 status=1 suspend=1 no_pause=0
+last=java/io/ByteArrayInputStream.read native=0
+
+GC_WAIT T=000001cfd1aba5c0 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Display.pump native=0
+T=000001cfd20f16e0 status=1 suspend=1 no_pause=0
+last=java/io/ByteArrayInputStream.read native=0
+
+GC_WAIT T=000001cfd1aba5c0 status=1 suspend=1 no_pause=0
+last=java/lang/Thread.sleep native=1
+T=000001cfd20f16e0 status=1 suspend=1 no_pause=0
+last=java/io/ByteArrayInputStream.read native=0
+
+GC_WAIT T=000001cfd20f16e0 status=1 suspend=1 no_pause=0
+last=ab.<init> native=0
+
+GC_WAIT T=000001cfd1aba5c0 status=1 suspend=1 no_pause=0
+last=crimson/Controls.generic native=0
+
+GC_WAIT T=000001cfd1aba5c0 status=1 suspend=1 no_pause=0
+last=java/lang/System.currentTimeMillis native=1
+
+GC_WAIT T=000001cfd1aba5c0 status=1 suspend=1 no_pause=0
+last=java/lang/System.currentTimeMillis native=1
+
+GC_WAIT T=000001cfd1aba5c0 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Display.pump native=0
+
+GC_WAIT T=000001cfd20f16e0 status=1 suspend=1 no_pause=0
+last=a.i native=0
+
+GC_WAIT T=000001cfd1aba5c0 status=1 suspend=1 no_pause=0
+last=crimson/Controls.keys native=0
+T=000001cfd20f16e0 status=1 suspend=1 no_pause=0
+last=a.b native=0
+
+GC_WAIT T=000001cfd1aba5c0 status=1 suspend=1 no_pause=0
+last=crimson/Native.buttons native=1
+
+GC_WAIT T=000001cfd20f16e0 status=1 suspend=1 no_pause=0
+last=java/lang/System.currentTimeMillis native=1
+
+GC_WAIT T=000001cfd1aba5c0 status=1 suspend=1 no_pause=0
+last=java/lang/System.currentTimeMillis native=1
+
+RAM cache hits: 620
+STAGE 40 0
+STAGE 41 3
+Java3DS: Worms 2011 Armageddon 320x240
+VM_AUDIO_LOAD handle=0 bytes=4895
+VM_AUDIO_START 0 result 0
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+the menu title y is -29
+VM_AUDIO_LOAD handle=0 bytes=4895
+VM_AUDIO_LOAD handle=0 bytes=26182
+VM_AUDIO_START 0 result 0
+VM_AUDIO_LOAD handle=0 bytes=26182
+VM_AUDIO_LOAD handle=0 bytes=22648
+VM_AUDIO_START 0 result 0
+VM_AUDIO_LOAD handle=0 bytes=22648
+VM_AUDIO_LOAD handle=0 bytes=19078
+VM_AUDIO_START 0 result 0
+VM_AUDIO_LOAD handle=0 bytes=19078
+VM_AUDIO_START 0 result 0
+VM_AUDIO_LOAD handle=0 bytes=19078
+VM_AUDIO_LOAD handle=0 bytes=22648
+VM_AUDIO_START 0 result 0
+VM_AUDIO_LOAD handle=0 bytes=22648
+VM_AUDIO_START 0 result 0
+VM_AUDIO_LOAD handle=0 bytes=22648
+VM_AUDIO_LOAD handle=0 bytes=31982
+VM_AUDIO_START 0 result 0
+VM_AUDIO_LOAD handle=1 bytes=17772
+VM_AUDIO_START 1 result 0
+VM_AUDIO_LOAD handle=2 bytes=3770
+VM_AUDIO_START 2 result 0
+VM_AUDIO_START 2 result 0
+VM_AUDIO_START 2 result 0
+VM_AUDIO_LOAD handle=3 bytes=6524
+VM_AUDIO_START 3 result 0
+STAGE 80 0
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+VM_EXIT run=0 result=0 frames=708 peak=32768

@@ -306,6 +306,7 @@ s32 checkcast(Runtime *runtime, Instance *ins, s32 typeIdx) {
     } else {
         return 1;
     }
+    jvm_printf("CAST_FAILURE actual=%s target=%s\n",ins&&ins->mb.clazz?utf8_cstr(ins->mb.clazz->name):"?",utf8_cstr(class_get_constant_classref(clazz,typeIdx)->name));
     return 0;
 }
 
@@ -513,6 +514,7 @@ MethodInfo *pop_last_method;
 static JavaThreadInfo *pop_game_thread;
 unsigned pop_method_calls;
 s32 execute_method_impl(MethodInfo *method, Runtime *pruntime) {
+#ifdef CRIMSON_VM_DIAGNOSTICS
     JavaThreadInfo *game=__atomic_load_n(&pop_game_thread,__ATOMIC_RELAXED);
     if(!game && utf8_equals_c(method->_this_class->name,"g") && utf8_equals_c(method->name,"run") && utf8_equals_c(method->descriptor,"()V")){
         game=pruntime->thrd_info;__atomic_store_n(&pop_game_thread,game,__ATOMIC_RELAXED);
@@ -521,6 +523,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime) {
         __atomic_store_n(&pop_last_method,method,__ATOMIC_RELAXED);
         __atomic_add_fetch(&pop_method_calls,1,__ATOMIC_RELAXED);
     }
+#endif
     __atomic_store_n(&pruntime->thrd_info->crimson_last_method,method,__ATOMIC_RELAXED);
 #if _JVM_DEBUG_METHOD_PROFILE || _JVM_DEBUG_SLOW_CALL_PROFILE
     s64 start_time = nanoTime();
@@ -3190,6 +3193,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime) {
                             r->ins = NULL;
                             if (r->other) {
                                 r->ins = instance_create(r, r->other);
+                                if(!r->ins){sp=stack->sp;goto label_outofmemory_throw;}
                             }
                             sp = stack->sp;
 
@@ -3212,6 +3216,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime) {
                             stack->sp = sp;
                             r->ins = jarray_create_by_type_index(r, r->count, r->idx);
                             sp = stack->sp;
+                            if(!r->ins)goto label_outofmemory_throw;
 #if _JVM_DEBUG_LOG_LEVEL > 5
                             invoke_deepth(r);
                             jvm_printf("(a)newarray  [%llx] type:%c , r->count:%d  \n", (s64) (intptr_t) r->ins, getDataTypeTag(r->idx), r->count);
@@ -3245,6 +3250,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime) {
                             }
                             r->ins = jarray_create_by_class(r, r->count, r->other);
                             sp = stack->sp;
+                            if(!r->ins)goto label_outofmemory_throw;
 
 #if _JVM_DEBUG_LOG_LEVEL > 5
                             invoke_deepth(r);
@@ -3452,6 +3458,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime) {
                             stack->sp = sp;
                             r->ins = jarray_multi_create(r, dim, r->count, r->ustr, 0);
                             sp = stack->sp;
+                            if(!r->ins)goto label_outofmemory_throw;
 #if _JVM_DEBUG_LOG_LEVEL > 5
                             invoke_deepth(r);
                             jvm_printf("multianewarray  [%llx] type:%s , r->count:%d  \n", (s64) (intptr_t) r->ins, utf8_cstr(r->ustr), r->count);
@@ -4041,6 +4048,12 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime) {
 #endif
                         stack->sp = sp;
                         push_ref(stack, (__refer) exception_create(JVM_EXCEPTION_ARRAYINDEXOUTOFBOUNDS, r));
+                        goto label_exception_handle;
+                    }
+
+                label_outofmemory_throw: {
+                        stack->sp=sp;
+                        push_ref(stack,exception_create(JVM_ERROR_OUTOFMEMORY,r));
                         goto label_exception_handle;
                     }
 

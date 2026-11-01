@@ -1,0 +1,2 @@
+package javax.microedition.rms;
+public interface RecordEnumeration {int numRecords();boolean hasNextElement();boolean hasPreviousElement();int nextRecordId()throws InvalidRecordIDException;int previousRecordId()throws InvalidRecordIDException;byte[] nextRecord()throws java.io.IOException;byte[] previousRecord()throws java.io.IOException;void reset();void rebuild();void destroy();void keepUpdated(boolean b);boolean isKeptUpdated();}

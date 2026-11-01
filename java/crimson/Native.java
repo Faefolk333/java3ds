@@ -1,11 +1,17 @@
 package crimson;
 public final class Native {
  public static native int[] snapshot();
- public static native int[] decode(byte[] bytes,int offset,int length);
+ public static native void readPixels(int[] target,int tw,int th,int[] dst,int offset,int scan,int x,int y,int w,int h);
+ public static native int[] decode(byte[] bytes,int offset,int length,int[] dimensions);
  public static native void fill(int[] target,int width,int height,int x,int y,int w,int h,int color);
  public static native void blit(int[] target,int width,int height,int[] source,int sw,int sh,int x,int y,int cx,int cy,int cw,int ch);
+ public static native void rgb(int[] target,int tw,int th,int[] pixels,int offset,int scan,int x,int y,int w,int h,boolean alpha,int cx,int cy,int cw,int ch);
+ public static native void text(int[] target,int tw,int th,long[] glyphs,String text,int x,int y,int scale,int color,int cx,int cy,int cw,int ch);
+ public static native void microBegin();
+ public static native void microTriangle(int[] target,int w,int h,float[] triangle,float[] projection,int[] texture,int tw,int th,int color,int flags,int cx,int cy,int cw,int ch);
  public static native void present();
  public static native int buttons();
+ public static native boolean motion(int kind,int[] sample);
  public static native void music(int id,int loops,int volume);
  public static native int audioLoad(byte[] data);
  public static native int audioControl(int handle,int operation,int value);

@@ -36,15 +36,24 @@ bool inspectGame(const std::string&path,GameInfo&g,std::string&error){
  // Native sizes are metadata/filename hints, never inferred from display hardware.
  std::string hint=path+" "+g.properties["Nokia-MIDlet-Original-Display-Size"];
  for(size_t i=0;i<hint.size();i++){int w=0,h=0;if(isdigit((unsigned char)hint[i])&&(i==0||!isdigit((unsigned char)hint[i-1]))&&sscanf(hint.c_str()+i,"%dx%d",&w,&h)==2&&w>=64&&w<=480&&h>=64&&h<=640&&w*h<=512*512){g.nativeWidth=w;g.nativeHeight=h;g.resolutionKnown=true;break;}}
+ // Some touch builds describe their fixed canvas using vendor attributes.
+ if(!g.resolutionKnown){int w=atoi(g.properties["LGE-MIDlet-TargetLCD-Width"].c_str()),h=atoi(g.properties["LGE-MIDlet-TargetLCD-Height"].c_str());if(w>=64&&w<=480&&h>=64&&h<=640&&w*h<=512*512){g.nativeWidth=w;g.nativeHeight=h;g.resolutionKnown=true;}}
  if(g.pop){g.nativeWidth=320;g.nativeHeight=240;g.resolutionKnown=true;}
- for(unsigned i=0;i<mz_zip_reader_get_num_files(&z);i++){mz_zip_archive_file_stat st;if(!mz_zip_reader_file_stat(&z,i,&st))continue;std::string n=st.m_filename;if(n.size()<6||n.substr(n.size()-6)!=".class"||st.m_uncomp_size>2*1024*1024)continue;std::vector<unsigned char>b;if(!zipEntry(z,n.c_str(),b,2*1024*1024))continue;std::string code(b.begin(),b.end());if(code.find("com/mascotcapsule/micro3d/")!=std::string::npos)g.unsupported="Requires Mascot Capsule Micro3D v3";else if(g.unsupported.empty()&&code.find("javax/microedition/m3g/")!=std::string::npos)g.unsupported="Requires JSR-184 / M3G 3D support";}
+ for(unsigned i=0;i<mz_zip_reader_get_num_files(&z);i++){mz_zip_archive_file_stat st;if(!mz_zip_reader_file_stat(&z,i,&st))continue;std::string n=st.m_filename;if(n.size()<6||n.substr(n.size()-6)!=".class"||st.m_uncomp_size>2*1024*1024)continue;std::vector<unsigned char>b;if(!zipEntry(z,n.c_str(),b,2*1024*1024))continue;std::string code(b.begin(),b.end());if(code.find("com/mascotcapsule/micro3d/")!=std::string::npos)g.properties["launcher.micro3d"]="experimental";else if(g.unsupported.empty()&&code.find("javax/microedition/m3g/")!=std::string::npos)g.properties["launcher.m3g"]="experimental";}
  mz_zip_reader_end(&z);if(g.midlets.empty()){error="No launchable MIDlet found";return false;}g.title=g.properties["MIDlet-Name"];if(g.title.empty())g.title=g.midlets[0].title;
  char id[24];snprintf(id,sizeof(id),"%08lx",(unsigned long)g.crc);g.id=id;return true;
 }
 struct Cursor {std::vector<unsigned char>&b;size_t p;bool ok=true;unsigned u1(){if(p>=b.size()){ok=false;return 0;}return b[p++];}unsigned u2(){unsigned a=u1();return (a<<8)|u1();}uint32_t u4(){unsigned a=u2();return (uint32_t)(a<<16)|u2();}void skip(size_t n){if(p>b.size()||n>b.size()-p){ok=false;p=b.size();}else p+=n;}};
 static void put2(std::vector<unsigned char>&b,unsigned v){b.push_back(v>>8);b.push_back(v);}
+static bool redirectConnector(std::vector<unsigned char>&b){
+ if(b.size()<10)return false;Cursor c{b,8};unsigned count=c.u2();std::vector<unsigned char>out(b.begin(),b.begin()+10);
+ for(unsigned i=1;i<count&&c.ok;i++){size_t start=c.p;unsigned tag=c.u1();if(tag==1){unsigned n=c.u2();if(n>b.size()-c.p)return false;std::string value((char*)b.data()+c.p,n);c.skip(n);if(value=="javax/microedition/io/Connector"){out.push_back(1);const std::string replacement="crimson/ConnectionFactory";put2(out,replacement.size());out.insert(out.end(),replacement.begin(),replacement.end());continue;}}
+ else if(tag==3||tag==4||tag==9||tag==10||tag==11||tag==12||tag==17||tag==18)c.skip(4);else if(tag==5||tag==6){c.skip(8);i++;}else if(tag==7||tag==8||tag==16||tag==19||tag==20)c.skip(2);else if(tag==15)c.skip(3);else return false;
+ if(!c.ok)return false;out.insert(out.end(),b.begin()+start,b.begin()+c.p);}
+ if(!c.ok)return false;out.insert(out.end(),b.begin()+c.p,b.end());b.swap(out);return true;
+}
 static bool resourcePatch(std::vector<unsigned char>&b){
- if(b.size()<10||memcmp(b.data(),"\xca\xfe\xba\xbe",4))return false;Cursor c{b,8};unsigned count=c.u2();if(count>65520||count<1)return false;
+ if(b.size()<10||memcmp(b.data(),"\xca\xfe\xba\xbe",4)||!redirectConnector(b))return false;Cursor c{b,8};unsigned count=c.u2();if(count>65520||count<1)return false;
  struct CP{unsigned tag=0,a=0,d=0;std::string text;};std::vector<CP>cp(count);for(unsigned i=1;i<count&&c.ok;i++){CP&v=cp[i];v.tag=c.u1();switch(v.tag){case 1:{unsigned n=c.u2();if(c.p>b.size()||n>b.size()-c.p)return false;v.text.assign((char*)b.data()+c.p,n);c.skip(n);break;}case 3:case 4:c.skip(4);break;case 5:case 6:c.skip(8);i++;break;case 7:case 8:case 16:case 19:case 20:v.a=c.u2();break;case 9:case 10:case 11:case 12:case 17:case 18:v.a=c.u2();v.d=c.u2();break;case 15:c.skip(3);break;default:return false;}}
  if(!c.ok)return false;size_t poolEnd=c.p;std::vector<unsigned>targets;
  for(unsigned i=1;i<count;i++)if(cp[i].tag==10&&cp[i].a<count&&cp[i].d<count){CP&cl=cp[cp[i].a];CP&nt=cp[cp[i].d];if(cl.a<count&&nt.a<count&&nt.d<count&&cp[cl.a].text=="java/lang/Class"&&cp[nt.a].text=="getResourceAsStream"&&cp[nt.d].text=="(Ljava/lang/String;)Ljava/io/InputStream;")targets.push_back(i);}

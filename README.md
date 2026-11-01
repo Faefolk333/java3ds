@@ -1,4 +1,4 @@
-# Java3DS — private alpha 0.3.2
+# Java3DS — private alpha 0.3.3
 
 Java ME / JAR / JAD launcher for Nintendo 3DS, with a shared MIDI synthesizer.
 Extract the installation ZIP to the root of the SD card, replacing
@@ -7,13 +7,28 @@ with Java Pocket 3DS. Games, settings and saves are retained. Start **Java3DS**
 from Homebrew Launcher; add your JAR/JAD files under `/3ds/java-3ds/games/`.
 A JAD also needs its matching local JAR. Original game JARs are not bundled.
 
-## Stability fixes (0.3.2)
+## Changes in 0.3.3
 
-Bounded CIA startup heap; Nokia Sound facade; missing array API protection;
-RMS names/listing/empty records; shutdown callback monitor fix. See
-[COMPATIBILITY.md](COMPATIBILITY.md) for evidence and remaining hardware checks.
+* Handles failed VM object/array allocations and retries after GC. Dump 26
+  identified an unchecked allocation failure in Age of Heroes III.
+* Native drawRGB, text and pixel reads avoid temporary full-frame images;
+  queued repaint and one VBlank per frame reduce rendering overhead.
+* Long sprite atlases (including Worms bodies) now decode and draw; PNG/JPEG
+  dimensions are bounded by both length and total pixel count.
+* MIDI/WAV players mix independently. Starting SFX no longer stops another
+  supported music player. AMR, AAC and MP3 remain unsupported.
+* LGE native-resolution metadata, functional RMS enumeration, Form/Gauge,
+  and deferred callSerially callbacks improve compatibility.
+* Experimental software Micro3D v3 and M3G scene rendering. Blades and Magic
+  and Outland rendered 3D scenes in PC tests; Gladiator loaded animated models.
+  These are initial backends, with incomplete effects and unmeasured 3DS speed.
+* HID accelerometer/gyroscope bridges for JSR-256 and Sony sensor APIs.
+  A game must actually request these APIs. The supplied LocoRoco Hi build does
+  not reference them; adding sensors does not invent tilt controls for it.
+* Touch keys highlight only on touch; menu parallax updates more often and
+  filters the stick movement. The banner is unchanged.
 
-## CIA installation (0.3.2)
+## CIA installation (0.3.3)
 
 Install `java3ds.cia` with FBI to launch directly from HOME Menu. The package
 includes a native animated 3D banner converted from the supplied Blender scene
@@ -34,11 +49,10 @@ CIA updates select `java3ds.cia`; 3DSX updates select `java3ds.3dsx`.
 * Rendering serialized with the game's repaint calls; recursive repaint
   callbacks are guarded. This addresses races between mutable image buffers
   and painting. Soul of Darkness reached its title and in-game scene in host tests.
-* Two display choices: **Native** and **3DS screen**. Native centers the original
-  image and only shrinks if necessary. Generic games keep their original canvas
-  in both modes; the 3DS screen mode scales the completed image to fit while
-  preserving proportions, so black margins can remain. It does not invent a
-  wider game camera or stretch people sideways.
+* Two display choices: **Native** and **Fill screen**. Native centers the original
+  image and only shrinks if necessary. Fill screen scales the completed canvas
+  to 400×240 with no launcher-added margins; differing aspect ratios stretch.
+  Borders drawn inside a game itself remain part of its image.
 * The known Prince of Persia Classic profile retains its actual 400×240 camera.
   Old and New 3DS have the same 400×240 2D output; there is no separate resolution
   switch for the model. Generic wide-camera adaptation remains game-specific.
@@ -47,7 +61,7 @@ CIA updates select `java3ds.cia`; 3DSX updates select `java3ds.3dsx`.
   wait; monitor cleanup and daemon-thread teardown before VM memory is freed.
 
 Native resolution comes from a `[320x240]` style filename hint or supported
-Nokia display metadata. Without a reliable hint, 320×240 is labelled assumed.
+Nokia or LGE display metadata. Without a reliable hint, 320×240 is labelled assumed.
 Rename a JAR to include its known original dimensions when necessary.
 
 ## Controls and audio
@@ -66,9 +80,10 @@ needs its usual `/3ds/dspfirm.cdc`. The MIDI engine is shared by games.
 ## Compatibility and validation
 
 This is a partial MIDP runtime, not a universal Java or Android emulator.
-The supplied Blades and Magic K800i/K790i JAR needs Mascot Capsule Micro3D v3;
-that 3D backend is still unsupported and is reported before launch.
-Some MIDP form APIs and game-specific behaviors remain incomplete.
+Micro3D v3 and JSR-184/M3G are experimental software backends. Micro3D command
+lists, lighting/toon/sphere effects and some vendor APIs remain incomplete.
+Some MIDP forms, Bluetooth, file connections and compressed audio codecs also
+remain incomplete. See [COMPATIBILITY.md](COMPATIBILITY.md) for game evidence.
 
 See [VALIDATION.md](VALIDATION.md) for actual host checks and hardware limits.
 Physical-console rendering, performance and Wi-Fi installation must still be

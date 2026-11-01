@@ -1,0 +1,72 @@
+RAM cache ready: 3 JARs, 1773475 bytes
+GC_WAIT T=000002128884dbf0 status=1 suspend=1 no_pause=0
+last=java/lang/Thread.nextThreadNum native=0
+
+GC_WAIT T=0000021288dd7e50 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.repaint native=0
+T=0000021288dd7ff0 status=1 suspend=1 no_pause=0
+last=java/lang/Thread.yield native=1
+
+GC_WAIT T=000002128884c460 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+T=0000021288dd7ff0 status=1 suspend=1 no_pause=0
+last=java/lang/Thread.yield native=1
+
+RAM cache hits: 474
+STAGE 40 0
+STAGE 41 3
+Java3DS: Age of Heroes 3 320x240
+VM_AUDIO_LOAD handle=0 bytes=6864
+VM_AUDIO_LOAD handle=1 bytes=151
+VM_AUDIO_LOAD handle=2 bytes=849
+VM_AUDIO_LOAD handle=3 bytes=172
+VM_AUDIO_LOAD handle=4 bytes=344
+VM_AUDIO_LOAD handle=5 bytes=463
+VM_AUDIO_LOAD handle=6 bytes=120
+VM_AUDIO_LOAD handle=7 bytes=144
+VM_AUDIO_START 0 result 0
+STAGE 80 0
+STAGE 80 0
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+VM_EXIT run=0 result=0 frames=248 peak=28486
+RAM cache ready: 3 JARs, 1773475 bytes
+GC_WAIT T=0000021288b08350 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+T=0000021288a3b810 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.repaint native=0
+T=0000021288a3d210 status=1 suspend=1 no_pause=0
+last=java/lang/Thread.setPriority0 native=1
+
+GC_WAIT T=0000021288b08350 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+T=0000021288a3d210 status=1 suspend=1 no_pause=0
+last=java/lang/Thread.yield native=1
+
+GC_WAIT T=0000021288b08350 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.getGameAction native=0
+T=0000021288a3d140 status=1 suspend=1 no_pause=0
+last=java/lang/Thread.yield native=1
+T=0000021288a3d210 status=1 suspend=1 no_pause=0
+last=java/lang/Thread.yield native=1
+
+RAM cache hits: 474
+STAGE 40 0
+STAGE 41 3
+Java3DS: Age of Heroes 3 320x240
+VM_AUDIO_LOAD handle=8 bytes=6864
+VM_AUDIO_LOAD handle=9 bytes=151
+VM_AUDIO_LOAD handle=10 bytes=849
+VM_AUDIO_LOAD handle=11 bytes=172
+VM_AUDIO_LOAD handle=12 bytes=344
+VM_AUDIO_LOAD handle=13 bytes=463
+VM_AUDIO_LOAD handle=14 bytes=120
+VM_AUDIO_LOAD handle=15 bytes=144
+VM_AUDIO_START 8 result 0
+STAGE 80 0
+STAGE 80 0
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+VM_EXIT run=1 result=0 frames=251 peak=28486
