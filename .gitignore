@@ -13,3 +13,7 @@ github-token.txt
 /saves/
 /cache/
 /settings/
+
+*.cia
+
+/jvm_crash_*.dmp

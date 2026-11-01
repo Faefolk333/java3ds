@@ -7,7 +7,7 @@ public final class GameMain {
  public static boolean menuBackdrop(){if(!popProfile)return false;switch(state){case 1:case 2:case 4:case 5:case 7:case 8:case 9:case 16:case 18:case 19:case 21:case 22:case 23:return true;default:return false;}}
  public static void updateState(int s){state=s;Native.stage(60,s);}
  public static void updateSound(int s,int level,boolean enabled){int v=(s<<8)|(level&255)|(enabled?65536:0);if(v!=soundScene){soundScene=v;Native.stage(82,v);}}
- private static boolean stopping;public static synchronized void requestStop(){if(stopped||stopping)return;stopping=true;try{if(midlet!=null)midlet.shutdown();}catch(Throwable e){e.printStackTrace();}stopped=true;Native.stage(80,0);}
+ private static boolean stopping;public static void requestStop(){synchronized(GameMain.class){if(stopped||stopping)return;stopping=true;}try{if(midlet!=null)midlet.shutdown();}catch(Throwable e){e.printStackTrace();}stopped=true;Native.stage(80,0);}
  public static String property(String key,String fallback){String value=(String)properties.get(key);return value==null?fallback:value;}
  public static void main(String[]args)throws Exception{
   String file=System.getProperty("launcher.config");if(file==null)throw new IOException("Missing launch configuration");

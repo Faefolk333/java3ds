@@ -3,9 +3,9 @@ import hashlib, shutil, zipfile
 
 root=Path(__file__).resolve().parents[1]
 out=root/'dist';out.mkdir(exist_ok=True)
-target=Path('D:/nintendo 3ds/games/Java3DS-0.3.0')
+target=Path('D:/nintendo 3ds/games/Java3DS-0.3.2')
 target.mkdir(parents=True,exist_ok=True)
-install=out/'Java3DS-0.3.0-private.zip'
+install=out/'Java3DS-0.3.2-private.zip'
 licenses=[root/'THIRD-PARTY.md']
 for folder in ('minijvm','TinySoundFont','GeneralUser-GS','curl','mbedtls','zlib'):
  licenses.extend(p for p in (root/'third-party'/folder).glob('LICENSE*') if p.is_file())
@@ -16,11 +16,14 @@ with zipfile.ZipFile(install,'w',zipfile.ZIP_DEFLATED,compresslevel=6) as z:
  z.write(root/'README-cs.md','CTI-ME.md')
  z.write(root/'VALIDATION.md','VALIDATION.md')
  z.write(root/'UPDATES.md','UPDATES.md')
+ z.write(root/'CIA.md','CIA.md')
+ z.write(root/'COMPATIBILITY.md','COMPATIBILITY.md')
+ z.write(root/'work/arm/java3ds.cia','cias/Java3DS.cia')
  z.writestr('3ds/java-3ds/games/ADD-YOUR-GAMES-HERE.txt','Add your JAR/JAD games here. A JAD also needs its matching local JAR.\n')
  for p in licenses:z.write(p,'licenses/'+p.relative_to(root).as_posix())
  z.write(root/'third-party/stb_image.h','licenses/stb_image.h')
  z.write(root/'third-party/font8x8/font8x8_basic.h','licenses/font8x8_basic.h')
-source=out/'Java3DS-0.3.0-source-private.zip'
+source=out/'Java3DS-0.3.2-source-private.zip'
 with zipfile.ZipFile(source,'w',zipfile.ZIP_DEFLATED,compresslevel=6) as z:
  for folder in ('native','java','tools','tests','third-party','romfs','assets'):
   for p in (root/folder).rglob('*'):
@@ -36,7 +39,9 @@ with zipfile.ZipFile(source,'w',zipfile.ZIP_DEFLATED,compresslevel=6) as z:
 checks=[]
 raw=out/"java3ds.3dsx"
 shutil.copy2(root/"work/arm/java_pocket.3dsx",raw)
-for p in (install,source,raw):
+cia=out/"java3ds.cia"
+shutil.copy2(root/"work/arm/java3ds.cia",cia)
+for p in (install,source,raw,cia):
  if p.suffix==".zip":
   with zipfile.ZipFile(p) as z:assert z.testzip() is None
  shutil.copy2(p,target/p.name)

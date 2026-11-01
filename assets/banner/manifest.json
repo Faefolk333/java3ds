@@ -1,0 +1,30 @@
+{
+  "cgfx_bytes": 441336,
+  "animations": [
+    {
+      "name": "COMMON",
+      "frames_at_60_hz": 300.0,
+      "looping": true,
+      "members": 2
+    }
+  ],
+  "geometry": {
+    "fps": 24,
+    "frames": 120,
+    "duration_seconds": 5,
+    "objects": [
+      {
+        "name": "GreasePencil.001",
+        "vertices_before": 285482,
+        "vertices": 1715,
+        "triangles": 3398
+      },
+      {
+        "name": "Text",
+        "vertices_before": 3948,
+        "vertices": 1003,
+        "triangles": 1990
+      }
+    ]
+  }
+}

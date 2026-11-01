@@ -1,4 +1,4 @@
-# Java3DS — private alpha 0.3.0
+# Java3DS — private alpha 0.3.2
 
 Java ME / JAR / JAD launcher for Nintendo 3DS, with a shared MIDI synthesizer.
 Extract the installation ZIP to the root of the SD card, replacing
@@ -7,7 +7,21 @@ with Java Pocket 3DS. Games, settings and saves are retained. Start **Java3DS**
 from Homebrew Launcher; add your JAR/JAD files under `/3ds/java-3ds/games/`.
 A JAD also needs its matching local JAR. Original game JARs are not bundled.
 
-## This update
+## Stability fixes (0.3.2)
+
+Bounded CIA startup heap; Nokia Sound facade; missing array API protection;
+RMS names/listing/empty records; shutdown callback monitor fix. See
+[COMPATIBILITY.md](COMPATIBILITY.md) for evidence and remaining hardware checks.
+
+## CIA installation (0.3.2)
+
+Install `java3ds.cia` with FBI to launch directly from HOME Menu. The package
+includes a native animated 3D banner converted from the supplied Blender scene
+and all runtime/MIDI resources. CIA and 3DSX share `/3ds/java-3ds` on SD.
+See [CIA.md](CIA.md) for local Wi-Fi QR installation and rebuilding the banner.
+CIA updates select `java3ds.cia`; 3DSX updates select `java3ds.3dsx`.
+
+## Launcher features (since 0.3.0)
 
 * Private Wi-Fi release checks and installation from `Faefolk333/java3ds`.
   Startup check when an SD token exists; Y in the library opens Updates.

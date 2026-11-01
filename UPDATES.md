@@ -69,3 +69,14 @@ hosts, using the system trust store; no verification was disabled.
 Review the resulting CA names and fingerprints before publishing an update.
 Transport uses devkitPro's libcurl + mbedTLS, avoiding the console's old HTTPS
 service. Real console Wi-Fi/TLS and SD installation still need hardware testing.
+
+## CIA channel (0.3.1+)
+
+The installed HOME Menu build selects `java3ds.cia` from the same private
+release. It verifies SHA-256 and size, then checks Title ID
+`000400000F3A3D00` with the system installer before installation. RomFS is
+closed before replacement. After success, exit and reopen the application;
+returning to games is disabled until restart. The CIA replaces the installed
+title on SD; the `.previous` backup applies only to the 3DSX build.
+No GitHub token is embedded in either application or in the QR code.
+The CIA self-update path still needs a physical-console test.

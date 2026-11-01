@@ -1,3 +1,27 @@
+# Java3DS 0.3.2 stability validation — 2026-11-01
+
+- CIA/3DSX compile; CIA TMD version 50 (0.3.2), same title ID.
+- CIA contents, ExeFS/RomFS hashes and extracted resources checked with CTRTool.
+  Homebrew ticket/TMD/access-descriptor signature failures are expected.
+- Age of Heroes III reproduced a host access violation in array_class_create_get
+  for missing com/nokia/mid/sound/Sound. After the API and VM fix, two 12-second
+  runs render frames, play MIDI (PCM peak 28623), and return status 0.
+- Age V/VII, LocoRoco Hi, Dark Knight Rises: two 12-second host runs each render
+  frames and return status 0. This covers smoke startup and cooperative stop,
+  not all gameplay or the physical console crash reported by the user.
+- Missing array component regression: three runs report ClassNotFoundException
+  without a native crash. RMS: three runs verify names, Unicode, path safety,
+  zero-length null data, persistence, listing and deletion.
+- Shutdown callback reentry: three VM runs complete without the old class-monitor
+  deadlock. Updater target/size/hash/title-ID/stream short-write tests pass.
+- CIA heap tests cover 64/124 MiB profiles, constrained resource limit and fallback.
+  Final ELF startup call is linked through the bounded-heap wrapper.
+- Physical CIA startup, Dark Knight first load, START+SELECT and game save UI
+  need a console retest. 3D backends are still unsupported. Banner untouched
+  during this stability pass; its motion/framing needs discussion with the user.
+
+Previous 0.3.0 validation follows (historical):
+
 # Java3DS 0.3.0 validation — 2026-10-28
 
 This build was compiled and tested on the Windows PC. The user's previous

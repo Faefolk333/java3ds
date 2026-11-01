@@ -3238,6 +3238,11 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime) {
                                 }
                                 spin_unlock(&r->jvm->lock_cloader);
                             }
+                            if (!r->other) {
+                                sp = stack->sp;
+                                push_ref(stack, exception_create(JVM_EXCEPTION_CLASSNOTFOUND, r));
+                                goto label_exception_handle;
+                            }
                             r->ins = jarray_create_by_class(r, r->count, r->other);
                             sp = stack->sp;
 

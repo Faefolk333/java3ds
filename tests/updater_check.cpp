@@ -12,6 +12,7 @@ int main(){
  write(target,old);write(temp,binary);assert(hashFile(temp,hash,size));assert(size==binary.size());
  std::string json="{\"draft\":false,\"prerelease\":false,\"tag_name\":\"v0.4.0\",\"assets\":[{\"name\":\"java3ds.3dsx\",\"size\":"+std::to_string(size)+",\"digest\":\"sha256:"+hash+"\",\"url\":\"https://api.github.com/repos/Faefolk333/java3ds/releases/assets/1234\"}]}";
  Release r;assert(parse(json,r));assert(r.sha==hash&&r.size==size);assert(version(r.tag)>version("0.3.0"));assert(version("v0.10.1")>version("0.9.9"));assert(version("0.4.0-rc1")==-1);
+ std::string cia=json;cia.replace(cia.find("java3ds.3dsx"),12,"java3ds.cia");assert(parse(cia,r,"java3ds.cia"));assert(!parse(cia,r));assert(!parse(json,r,"java3ds.cia"));
  std::string bad=json;bad.replace(bad.find("api.github.com"),14,"evil.test");assert(!parse(bad,r));bad=json;bad.replace(bad.find("sha256:"),7,"md5:");assert(!parse(bad,r));assert(!parse(json+"garbage",r));assert(!parse("{",r));
  assert(!install(target,temp,size-1,hash,error));assert(read(target)==old);
  write(temp,"3DSX tampered payload");assert(!install(target,temp,size,hash,error));assert(read(target)==old);

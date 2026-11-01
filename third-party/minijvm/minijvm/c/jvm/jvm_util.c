@@ -191,12 +191,15 @@ JClass *array_class_create_get(Runtime *runtime, Instance *jloader, Utf8String *
             vm_share_lock(jvm);
             clazz = classes_get(jvm, jloader, desc); //maybe other thread created
             if (!clazz) {
+                // Resolve before allocating/publishing the array class. A missing
+                // optional device API must become a Java exception, not a NULL dereference.
+                JClass *typec = arraytype_get_by_desc(runtime, jloader, desc);
+                if (!typec) { vm_share_unlock(jvm); return NULL; }
                 clazz = class_create(runtime);
                 clazz->mb.arr_type_index = getDataTypeIndex(utf8_char_at(desc, 1));
                 clazz->name = utf8_create_copy(desc);
                 clazz->superclass = classes_get_c(jvm, NULL, STR_CLASS_JAVA_LANG_OBJECT);
                 //this arrayclass need to set loader with element type
-                JClass *typec = arraytype_get_by_desc(runtime, jloader, desc);
                 clazz->jloader = typec->jloader;
 
                 //                gc_obj_hold(jvm->collector, clazz);
@@ -1164,7 +1167,7 @@ s32 check_suspend_and_pause(Runtime *runtime) {
 
 //===============================    实例化数组  ==================================
 Instance *jarray_create_by_class(Runtime *runtime, s32 count, JClass *clazz) {
-    if (count < 0)return NULL;
+    if (count < 0 || !clazz)return NULL;
     s32 typeIdx = clazz->mb.arr_type_index;
     s32 width = DATA_TYPE_BYTES[typeIdx];
     s32 insSize = instance_base_size() + (width * count);
