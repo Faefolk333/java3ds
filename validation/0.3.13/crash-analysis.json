@@ -1,0 +1,19 @@
+{
+  "dump_sha256": "ef56fde28efa4f37789282910da358b72ad1a6163e6cc2e76f749d80e1ccf545",
+  "process": "3dsx_app",
+  "exception_type": 2,
+  "pc": "0x13607c",
+  "lr": "0x137e14",
+  "code_window_exact_match": true,
+  "matched_code_base": "0x136020",
+  "symbols": [
+    "svcBreak",
+    "/home/davem/projects/devkitpro/pacman-packages/libctru/src/libctru-2.7.0/libctru/source/svc.s:401",
+    "__system_allocateHeaps",
+    "/home/davem/projects/devkitpro/pacman-packages/libctru/src/libctru-2.7.0/libctru/source/system/allocateHeaps.c:66"
+  ],
+  "heap_size_observed_register_r3": 127496192,
+  "observed_heap_MiB": 121.58984375,
+  "regular_heap_address_limit_MiB": 96,
+  "failure": "SDK heap allocation before main; probe startup omitted existing bounded heap wrapper"
+}

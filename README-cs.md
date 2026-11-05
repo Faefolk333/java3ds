@@ -1,4 +1,15 @@
-# Java3DS 0.3.12 — testovací sestavení
+# Java3DS 0.3.13 — testovací sestavení
+
+Opraven pád samostatného Symbian Probe před startem. Dump 31 odpovídá přesně
+kódu 0.3.12: systémový start žádal přibližně 121,59 MiB běžné haldy, jejíž
+adresní prostor má 96 MiB. Omezení použité už u CIA je nyní připojeno také
+k hlavní 3DSX a testu. Nová verze potřebuje ověřit start na konzoli.
+Po aktualizaci znovu otevřete Java3DS, pak v Homebrew Launcheru spusťte probe
+s označením 0.3.13. Data soukromého ZIPu 0.3.12 platí dál. Tlačítko Y spustí
+stejnou diagnostiku a uloží symbian-loader.log. Hratelný Symbian zatím není.
+
+Předchozí změny 0.3.12:
+
 
 Verze 0.3.12 rozšiřuje samostatný Symbian Probe o načítání nativních EKA1
 programů a ROM pro N-Gage. Kontroluje adresy, importy, relokace a oddělení paměti

@@ -1,0 +1,3 @@
+STARTUP_HEAP_LINK_PASS java3ds-cia.elf CRT -> bounded wrapper -> SDK allocator
+STARTUP_HEAP_LINK_PASS java_pocket.elf CRT -> bounded wrapper -> SDK allocator
+STARTUP_HEAP_LINK_PASS java3ds-symbian-probe.elf CRT -> bounded wrapper -> SDK allocator

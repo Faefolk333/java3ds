@@ -3,6 +3,16 @@
 The main Java3DS app executes Java ME bytecode. It does not yet execute Symbian
 SIS/SISX/APP programs. The inventory in validation/0.3.10 was metadata-only.
 
+## Standalone startup correction (0.3.13)
+
+The owner's dump 31 matches the 0.3.12 probe startup, before main. A 124 MiB HBL
+process with the fixed 2 MiB linear reservation caused the SDK to request
+121.59 MiB of regular heap, beyond its 96 MiB address range. The existing CIA
+bounded-heap hook is now linked into the probe and main 3DSX as well. Static
+ELF call-target checks and a regression using the dump's inputs cover the fix;
+physical startup must be retested. The earlier private 0.3.12 SD data ZIP works
+unchanged. This does not add a kernel/heap service to the emulated Symbian OS.
+
 ## EKA1 E32/ROM stage (0.3.12)
 
 The standalone probe now loads uncompressed ARM EKA1 E32 images, validates

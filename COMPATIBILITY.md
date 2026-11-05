@@ -1,4 +1,10 @@
-# Compatibility work — 0.3.12
+# Compatibility work — 0.3.13
+
+This is a standalone startup-memory fix. The supplied dump fails before the
+probe enters main. Main 3DSX and probe now use the existing CIA heap cap; Java
+and EKA1 guest behavior are unchanged. Physical startup retest required.
+
+## Earlier 0.3.12 work
 
 This update extends the separate Symbian diagnostic; no new Java game
 compatibility claim is made. It also fixes probe extraction in the main app.

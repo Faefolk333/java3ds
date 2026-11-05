@@ -1,4 +1,4 @@
-// The startup hook runs before constructors and before any service connection.
+// Shared CIA/main-3DSX/probe startup hook, before constructors or services.
 #include <3ds.h>
 extern "C" {
 extern u32 __ctru_heap_size;

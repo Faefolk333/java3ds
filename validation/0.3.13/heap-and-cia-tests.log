@@ -1,0 +1,3 @@
+UPDATER_PASS version manifest URL digest size integrity format install backup
+CIA_UPDATE_PASS hash size title-ID short-write cancel RomFS streamed-install
+STARTUP_HEAP_PASS Old64 New124 dump31_request bounded_SDK_request tight_limit fallback

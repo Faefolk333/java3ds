@@ -1,3 +1,25 @@
+# Java3DS 0.3.13 validation — 2026-11-05
+
+Physical startup and the new EKA1 loader still require a console retest.
+
+* Dump 31's full 96-byte code window matches the 0.3.12 probe ELF. PC 0x13607c
+  is svcBreak; LR 0x137e14 returns to SDK __system_allocateHeaps after its failed
+  regular-memory allocation. This happens before main, not in guest execution.
+  Observed regular heap size 0x7997000 = 121.59 MiB exceeds the 96 MiB area.
+* Shared heap-policy checks reproduce max=124 MiB, used=0x69000, fixed-linear=
+  2 MiB from the failed request. The wrapper instead requests 80 MiB regular /
+  4 MiB linear. Checks also cover Old64, a constrained limit and API fallback.
+* Actual linked startup call targets are checked for CIA, main 3DSX and probe:
+  CRT -> bounded heap wrapper -> SDK. The same check rejects the old probe ELF.
+* The EKA1 loader, ROM links and private SD inputs are unchanged. No new game or
+  OS functionality is claimed. Prior host loader/ROM regression remains valid.
+* Final CIA is title 000400000F3A3D00, version 61 / 0.3.13. CTRTool content
+  hashes pass with the three expected unsigned signature failures. Extracted
+  RomFS, icon, banner and original audio PCM match; embedded-asset and banner
+  format regression checks pass.
+
+## Previous validation history
+
 # Java3DS 0.3.12 validation — 2026-11-05
 
 New EKA1 loader/ROM execution on physical hardware is not yet verified. The

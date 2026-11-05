@@ -1,4 +1,4 @@
-# Java3DS — test build 0.3.12
+# Java3DS — test build 0.3.13
 
 Java ME / JAR / JAD launcher for Nintendo 3DS, with a shared MIDI synthesizer.
 Extract the installation ZIP to the root of the SD card, replacing
@@ -7,7 +7,23 @@ with Java Pocket 3DS. Games, settings and saves are retained. Start **Java3DS**
 from Homebrew Launcher; add your JAR/JAD files under `/3ds/java-3ds/games/`.
 A JAD also needs its matching local JAR. Original game JARs are not bundled.
 
-## Changes in 0.3.12
+## Changes in 0.3.13
+
+Fix standalone 3DSX startup on a 124 MiB Homebrew Launcher process. Dump 31's
+code window matches the 0.3.12 probe ELF exactly: svcBreak is called by the SDK
+heap allocator before main. With a fixed 2 MiB linear heap, the old startup
+requests about 121.59 MiB of regular heap, beyond its 96 MiB address area.
+
+The existing CIA bounded-heap startup hook is now linked into both the main
+3DSX and Symbian probe as well. It caps regular memory at 80 MiB on the larger
+profile / 48 MiB on the smaller profile, uses 4 MiB linear memory and retains
+resource-limit headroom. Tests reproduce the dump's allocation inputs and
+inspect all three final ARM ELF startup call targets. Physical startup needs a
+retest. EKA1 loader behavior and the private SD test data are unchanged; there
+is still no playable Symbian runtime. Run the updated probe, then Y for the
+previously prepared optional SD diagnostic.
+
+## Earlier changes in 0.3.12
 
 Fix automatic standalone-probe extraction: validate 3DSX and SMDH assets using
 their own formats instead of rejecting them as non-JAR files. Opening the

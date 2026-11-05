@@ -9,7 +9,8 @@ objects=[]
 for name in ('cpu_probe','probe_3ds','e32_image','e32_session','rom_image','loader_probe','image_probe'):
  obj=out/('symbian-'+name+'.o');subprocess.run([str(b/'arm-none-eabi-g++.exe'),*flags,'-c','native/symbian/'+name+'.cpp','-o',str(obj)],check=True);objects.append(str(obj))
 elf=out/'java3ds-symbian-probe.elf';smdh=out/'java3ds-symbian-probe.smdh';target=out/'java3ds-symbian-probe.3dsx'
-subprocess.run([str(b/'arm-none-eabi-g++.exe'),*flags,'-specs=3dsx.specs','-Wl,--gc-sections',*objects,'work/symbian-cpu-3ds/libsymbian-cpu.a','-L'+str(d/'libctru/lib'),'-lctru','-lm','-o',str(elf)],check=True)
+heap=out/'symbian-startup_heap.o';subprocess.run([str(b/'arm-none-eabi-g++.exe'),*flags,'-c','native/cia_heap.cpp','-o',str(heap)],check=True)
+subprocess.run([str(b/'arm-none-eabi-g++.exe'),*flags,'-specs=3dsx.specs','-Wl,--gc-sections','-Wl,--wrap=__system_allocateHeaps',str(heap),*objects,'work/symbian-cpu-3ds/libsymbian-cpu.a','-L'+str(d/'libctru/lib'),'-lctru','-lm','-o',str(elf)],check=True)
 subprocess.run([str(d/'tools/bin/smdhtool.exe'),'--create','Java3DS Symbian CPU Probe','CPU / EKA1 loader test - no games yet','Faefolk333','assets/icon48.png',str(smdh)],check=True)
 subprocess.run([str(d/'tools/bin/3dsxtool.exe'),str(elf),str(target),'--smdh='+str(smdh)],check=True);print('SYMBIAN_PROBE_BUILT',target)
 embedded=r/'romfs/probe';embedded.mkdir(exist_ok=True)
