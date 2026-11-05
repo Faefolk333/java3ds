@@ -16,20 +16,24 @@ std::uint16_t uidHalf(const std::vector<std::uint8_t>&b,unsigned start){
 }
 bool fail(std::string&error,const char*message){error=message;return false;}
 }
-bool E32Image::open(const char*path,std::string&error,bool(*keepRunning)()){
+bool E32Image::open(const char*path,std::string&error,TaskControl*control){
  ready=false;bytes.clear();imports.clear();relocations.clear();info={};
  FILE*f=std::fopen(path,"rb");if(!f)return fail(error,"Cannot open E32 file");
  if(std::fseek(f,0,SEEK_END)!=0){std::fclose(f);return fail(error,"Cannot seek E32 file");}
  long size=std::ftell(f);
  if(size<124||std::uint64_t(size)>maxFileBytes||std::fseek(f,0,SEEK_SET)!=0){std::fclose(f);return fail(error,"E32 file size is outside the loader limit");}
  std::vector<std::uint8_t> input(size);bool okay=true;std::size_t copied=0;
+ if(control)control->report("Reading program",0,size);
  while(copied<input.size()){
-  if(keepRunning&&!keepRunning()){std::fclose(f);return fail(error,"E32 read cancelled");}
+  if(control&&!control->checkpoint()){std::fclose(f);return fail(error,"E32 read cancelled");}
   auto chunk=std::min<std::size_t>(65536,input.size()-copied);
   if(std::fread(input.data()+copied,1,chunk,f)!=chunk){okay=false;break;}copied+=chunk;
+  if(control)control->report("Reading program",copied,input.size());
  }
  std::fclose(f);
- if(!okay)return fail(error,"Short read of E32 file");return parse(std::move(input),error);
+ if(!okay)return fail(error,"Short read of E32 file");
+ if(control&&!control->checkpoint())return fail(error,"E32 read cancelled");
+ return parse(std::move(input),error);
 }
 bool E32Image::parse(std::vector<std::uint8_t> input,std::string&error){
  ready=false;bytes.clear();imports.clear();relocations.clear();info={};error.clear();

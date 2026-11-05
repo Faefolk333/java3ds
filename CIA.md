@@ -31,7 +31,7 @@ Python executable if `python3` is not on PATH. With devkitARM,
 libctru and the same portlibs as the 3DSX build, run `bash build-cia.sh`.
 The checked-in generated banner is sufficient; Blender is not needed for a
 normal application rebuild. Output: `work/arm/java3ds.cia`, title ID
-`000400000F3A3D00`, product code `CTR-P-J3DS`, title version 59 (0.3.13).
+`000400000F3A3D00`, product code `CTR-P-J3DS`, title version 59 (0.3.14).
 Keep this title ID for future updates. The executable supports Old/New 3DS;
 64 MiB/124 MiB memory profiles are encoded in its exheader. The CIA build
 reserves 4 MiB of linear memory and caps the regular heap at 48 MiB (Old) / 80 MiB (New), with resource-limit checks.

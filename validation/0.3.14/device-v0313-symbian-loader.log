@@ -1,0 +1,7 @@
+Java3DS EKA1 loader diagnostic; no phone OS/gameplay
+E32_VALID uid3=101fd3f6 code=1051076 data=0 bss=0 imports=415 relocations=10104
+E32_MAPPED bytes=1062596
+ROM_NOT_MAPPED ROM read cancelled
+E32_CALL entry=12000000 result=returned r0=00000000 pc=6fff0004 instructions=4 import=#0 svc=007fffff fault=00000000 access=0
+E32_CALL entry=1202841c result=unimplemented import r0=0000022c pc=6f00095c instructions=7 import=EUSER[100039e5].DLL#1582 svc=0070012b fault=00000000 access=0
+DIAGNOSTIC_END no kernel/services/gameplay implemented

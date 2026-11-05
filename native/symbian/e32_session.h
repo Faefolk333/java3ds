@@ -19,10 +19,10 @@ class E32Session {
 public:
  E32Session();~E32Session();
  bool load(const E32Image&image,std::uint32_t codeBase,std::uint32_t dataBase,std::string&error);
- bool mountRom(const char*path,std::string&error,bool(*keepRunning)()=nullptr);
+ bool mountRom(const char*path,std::string&error,TaskControl*control=nullptr);
  bool linkRomLibrary(const std::string&importName,const char*descriptor,std::size_t&resolved,std::string&error);
  const LoadedE32&module()const;
  AddressSpace&memory();
- ExecutionResult call(std::uint32_t entry,std::uint32_t argument=0,std::uint64_t budget=100000,bool(*keepRunning)()=nullptr);
+ ExecutionResult call(std::uint32_t entry,std::uint32_t argument=0,std::uint64_t budget=100000,TaskControl*control=nullptr);
 };
 }

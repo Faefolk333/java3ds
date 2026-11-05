@@ -1,4 +1,4 @@
-# Java3DS — test build 0.3.13
+# Java3DS — test build 0.3.14
 
 Java ME / JAR / JAD launcher for Nintendo 3DS, with a shared MIDI synthesizer.
 Extract the installation ZIP to the root of the SD card, replacing
@@ -7,7 +7,21 @@ with Java Pocket 3DS. Games, settings and saves are retained. Start **Java3DS**
 from Homebrew Launcher; add your JAR/JAD files under `/3ds/java-3ds/games/`.
 A JAD also needs its matching local JAR. Original game JARs are not bundled.
 
-## Changes in 0.3.13
+## Changes in 0.3.14
+
+The owner's New 3DS logs confirm the 0.3.13 startup fix and all CPU/E32 fixture
+checks, including relocation, guarded memory, instruction limits and cancellation.
+The real Shadowkey E32 also validates/maps. Its ROM read was cancelled by START,
+as confirmed by the owner; full ROM linking has not yet been verified on console.
+
+Show ROM/program read progress, KiB and elapsed time in the separate probe.
+Read ROM in 64 KiB blocks. Share a latched task cancellation across I/O, linking
+and execution so a cancelled ROM read cannot fall through to guest calls.
+The log records the stage, bytes and elapsed time at cancellation. B cancels the
+image diagnostic and Y retries; START exits. New controls/UI need a device test.
+The same private SD data remains usable. No new kernel/gameplay support is claimed.
+
+## Earlier changes in 0.3.13
 
 Fix standalone 3DSX startup on a 124 MiB Homebrew Launcher process. Dump 31's
 code window matches the 0.3.12 probe ELF exactly: svcBreak is called by the SDK

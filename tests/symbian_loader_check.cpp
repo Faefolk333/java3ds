@@ -11,6 +11,9 @@
 #include <fstream>
 using namespace symbian;
 static void put(std::vector<std::uint8_t>&b,unsigned at,std::uint32_t word){for(unsigned n=0;n<4;n++)b[at+n]=word>>(n*8);}
+static std::uint32_t imageRead=0;static unsigned imageCancelSignals=0;
+static void imageProgress(const char*stage,std::uint32_t done,std::uint32_t){if(!std::strcmp(stage,"Reading ROM"))imageRead=done;}
+static bool cancelImageOnce(){if(imageRead>=65536&&!imageCancelSignals){imageCancelSignals++;return false;}return true;}
 static void romChecks(const std::vector<std::uint8_t>&e32){
  namespace fs=std::filesystem;const fs::path folder="work/symbian-rom-check";fs::create_directories(folder);
  auto save=[&](const char*name,const std::vector<std::uint8_t>&bytes){std::ofstream out(folder/name,std::ios::binary);out.write(reinterpret_cast<const char*>(bytes.data()),bytes.size());assert(out.good());return (folder/name).string();};
@@ -28,7 +31,25 @@ static void romChecks(const std::vector<std::uint8_t>&e32){
  auto r=session.call(session.module().exports[1]);assert(r.reason==StopReason::Returned&&r.r0==77);
  assert(!session.mountRom(path.c_str(),error));
  AddressSpace small(4096);RomImage limit;assert(!limit.mount(small,path.c_str(),error)&&small.used()==0);
- AddressSpace cancelled;RomImage cancelledRom;assert(!cancelledRom.mount(cancelled,path.c_str(),error,[](){return false;})&&cancelled.used()==0&&!cancelledRom.mounted());
+ AddressSpace cancelled;RomImage cancelledRom;TaskControl stop([](){return false;});
+ assert(!cancelledRom.mount(cancelled,path.c_str(),error,&stop)&&cancelled.used()==0&&!cancelledRom.mounted()&&stop.cancelled());
+ auto large=rom;large.resize(3*65536);put(large,144,large.size());auto largePath=save("large-original-test.rom",large);
+ unsigned polls=0,previous=0,progressEvents=0;TaskControl transient([&](){return ++polls!=3;},[&](const char*stage,std::uint32_t done,std::uint32_t total){
+  if(!std::strcmp(stage,"Reading ROM")){assert(done>=previous&&done<=total);previous=done;progressEvents++;}
+ });
+ RomImage interrupted;assert(!interrupted.mount(cancelled,largePath.c_str(),error,&transient));
+ assert(transient.cancelled()&&transient.done()==65536&&cancelled.used()==0&&!interrupted.mounted());
+ assert(!transient.checkpoint()&&polls==3&&progressEvents==2);
+ unsigned finished=0;TaskControl retry({},[&](const char*stage,std::uint32_t done,std::uint32_t total){if(!std::strcmp(stage,"Reading ROM")){assert(done>=finished&&done<=total);finished=done;}});
+ assert(interrupted.mount(cancelled,largePath.c_str(),error,&retry)&&interrupted.mounted()&&finished==large.size()&&!retry.cancelled());
+ assert(cancelled.unmap(0x50000000)&&cancelled.used()==0);
+ // Reproduce the console report: a false poll during ROM reading followed by
+ // true polls must never fall through to entry/export calls without the ROM.
+ save("test.app",e32);save("SYM.ROM",large);
+ FILE*report=std::tmpfile();assert(report);assert(symbianImageProbe(folder.string().c_str(),report,cancelImageOnce,imageProgress));
+ std::rewind(report);char text[4096]={};auto length=std::fread(text,1,sizeof(text)-1,report);std::fclose(report);
+ assert(length&&std::strstr(text,"DIAGNOSTIC_CANCELLED")&&!std::strstr(text,"E32_CALL")&&!std::strstr(text,"DIAGNOSTIC_END")&&imageCancelSignals==1);
+ puts("IMAGE_CANCEL_PASS transient_cancel_latched ROM_rollback no_guest_call_after_cancel monotonic_progress");
  auto bad=rom;put(bad,144,8193);auto broken=save("truncated.rom",bad);AddressSpace memory;RomImage rejected;
  assert(!rejected.mount(memory,broken.c_str(),error)&&memory.used()==0);
  bad=rom;put(bad,140,0x80000000);broken=save("eka2.rom",bad);assert(!rejected.mount(memory,broken.c_str(),error)&&memory.used()==0);
@@ -88,7 +109,7 @@ int main(int argc,char**argv){
   auto b=original;put(b,field,0xffffffff);assert(!image.parse(std::move(b),error));rejected++;
  }
  assert(image.parse(original,error));AddressSpace small(128);LoadedE32 loaded;
- assert(!image.open("work/symbian-e32/original-e32-test.app",error,[](){return false;}));
+ TaskControl stop([](){return false;});assert(!image.open("work/symbian-e32/original-e32-test.app",error,&stop)&&stop.cancelled());
  assert(!image.load(memory,0x12000000,0x02000000,loaded,error)&&memory.used()==0);
  assert(image.parse(original,error));
  assert(!image.load(small,0x12000000,0x02000000,loaded,error)&&small.used()==0);

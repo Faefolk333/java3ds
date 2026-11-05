@@ -3,6 +3,23 @@
 The main Java3DS app executes Java ME bytecode. It does not yet execute Symbian
 SIS/SISX/APP programs. The inventory in validation/0.3.10 was metadata-only.
 
+## Confirmed startup/E32 checks and loading progress (0.3.14)
+
+The owner supplied 0.3.13 New 3DS logs: startup and every CPU/E32 fixture check
+pass, with zero CPU faults (1M hot-loop instructions in 114821 us). The supplied
+Shadowkey image validates/maps on hardware. The owner confirmed pressing START
+during ROM loading. Thus full ROM reading/linking is not yet console-verified.
+The old diagnostic erroneously proceeded to entry/export calls after that
+cancellation; its EUSER#1582 stop is not evidence of a ROM/library failure.
+
+A task-wide latched control now stops I/O/linking/execution after any false poll.
+An original test ROM reproduces one false poll followed by true polls; no guest
+call or completion record may follow the cancellation. ROM mappings roll back.
+64 KiB reads emit byte progress; the probe shows percent, KiB and elapsed time.
+B cancels only the image diagnostic; Y explicitly starts a fresh task. START
+exits the application. Cancellation logs include stage/bytes/elapsed and the
+platform input source. New controls and read throughput require a device test.
+
 ## Standalone startup correction (0.3.13)
 
 The owner's dump 31 matches the 0.3.12 probe startup, before main. A 124 MiB HBL
@@ -10,7 +27,7 @@ process with the fixed 2 MiB linear reservation caused the SDK to request
 121.59 MiB of regular heap, beyond its 96 MiB address range. The existing CIA
 bounded-heap hook is now linked into the probe and main 3DSX as well. Static
 ELF call-target checks and a regression using the dump's inputs cover the fix;
-physical startup must be retested. The earlier private 0.3.12 SD data ZIP works
+the owner subsequently confirmed startup/all fixture checks passed. The earlier private 0.3.12 SD data ZIP works
 unchanged. This does not add a kernel/heap service to the emulated Symbian OS.
 
 ## EKA1 E32/ROM stage (0.3.12)

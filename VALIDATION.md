@@ -1,3 +1,24 @@
+# Java3DS 0.3.14 validation — 2026-11-05
+
+The owner's 0.3.13 New 3DS result confirms startup plus all CPU and E32 fixture
+checks. Shadowkey validation/mapping passed; the owner cancelled its ROM read
+using START. Full ROM/linking/gameplay is not a hardware pass.
+
+* Task-wide cancellation regression reproduces a transient false poll during a
+  ROM read followed by true polls. The ROM mapping rolls back, no E32_CALL or
+  DIAGNOSTIC_END is produced and cancellation stays latched.
+* Original ROM fixture checks monotonic progress, mid-read rollback and explicit
+  retry with a fresh task. Previous 418 malformed/truncated E32 cases remain.
+* The common host diagnostic with the owner's full RH-29 ROM still resolves
+  324/415 Shadowkey imports and reaches the missing EKA1 Heap SVC 0x6c.
+* Byte-progress, elapsed time and B/Y/START controls compile for ARM; new device
+  UI/throughput behavior needs a console retest. Kernel/game support is unchanged.
+* Final CIA version 62 / 0.3.14 has verified content hashes (three expected
+  unsigned signature failures). Extracted RomFS/banner/icon/audio PCM match
+  their inputs. Embedded-asset and all three final startup heap-link checks pass.
+
+## Previous validation history
+
 # Java3DS 0.3.13 validation — 2026-11-05
 
 Physical startup and the new EKA1 loader still require a console retest.

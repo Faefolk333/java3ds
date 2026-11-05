@@ -1,0 +1,9 @@
+{
+  "source": "owner New 3DS logs; owner confirmed pressing START during ROM read",
+  "startup": "passed",
+  "CPU_and_original_E32_fixture": "all passed",
+  "CPU_million_instructions_per_second": 8.709208245878367,
+  "real_Shadowkey_E32_validation_and_mapping": "passed",
+  "ROM_load": "cancelled by START before linking",
+  "full_ROM_or_gameplay_validated": false
+}

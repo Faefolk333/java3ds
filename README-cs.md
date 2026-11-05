@@ -1,4 +1,15 @@
-# Java3DS 0.3.13 — testovací sestavení
+# Java3DS 0.3.14 — testovací sestavení
+
+Ve vašem testu 0.3.13 prošel start, CPU i všechny kontroly E32 a paměti.
+Čtení ROMu bylo přerušeno tlačítkem START. Verze 0.3.14 ukazuje procenta,
+načtené KiB a uplynulý čas. Čte ROM po 64 KiB a po zrušení už nepokračuje
+spouštěním programu. B zruší jen diagnostiku, Y ji zopakuje a START ukončí
+aplikaci. Log uvádí fázi, množství načtených dat, čas a zdroj zrušení.
+Použijte stejná soukromá data Shadowkey. Plné načtení ROMu na konzoli ještě
+potřebujeme ověřit; hratelný Symbian ani nové služby jádra zatím nepřibyly.
+
+Předchozí změny 0.3.13:
+
 
 Opraven pád samostatného Symbian Probe před startem. Dump 31 odpovídá přesně
 kódu 0.3.12: systémový start žádal přibližně 121,59 MiB běžné haldy, jejíž

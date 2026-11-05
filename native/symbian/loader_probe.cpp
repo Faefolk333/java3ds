@@ -18,6 +18,6 @@ SymbianLoaderResult symbianLoaderProbe(){
  result.protectedMemory=r.reason==StopReason::MemoryFault&&r.access==Write&&before==after&&
   session.call(0x02000000).reason==StopReason::InvalidEntry&&session.call(0).reason==StopReason::InvalidEntry;
  r=session.call(module.exports[4],0,5000);result.bounded=r.reason==StopReason::BudgetExhausted&&r.instructions>=5000&&r.instructions<5100;
- r=session.call(module.exports[4],0,500000,[](){return false;});result.cancelled=r.reason==StopReason::Cancelled&&r.instructions==0;
+ TaskControl stop([](){return false;});r=session.call(module.exports[4],0,500000,&stop);result.cancelled=r.reason==StopReason::Cancelled&&r.instructions==0&&stop.cancelled();
  return result;
 }

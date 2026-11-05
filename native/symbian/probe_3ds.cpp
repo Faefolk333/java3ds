@@ -6,11 +6,25 @@
 #include "touch_mapper.h"
 #include "loader_probe.h"
 #include "image_probe.h"
+#include "version.h"
 #include "../font8x8.h"
 u32 __stacksize__=256*1024;
 u32 __ctru_linear_heap_size=2*1024*1024;
 static bool alive=true;
-static bool poll(){if(!aptMainLoop())return alive=false;hidScanInput();if(hidKeysDown()&KEY_START)return alive=false;svcSleepThread(1000000);return true;}
+static bool imageCancelled=false;static const char*cancelSource="none";
+static bool poll(){if(!alive)return false;if(!aptMainLoop()){cancelSource="APT";return alive=false;}hidScanInput();if(hidKeysDown()&KEY_START){cancelSource="START";return alive=false;}svcSleepThread(1000000);return true;}
+static bool pollImage(){if(imageCancelled||!poll())return false;if(hidKeysDown()&KEY_B){cancelSource="B";imageCancelled=true;return false;}return true;}
+static u64 diagnosticStarted=0,lastProgress=0;static const char*lastStage=nullptr;
+static void showProgress(const char*stage,std::uint32_t done,std::uint32_t total){
+ u64 now=osGetTime();if(lastStage&&strcmp(stage,lastStage)==0&&done!=total&&now-lastProgress<100)return;
+ lastStage=stage;lastProgress=now;
+ printf("\x1b[7;1H\x1b[2K%s\n\x1b[2K",stage);
+ if(total){unsigned percent=(unsigned)((u64)done*100/total);printf("%u%%  ",percent);
+  if(strstr(stage,"Reading")||strstr(stage,"memory"))printf("%lu / %lu KiB",(unsigned long)(done/1024),(unsigned long)((total+1023)/1024));
+  else printf("%lu / %lu",(unsigned long)done,(unsigned long)total);
+ }
+ printf("\n\x1b[2KElapsed: %lu s\n",(unsigned long)((now-diagnosticStarted)/1000));gfxFlushBuffers();
+}
 static void pixel(u8*b,int x,int y,unsigned color){if(x<0||x>=320||y<0||y>=240)return;int i=(x*240+239-y)*3;b[i]=color;b[i+1]=color>>8;b[i+2]=color>>16;}
 static void text(u8*b,int x,int y,const char*s,unsigned color){for(;*s;s++,x+=8)for(int row=0;row<8;row++)for(int col=0;col<8;col++)if(font8x8_basic[(unsigned char)*s][row]&(1<<col))pixel(b,x+col,y+row,color);}
 static void circle(u8*b,int cx,int cy,int radius,unsigned color){for(int y=-radius;y<=radius;y++)for(int x=-radius;x<=radius;x++)if(x*x+y*y<=radius*radius&&(x*x+y*y>=(radius-2)*(radius-2)))pixel(b,cx+x,cy+y,color);}
@@ -22,19 +36,23 @@ int main(){
  auto r=symbianCpuProbe(poll);if(!alive){gfxExit();return 0;}
  printf("\nTesting EKA1 loader and guarded memory...\n");auto loader=symbianLoaderProbe();
  if(!poll()){gfxExit();return 0;}bool newModel=false;APT_CheckNew3DS(&newModel);consoleClear();
- printf("JAVA3DS // SYMBIAN PROBE 0.3.13\n\n%s\nARM: %s  Thumb: %s\nExclusive: %s  VFP: %s\nContext: %s  Budget: %s\nFaults: %u  Cache: 8 MiB\n\n%llu instructions / %llu us\nCPU-only: %.2f M instr/s\n\nEKA1 loader: %s  Relocations: %s\nE32 call: %s  Import stop: %s\nSVC stop: %s  Memory guards: %s\nBudget: %s  Cancel: %s\n\nNo phone OS or SIS games yet.\nY: test supplied EKA1 image on SD\nPad / Circle: virtual joystick\nA / B: virtual action buttons\nTouch: direct pointer\nX: portrait / landscape\nSTART: exit\n",newModel?"New 3DS":"Old 3DS",status(r.arm),status(r.thumb),status(r.exclusive),status(r.vfp),status(r.context),status(r.budget),r.faults,(unsigned long long)r.benchmarkInstructions,(unsigned long long)r.benchmarkMicros,r.benchmarkMicros?double(r.benchmarkInstructions)/r.benchmarkMicros:0,status(loader.parsed),status(loader.relocated),status(loader.returned),status(loader.imports),status(loader.systemCall),status(loader.protectedMemory),status(loader.bounded),status(loader.cancelled));
- mkdir("/3ds",0777);mkdir("/3ds/java-3ds",0777);FILE*log=fopen("/3ds/java-3ds/symbian-probe.log","w");if(log){fprintf(log,"Symbian CPU probe; no OS/game execution\nnew_model=%d arm=%d thumb=%d exclusive=%d vfp=%d context=%d bounded_slice=%d faults=%u cache_bytes=8388608 instructions=%llu cpu_us=%llu\n",newModel,r.arm,r.thumb,r.exclusive,r.vfp,r.context,r.budget,r.faults,(unsigned long long)r.benchmarkInstructions,(unsigned long long)r.benchmarkMicros);fprintf(log,"loader_parsed=%d relocated=%d returned=%d import_stop=%d svc_stop=%d memory_guards=%d bounded=%d cancelled=%d\n",loader.parsed,loader.relocated,loader.returned,loader.imports,loader.systemCall,loader.protectedMemory,loader.bounded,loader.cancelled);fclose(log);}
+ printf("JAVA3DS // SYMBIAN PROBE " SYMBIAN_PROBE_VERSION "\n\n%s\nARM: %s  Thumb: %s\nExclusive: %s  VFP: %s\nContext: %s  Budget: %s\nFaults: %u  Cache: 8 MiB\n\n%llu instructions / %llu us\nCPU-only: %.2f M instr/s\n\nEKA1 loader: %s  Relocations: %s\nE32 call: %s  Import stop: %s\nSVC stop: %s  Memory guards: %s\nBudget: %s  Cancel: %s\n\nNo phone OS or SIS games yet.\nY: test supplied EKA1 image on SD\nPad / Circle: virtual joystick\nA / B: virtual action buttons\nTouch: direct pointer\nX: portrait / landscape\nSTART: exit\n",newModel?"New 3DS":"Old 3DS",status(r.arm),status(r.thumb),status(r.exclusive),status(r.vfp),status(r.context),status(r.budget),r.faults,(unsigned long long)r.benchmarkInstructions,(unsigned long long)r.benchmarkMicros,r.benchmarkMicros?double(r.benchmarkInstructions)/r.benchmarkMicros:0,status(loader.parsed),status(loader.relocated),status(loader.returned),status(loader.imports),status(loader.systemCall),status(loader.protectedMemory),status(loader.bounded),status(loader.cancelled));
+ mkdir("/3ds",0777);mkdir("/3ds/java-3ds",0777);FILE*log=fopen("/3ds/java-3ds/symbian-probe.log","w");if(log){fprintf(log,"Symbian CPU probe " SYMBIAN_PROBE_VERSION "; no OS/game execution\nnew_model=%d arm=%d thumb=%d exclusive=%d vfp=%d context=%d bounded_slice=%d faults=%u cache_bytes=8388608 instructions=%llu cpu_us=%llu\n",newModel,r.arm,r.thumb,r.exclusive,r.vfp,r.context,r.budget,r.faults,(unsigned long long)r.benchmarkInstructions,(unsigned long long)r.benchmarkMicros);fprintf(log,"loader_parsed=%d relocated=%d returned=%d import_stop=%d svc_stop=%d memory_guards=%d bounded=%d cancelled=%d\n",loader.parsed,loader.relocated,loader.returned,loader.imports,loader.systemCall,loader.protectedMemory,loader.bounded,loader.cancelled);fclose(log);}
  symbian::TouchProfile profile;symbian::TouchMapper mapper(profile);int pointerX=0,pointerY=0;bool pointer=false;unsigned events=0;
  while(aptMainLoop()){
   hidScanInput();u32 held=hidKeysHeld(),down=hidKeysDown();if(down&KEY_START)break;
   if(down&KEY_Y){
-   mapper.cancel();pointer=false;consoleClear();printf("SYMBIAN // EKA1 IMAGE DIAGNOSTIC\n\nLoading your test.app / SYM.ROM...\nSTART: cancel\nNo phone OS or gameplay yet.\n");
+   mapper.cancel();pointer=false;imageCancelled=false;cancelSource="none";diagnosticStarted=osGetTime();lastProgress=0;lastStage=nullptr;
+   consoleClear();printf("SYMBIAN // EKA1 IMAGE DIAGNOSTIC\n\nLoading your test.app / SYM.ROM...\nB: cancel test    START: exit\nNo phone OS or gameplay yet.\n");
    gfxFlushBuffers();
    FILE*report=fopen("/3ds/java-3ds/symbian-loader.log","w");
-   bool supplied=report&&symbianImageProbe("/3ds/java-3ds/symbian",report,poll);if(report)fclose(report);
+   bool supplied=report&&symbianImageProbe("/3ds/java-3ds/symbian",report,pollImage,showProgress);
+   if(report){if(imageCancelled||!alive)fprintf(report,"PLATFORM_CANCEL source=%s\n",cancelSource);fclose(report);}
    if(!alive)break;
-   printf(supplied?"\nDiagnostic finished.\nReport: /3ds/java-3ds/symbian-loader.log\n":"\nInput missing or log cannot be written.\nPut test.app in /3ds/java-3ds/symbian\n");
-   printf("\nThis does not launch the actual game.\nSTART: exit\n");continue;
+   printf("\x1b[11;1H");
+   if(imageCancelled)printf("\nDiagnostic cancelled. Y: retry\n");
+   else printf(supplied?"\nDiagnostic finished.\nReport: /3ds/java-3ds/symbian-loader.log\n":"\nInput missing or log cannot be written.\nPut test.app in /3ds/java-3ds/symbian\n");
+   printf("\nThis does not launch the actual game.\nY: run test again    START: exit\n");continue;
   }
   if(down&KEY_X){mapper.cancel();std::swap(profile.width,profile.height);mapper=symbian::TouchMapper(profile);pointer=false;}
   circlePosition pad;hidCircleRead(&pad);symbian::PadSample s;s.x=pad.dx;s.y=pad.dy;

@@ -1,4 +1,11 @@
-# Compatibility work — 0.3.13
+# Compatibility work — 0.3.14
+
+Hardware 0.3.13 startup and CPU/E32 fixture checks pass. Real Shadowkey E32
+validation/mapping pass; the owner cancelled ROM loading with START, so full
+ROM linking is not yet a console result. This build adds progress and fixes
+post-cancel fallthrough; it makes no new game/kernel compatibility claim.
+
+## Earlier 0.3.13 work
 
 This is a standalone startup-memory fix. The supplied dump fails before the
 probe enters main. Main 3DSX and probe now use the existing CIA heap cap; Java

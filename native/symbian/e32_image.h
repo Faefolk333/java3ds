@@ -1,5 +1,6 @@
 #pragma once
 #include "address_space.h"
+#include "task_control.h"
 #include <string>
 #include <vector>
 
@@ -29,7 +30,7 @@ class E32Image {
 public:
  static constexpr std::size_t maxFileBytes=8*1024*1024;
  bool parse(std::vector<std::uint8_t> input,std::string&error);
- bool open(const char*path,std::string&error,bool(*keepRunning)()=nullptr);
+ bool open(const char*path,std::string&error,TaskControl*control=nullptr);
  bool load(AddressSpace&memory,std::uint32_t codeBase,std::uint32_t dataBase,LoadedE32&loaded,std::string&error)const;
  const E32Header&header()const{return info;}
  std::size_t importCount()const{return imports.size();}

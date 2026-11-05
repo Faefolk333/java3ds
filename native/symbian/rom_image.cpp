@@ -9,7 +9,7 @@ namespace {
 std::uint32_t word(const unsigned char*b){return b[0]|std::uint32_t(b[1])<<8|std::uint32_t(b[2])<<16|std::uint32_t(b[3])<<24;}
 bool error(std::string&e,const char*text){e=text;return false;}
 }
-bool RomImage::mount(AddressSpace&memory,const char*path,std::string&e,bool(*keepRunning)()){
+bool RomImage::mount(AddressSpace&memory,const char*path,std::string&e,TaskControl*control){
  e.clear();if(mounted())return error(e,"ROM is already mounted");
  FILE*f=std::fopen(path,"rb");if(!f)return error(e,"Cannot open supplied SYM.ROM");
  unsigned char header[512];bool okay=std::fread(header,1,sizeof(header),f)==sizeof(header)&&std::fseek(f,0,SEEK_END)==0;
@@ -19,13 +19,18 @@ bool RomImage::mount(AddressSpace&memory,const char*path,std::string&e,bool(*kee
    (word(header)&0xff000000)!=0xea000000||std::fseek(f,0,SEEK_SET)!=0){
   std::fclose(f);return error(e,"Unsupported/truncated ROM: need uncompressed EKA1 SYM.ROM within 20 MiB");
  }
+ if(control){control->report("Allocating ROM memory",0,imageSize);if(!control->checkpoint()){std::fclose(f);return error(e,"ROM read cancelled");}}
+ std::unique_ptr<unsigned char[]> buffer(new(std::nothrow) unsigned char[65536]);
+ if(!buffer){std::fclose(f);return error(e,"Cannot allocate ROM I/O buffer");}
  if(!memory.map(imageBase,imageSize,Read|Execute)){std::fclose(f);return error(e,"ROM mapping exceeds guest memory budget or overlaps a region");}
- unsigned char buffer[4096];std::uint32_t copied=0;
+ std::uint32_t copied=0;if(control)control->report("Reading ROM",0,imageSize);
  while(copied<imageSize){
-  if((copied&65535)==0&&keepRunning&&!keepRunning()){std::fclose(f);memory.unmap(imageBase);return error(e,"ROM read cancelled");}
-  std::size_t want=std::min<std::uint32_t>(sizeof(buffer),imageSize-copied);if(std::fread(buffer,1,want,f)!=want||!memory.initialize(imageBase+copied,buffer,want)){okay=false;break;}copied+=want;
+  if(control&&!control->checkpoint()){std::fclose(f);memory.unmap(imageBase);return error(e,"ROM read cancelled");}
+  std::size_t want=std::min<std::uint32_t>(65536,imageSize-copied);if(std::fread(buffer.get(),1,want,f)!=want||!memory.initialize(imageBase+copied,buffer.get(),want)){okay=false;break;}copied+=want;
+  if(control)control->report("Reading ROM",copied,imageSize);
  }
  std::fclose(f);if(!okay){memory.unmap(imageBase);return error(e,"ROM read failed; mapping rolled back");}
+ if(control&&!control->checkpoint()){memory.unmap(imageBase);return error(e,"ROM read cancelled");}
  base=imageBase;size=imageSize;return true;
 }
 bool RomImage::library(AddressSpace&memory,const char*path,RomLibrary&library,std::string&e)const{

@@ -1,5 +1,6 @@
 #pragma once
 #include "address_space.h"
+#include "task_control.h"
 #include <string>
 #include <vector>
 namespace symbian {
@@ -12,7 +13,7 @@ struct RomLibrary {
 class RomImage {
  std::uint32_t base=0,size=0;
 public:
- bool mount(AddressSpace&memory,const char*path,std::string&error,bool(*keepRunning)()=nullptr);
+ bool mount(AddressSpace&memory,const char*path,std::string&error,TaskControl*control=nullptr);
  bool library(AddressSpace&memory,const char*path,RomLibrary&library,std::string&error)const;
  bool mounted()const{return size!=0;}
  std::uint32_t bytes()const{return size;}

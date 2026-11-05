@@ -69,7 +69,7 @@ bool E32Session::load(const E32Image&image,std::uint32_t codeBase,std::uint32_t 
 }
 const LoadedE32&E32Session::module()const{return impl->image;}
 AddressSpace&E32Session::memory(){return impl->memory;}
-bool E32Session::mountRom(const char*path,std::string&error,bool(*keepRunning)()){return impl->rom.mount(impl->memory,path,error,keepRunning);}
+bool E32Session::mountRom(const char*path,std::string&error,TaskControl*control){return impl->rom.mount(impl->memory,path,error,control);}
 bool E32Session::linkRomLibrary(const std::string&importName,const char*descriptor,std::size_t&resolved,std::string&error){
  resolved=0;std::string filename;std::uint32_t uid=0;
  if(!impl->loaded||!e32LibraryIdentity(importName,filename,uid)){error="Unsupported EKA1 library identity";return false;}
@@ -86,7 +86,7 @@ bool E32Session::linkRomLibrary(const std::string&importName,const char*descript
  }
  impl->cpu.clear_instruction_cache();impl->cpu.flush_tlb();return true;
 }
-ExecutionResult E32Session::call(std::uint32_t entry,std::uint32_t argument,std::uint64_t budget,bool(*keepRunning)()){
+ExecutionResult E32Session::call(std::uint32_t entry,std::uint32_t argument,std::uint64_t budget,TaskControl*control){
  auto&p=*impl;p.result={};
  if(!p.loaded||!p.memory.permits(entry&~1u,entry&1?2:4,Read|Execute)||(!(entry&1)&&(entry&3))){p.result.reason=StopReason::InvalidEntry;return p.result;}
  p.cpu.clear_instruction_cache();p.cpu.flush_tlb();p.monitor.clear_exclusive();
@@ -94,7 +94,7 @@ ExecutionResult E32Session::call(std::uint32_t entry,std::uint32_t argument,std:
  p.cpu.set_reg(0,argument);p.cpu.set_sp((stackBase+p.stackSize)&~7u);p.cpu.set_lr(returnBase);
  p.cpu.set_cpsr(entry&1?0x30:0x10);p.cpu.set_pc(entry&~1u);
  while(p.result.reason==StopReason::Running&&p.result.instructions<budget){
-  if(keepRunning&&!keepRunning()){p.result.reason=StopReason::Cancelled;break;}
+  if(control&&!control->checkpoint()){p.result.reason=StopReason::Cancelled;break;}
   p.cpu.run(static_cast<std::uint32_t>(std::min<std::uint64_t>(1000,budget-p.result.instructions)));
   auto executed=p.cpu.get_num_instruction_executed();p.result.instructions+=executed;
   if(!executed&&p.result.reason==StopReason::Running){p.result.reason=StopReason::BudgetExhausted;break;}
