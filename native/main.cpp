@@ -104,7 +104,7 @@ static bool prepare(){if(R_FAILED(romfsInit())||chdir("sdmc:/"))return false;for
  // Keep the independently built CPU test available after a CIA Wi-Fi update.
  // Failure to copy this optional tool does not stop the Java game launcher.
  mkdir("/3ds/java3ds-symbian-probe",0777);
- for(const char*ext:{"3dsx","smdh"}){startupScreen("Preparing Symbian CPU test...");std::string name=std::string("java3ds-symbian-probe.")+ext;char error[160];if(pop_install_file(("romfs:/probe/"+name).c_str(),("/3ds/java3ds-symbian-probe/"+name).c_str(),error,sizeof(error))<0)fprintf(stderr,"Optional Symbian probe: %s\n",error);}
+ for(const char*ext:{"3dsx","smdh"}){startupScreen("Preparing Symbian CPU test...");std::string name=std::string("java3ds-symbian-probe.")+ext;char error[160];PopAssetKind kind=!strcmp(ext,"3dsx")?PopAssetKind::ThreeDsx:PopAssetKind::Smdh;if(pop_install_file(("romfs:/probe/"+name).c_str(),("/3ds/java3ds-symbian-probe/"+name).c_str(),error,sizeof(error),kind)<0)fprintf(stderr,"Optional Symbian probe: %s\n",error);}
  // Bundle a small original test application; never overwrite user game files.
  std::string demo=ROOT+"/games/LauncherCheck.jar";struct stat st;if(stat(demo.c_str(),&st)){char error[160];pop_install_file("romfs:/demo/LauncherCheck.jar",demo.c_str(),error,sizeof(error));}
  return true;
