@@ -1,4 +1,41 @@
-# Java3DS 0.3.10 validation — 2026-11-05
+# Java3DS 0.3.11 validation — 2026-11-05
+
+Physical console validation remains required. Current evidence is in
+validation/0.3.11; do not interpret host passes as console/game certification.
+
+* Final CIA is title 000400000F3A3D00, version 59 / 0.3.11. CTRTool verifies
+  content hashes; the three expected unsigned signature failures remain.
+  Extracted RomFS, banner, icon and audio PCM match their build inputs, including
+  the new standalone CPU probe. Embedded-asset and banner-format checks pass.
+* Real VM built with POSIX threading and a host adapter returning Nintendo's
+  1900-based milliseconds passes 22 probes twice. ClockEpochCheck compares Java
+  seconds to the independent Windows clock and verifies a bounded Object.wait.
+  RecursiveMonitorCheck also exercises mutex/condition deadlines. This covers
+  the actual currentTimeMillis conversion used in the console source path.
+* Same VM passes live suspend/resume and cancellation while suspended. Five real
+  games each survive three cancel/restart cycles, with complete stage-72 cleanup.
+* Four targeted 60s host probes exit cleanly. Screenshots show Gladiator combat,
+  LOTR gameplay, Orcs II gameplay and Resident Evil's item-selection screen.
+  A separate interactive Resident probe passed the reported mission selection.
+* Both supplied Orcs II filenames are byte-identical (SHA-256
+  2aa27f4082949d6ba59c6a28ffe1f5255e93281a477901994ab062d568a4991e).
+* The new supplied device logs have been preserved. They do not capture the four
+  current reported failure points; Stack Attack's Siemens API errors/NPE remain
+  visible, while the last recorded Orcs II run ends with stage 72.
+* The real EKA2L1 dyncom subset compiles and links for ARMv6K/devkitARM. Its host
+  test passes ARM, Thumb, memory, SVC, exclusives, VFP32/VFP64, context restore and
+  bounded instruction slices. Cache is 8 MiB. ARM execution on physical hardware
+  and speed remain untested; the separate 3DSX probe records those results.
+  All new CPU/probe objects have ARMv6K attributes. The final ELF inherits a v7
+  attribute from the SDK's libgcc _sync_dmb.o, as does the existing Java app;
+  no DMB/DSB/ISB instruction from that member remains in the linked CPU probe.
+* Touch mapper tests pass deadzone, diagonal motion, action-button priority,
+  release/restoration, cancellation, portrait/landscape and coordinate bounds.
+  One pointer is modeled; no game-specific touch profile is certified.
+* No Symbian kernel, phone OS, SIS/game execution or graphics/audio backend is
+  ported in this build. The probe's instruction fixture is original project data.
+
+## Previous 0.3.10 validation
 
 Test build; physical 3DS HOME/lid, self-recovery, keyboard and CIA self-update
 still require console verification. These limits must not be inferred away from

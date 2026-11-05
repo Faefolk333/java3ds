@@ -1,0 +1,114 @@
+Java3DS 0.3.10 / VM priority 0x34 / recursive monitor waits / HOME gate
+AUDIO ready: MIDI/WAV/AMR, 22050 Hz, core 2
+VM stage 40 0
+RAM cache ready: 3 JARs, 1734381 bytes
+VM stage 41 3
+method not exist :com/siemens/mp/lcdui/Image.createImageFromFile(Ljava/lang/String;Z)Ljavax/microedition/lcdui/Image;
+method not exist :com/siemens/mp/io/file/FileConnection.exists()Z
+method not exist :com/siemens/mp/io/file/FileConnection.list(Ljava/lang/String;Z)Ljava/util/Enumeration;
+method not exist :com/siemens/mp/io/file/FileConnection.openInputStream()Ljava/io/InputStream;
+method not exist :com/siemens/mp/io/file/FileConnection.delete()V
+method not exist :com/siemens/mp/io/File.buildPath(Ljava/lang/String;)Ljava/lang/String;
+method not exist :com/siemens/mp/io/file/FileConnection.mkdir()V
+method not exist :com/siemens/mp/io/file/FileConnection.create()V
+method not exist :com/siemens/mp/io/file/FileConnection.openOutputStream()Ljava/io/OutputStream;
+method not exist :com/siemens/mp/lcdui/Image.writeImageToFile(Ljavax/microedition/lcdui/Image;Ljava/lang/String;I)V
+method not exist :com/siemens/mp/wireless/messaging/MultipartMessage.setSubject(Ljava/lang/String;)V
+method not exist :com/siemens/mp/wireless/messaging/MultipartMessage.getSubject()Ljava/lang/String;
+method not exist :com/siemens/mp/wireless/messaging/MultipartMessage.addAddress(Ljava/lang/String;Ljava/lang/String;)Z
+method not exist :com/siemens/mp/wireless/messaging/MessagePart.<init>([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+method not exist :com/siemens/mp/io/file/FileConnection.exists()Z
+method not exist :com/siemens/mp/io/file/FileConnection.openInputStream()Ljava/io/InputStream;
+method not exist :com/siemens/mp/wireless/messaging/MessagePart.<init>(Ljava/io/InputStream;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+method not exist :com/siemens/mp/wireless/messaging/MultipartMessage.addMessagePart(Lcom/siemens/mp/wireless/messaging/MessagePart;)V
+method not exist :com/siemens/ct/wma/util/PermissionManager.getInstance()Lcom/siemens/ct/wma/util/PermissionManager;
+method not exist :com/siemens/ct/wma/util/PermissionManager.initialize(Ljavax/microedition/midlet/MIDlet;)V
+Exception threw: java/lang/NullPointerException: 
+    at StackAttackIso.D(StackAttackIso.java:-1)
+    at StackAttackIso.E(StackAttackIso.java:-1)
+    at StackAttackIso.A(StackAttackIso.java:-1)
+    at StackAttackIso.commandAction(StackAttackIso.java:-1)
+    at javax/microedition/lcdui/List.keyPressed(javax/microedition/lcdui/List.java:1)
+    at javax/microedition/lcdui/Canvas.pump(javax/microedition/lcdui/Canvas.java:14)
+    at javax/microedition/lcdui/Display.pump(javax/microedition/lcdui/Display.java:8)
+    at crimson/GameMain.main(crimson/GameMain.java:29)
+
+VM stage 70 1
+VM stage 71 1
+VM stage 72 1
+RAM cache hits: 1150
+AUDIO ready: MIDI/WAV/AMR, 22050 Hz, core 2
+VM stage 40 0
+RAM cache ready: 3 JARs, 1994120 bytes
+VM stage 41 3
+AUDIO load handle=0 bytes=3331 type=MIDI
+AUDIO midi PCM handle=0 peak=27714
+ result=0
+‰™üC¤[Q¹H²Íþ;|;ËzKªî
+—wg¹Ë½ÓQµAUDIO command handle=0 op=2 value=0 result=0
+AUDIO command handle=0 op=2 value=0 result=0
+AUDIO command handle=0 op=3 value=0 result=0
+AUDIO load handle=0 bytes=976 type=MIDI
+AUDIO command handle=0 op=1 value=1 result=0
+AUDIO midi PCM handle=0 peak=15918
+AUDIO command handle=0 op=2 value=0 result=0
+AUDIO command handle=0 op=2 value=0 result=0
+AUDIO command handle=0 op=3 value=0 result=0
+AUDIO load handle=0 bytes=1076 type=MIDI
+AUDIO command handle=0 op=1 value=1 result=0
+AUDIO midi PCM handle=0 peak=12290
+AUDIO command handle=0 op=2 value=0 result=0
+AUDIO command handle=0 op=2 value=0 result=0
+AUDIO command handle=0 op=3 value=0 result=0
+VM stage 70 2
+VM stage 71 2
+VM stage 72 2
+RAM cache hits: 718
+AUDIO ready: MIDI/WAV/AMR, 22050 Hz, core 2
+VM stage 40 0
+RAM cache ready: 3 JARs, 2014500 bytes
+VM stage 41 3
+AUDIO load handle=0 bytes=259 type=MIDI
+AUDIO load handle=1 bytes=192 type=MIDI
+AUDIO command handle=1 op=3 value=0 result=0
+AUDIO command handle=0 op=3 value=0 result=0
+AUDIO load handle=0 bytes=259 type=MIDI
+AUDIO load handle=1 bytes=192 type=MIDI
+AUDIO command handle=0 op=2 value=0 result=0
+AUDIO load handle=2 bytes=4060 type=MIDI
+AUDIO command handle=2 op=1 value=-1 result=0
+AUDIO midi PCM handle=2 peak=13866
+AUDIO command handle=2 op=2 value=0 result=0
+AUDIO command handle=2 op=2 value=0 result=0
+AUDIO command handle=1 op=3 value=0 result=0
+AUDIO command handle=0 op=3 value=0 result=0
+AUDIO command handle=2 op=3 value=0 result=0
+AUDIO load handle=0 bytes=259 type=MIDI
+AUDIO load handle=1 bytes=192 type=MIDI
+AUDIO command handle=0 op=2 value=0 result=0
+AUDIO load handle=2 bytes=153 type=MIDI
+AUDIO command handle=1 op=1 value=1 result=0
+AUDIO midi PCM handle=1 peak=8741
+AUDIO command handle=2 op=2 value=0 result=0
+AUDIO command handle=1 op=3 value=0 result=0
+AUDIO command handle=0 op=3 value=0 result=0
+AUDIO command handle=2 op=3 value=0 result=0
+AUDIO load handle=0 bytes=259 type=MIDI
+AUDIO load handle=1 bytes=192 type=MIDI
+AUDIO command handle=0 op=2 value=0 result=0
+AUDIO load handle=2 bytes=1158 type=MIDI
+AUDIO command handle=2 op=1 value=1 result=0
+AUDIO midi PCM handle=2 peak=19752
+AUDIO command handle=2 op=2 value=0 result=0
+AUDIO command handle=2 op=2 value=0 result=0
+AUDIO command handle=1 op=3 value=0 result=0
+AUDIO command handle=0 op=3 value=0 result=0
+AUDIO command handle=2 op=3 value=0 result=0
+AUDIO load handle=0 bytes=259 type=MIDI
+AUDIO load handle=1 bytes=192 type=MIDI
+AUDIO command handle=0 op=2 value=0 result=0
+AUDIO load handle=2 bytes=153 type=MIDI
+VM stage 70 2
+VM stage 71 2
+VM stage 72 2
+RAM cache hits: 1131

@@ -12,7 +12,7 @@ for name in ['java_pocket']:
   while child!=0xffffffff:
    directory(child,prefix);child=struct.unpack_from('<I',r,h[3]+child+4)[0]
  directory(0,'')
- expected={'java/'+n for n in ['minijvm_rt.jar','midp.jar']}|{'certs/github-roots.pem','audio/gm.sf2','audio/pop-theme.mid','profiles/pop-classic.zip','demo/LauncherCheck.jar'}|{'ui/'+n+'.wav' for n in ('navigation','confirm','achievement')};assert set(files)==expected,files.keys()
+ expected={'java/'+n for n in ['minijvm_rt.jar','midp.jar']}|{'certs/github-roots.pem','audio/gm.sf2','audio/pop-theme.mid','profiles/pop-classic.zip','demo/LauncherCheck.jar'}|{'ui/'+n+'.wav' for n in ('navigation','confirm','achievement')}|{'probe/java3ds-symbian-probe.'+n for n in ('3dsx','smdh')};assert set(files)==expected,files.keys()
  for path,payload in files.items():
   assert payload==(root/'romfs'/path).read_bytes(),path
   if path.endswith('.jar'):

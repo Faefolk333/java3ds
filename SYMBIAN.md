@@ -1,8 +1,35 @@
-# Symbian investigation — no executable backend yet
+# Symbian implementation — CPU/input foundation, no game runtime yet
 
-Java3DS executes Java ME bytecode. It does not execute Symbian SIS/SISX/APP
-programs. The inventory in `validation/0.3.10/symbian-audit.json` was produced
-without installing or running a package.
+The main Java3DS app executes Java ME bytecode. It does not yet execute Symbian
+SIS/SISX/APP programs. The inventory in validation/0.3.10 was metadata-only.
+
+## First implemented component (0.3.11)
+
+The separate `java3ds-symbian-probe.3dsx` contains the real EKA2L1 dyncom CPU
+interpreter adapted to ARM11/devkitARM. Its translation cache is bounded to
+8 MiB; the upstream 125 MiB default exceeds the console budget. Newlib integer
+type mismatches in decoder/VFP signatures are corrected. A host integration
+probe executes ARM and Thumb instructions, memory loads/stores, SVC callbacks,
+exclusive operations, VFP32/VFP64, context restoration and bounded time slices.
+The same test compiles/links for 3DS; physical accuracy/speed need validation.
+
+Run the separate probe through Homebrew Launcher. It records the CPU results
+and benchmark in `/3ds/java-3ds/symbian-probe.log`. The main CIA/3DSX launcher
+extracts it to `/3ds/java3ds-symbian-probe` at startup, so a main-app Wi-Fi update
+provides it too. The lower screen previews
+Circle Pad/D-pad movement as virtual joystick touches, A/B as virtual action
+touches, and direct touchscreen input. X toggles portrait/landscape coordinates.
+The mapper has configurable normalized anchors. It models one pointer: action
+touches take priority, releasing then restoring joystick movement. Simultaneous
+multi-touch gameplay and individual game's exact control positions are not
+implemented or certified. The mapper is not connected to a running Symbian game.
+
+The probe runs only original small instruction fixtures; no phone OS, game or
+firmware is embedded. There is no SIS launcher pretending to execute games.
+Remaining work includes EKA1/EKA2 kernel and services, memory model and ROM/E32
+loaders, package installation, filesystem, fonts, graphics/audio and main-app
+integration. First measure the CPU component on Old/New hardware before choosing
+the system memory/cache budgets. Source/licensing: third-party/eka2l1-cpu/README.md.
 
 * Shadowkey and Tomb Raider include EKA1 / ARMv4 E32 applications for N-Gage.
 * Asphalt Urban GT 2, Call of Duty, Splinter Cell: Chaos Theory, Tony Hawk's
@@ -10,7 +37,33 @@ without installing or running a package.
   files, rather than JARs. Several supplied archives are demos or review builds.
 * Hero of Sparta and Prince of Persia HD contain native S60v3-or-later SISX
   executables. Their controller metadata names EXE payloads, not embedded JARs.
-* No device ROM, RPKG or VPL was supplied, including in the added archives.
+* At the 0.3.10 release audit, no device ROM, RPKG or VPL was supplied.
+
+## Later supplied N71 firmware — 2026-11-05
+
+The owner subsequently supplied Nokia N71-1 / RM-67 firmware 4.0642.1.05,
+product 0526140. The local `system/Firmware` package contains a VPL, MCU FPSX,
+PPM V02, DCP and signature, plus an additional V05 language image. Every file
+referenced by the VPL exists. CRC32 matches both declared images exactly:
+MCU 69750F87, PPM V02 25500325. Metadata identifies the Turkey / EURO 2 variant.
+The VPL references V02; the extra V05 is not selected by that manifest.
+
+This removes the absence of firmware for this particular device. A subsequent
+manual Windows import hit `Unrecognised block type 147` in the FPSX reader;
+successful N71 installation is not established. Local audit:
+`work/symbian-n71-audit.json`.
+Firmware and derived device files stay outside Git and release archives.
+The 3DS execution backend is still not implemented.
+
+## N-Gage system imported successfully — 2026-11-05
+
+The owner supplied original N-Gage, QD and QD Dev system data and manually
+imported a SYM.ROM successfully into the isolated Windows test application.
+Its `data/devices.yml` now records RH-29 (N-Gage QD), version V 04.10, EPOC6,
+machine UID 270512817. The log completes app-registry loading. This confirms
+device import. The owner subsequently confirmed Shadowkey runs smoothly in PC
+EKA2L1. RM-320 (N95 8GB) was also imported and the owner reports SIS installation
+and execution succeeded. Those are PC reference results, not 3DS results.
 
 EKA2L1 needs a compatible device/OS image in addition to the game:
 https://eka2l1.github.io/quickstart/basic/installdevice/
@@ -21,7 +74,8 @@ Upstream https://github.com/EKA2L1/EKA2L1 has no Nintendo 3DS target. A port
 needs platform/kernel integration, a CPU execution strategy, graphics adaptation
 and memory-budget work, followed by device-image and game tests. The DualStick
 fork adapts Android input; it supplies no 3DS execution backend. Upstream was
-inspected locally; no EKA2L1 engine is linked or distributed in this build.
+inspected locally. The 0.3.11 separate probe links the CPU subset only; the
+full EKA2L1 OS/game execution backend has not been ported.
 
 `tools/symbian_audit.py` reads E32 headers and bounded SIS controller metadata;
 optional `py7zr` lists 7z members. Originals remain unchanged. The report makes

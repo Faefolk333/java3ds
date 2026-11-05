@@ -4,6 +4,7 @@ ROOT="$(cd "$(dirname "$0")" && pwd)"
 export DEVKITPRO=/opt/devkitpro
 export PATH="$DEVKITPRO/devkitARM/bin:$DEVKITPRO/tools/bin:$PATH"
 OUT="$ROOT/work/arm"; mkdir -p "$OUT"
+"${PYTHON:-python3}" -X utf8 "$ROOT/tools/build_symbian_probe.py"
 "${PYTHON:-python3}" -X utf8 "$ROOT/tools/build-amr.py" arm
 ARCH=(-march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft)
 FLAGS=("${ARCH[@]}" -O2 -D__3DS__ -D__JVM_PRI_ALLOC__=0 -ffunction-sections -fdata-sections -I"$ROOT/third-party/minijvm/minijvm/c/jvm" -I"$ROOT/third-party/minijvm/minijvm/c/utils" -I"$DEVKITPRO/libctru/include" -I"$DEVKITPRO/portlibs/3ds/include" -DCURL_STATICLIB)

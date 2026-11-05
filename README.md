@@ -1,4 +1,4 @@
-# Java3DS — test build 0.3.10
+# Java3DS — test build 0.3.11
 
 Java ME / JAR / JAD launcher for Nintendo 3DS, with a shared MIDI synthesizer.
 Extract the installation ZIP to the root of the SD card, replacing
@@ -7,7 +7,34 @@ with Java Pocket 3DS. Games, settings and saves are retained. Start **Java3DS**
 from Homebrew Launcher; add your JAR/JAD files under `/3ds/java-3ds/games/`.
 A JAD also needs its matching local JAR. Original game JARs are not bundled.
 
-## Changes in 0.3.10
+## Changes in 0.3.11
+
+Fix the console VM clock epoch. libctru osGetTime starts in 1900; Java and
+pthread CLOCK_REALTIME deadlines start in 1970. Passing the raw console time
+could turn a short monitor/condition timeout into a distant or overflowing
+deadline, causing console-only hangs. The VM now converts to Unix milliseconds.
+A host build emulating Nintendo's clock passes 22 runtime probes twice,
+including independent native-clock comparison and real timed waits. APT/UI
+relative timers retain their existing clock.
+
+Targeted host probes with the emulated console clock reach Gladiator combat,
+LOTR gameplay, Orcs & Elves II's world and Resident Evil: The Missions item
+selection beyond its reported mission screen. Both supplied Orcs II filenames
+are byte-identical. Supplied console logs do not capture the latest reported
+four failure points; a physical 3DS retest remains necessary. Save files are
+preserved. This is a timing fix, not certification of every game/save state.
+
+Initial Symbian implementation is a **separate CPU/input probe**, included in
+the SD installation ZIP. Run Java3DS Symbian CPU Probe from Homebrew Launcher;
+the CIA/3DSX launcher also copies this tool to SD during startup, so a CIA
+Wi-Fi update provides it without a separate SD copy.
+The probe saves `/3ds/java-3ds/symbian-probe.log`. It ports EKA2L1 dyncom to ARM11,
+uses an 8 MiB cache, checks ARM/Thumb/VFP/context/exclusives and previews physical
+controls mapped to a virtual touchscreen. **It does not boot a phone OS or run
+SIS/SISX/APP games.** Kernel/loaders/services/graphics/audio integration remain
+to be ported. See SYMBIAN.md. No firmware or game payload is bundled.
+
+## Earlier changes in 0.3.10
 
 VM/Java/GC thread priorities now agree and stay below APT's event thread.
 Recursive Object.wait releases/restores every monitor level. HOME/lid hooks

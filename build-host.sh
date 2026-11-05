@@ -8,6 +8,7 @@ OUT="$ROOT/work/runtime-host${JAVA_HOST_SUFFIX:-}"
 mkdir -p "$OUT"
 FLAGS=(-std=gnu99 -O2 -fno-strict-aliasing -fwrapv -DCRIMSON_OFFLINE=1 -DJIT_ENABLE=0 -D__JVM_PRI_ALLOC__=0 -I"$SRC/jvm" -I"$SRC/utils" -I"$SRC/utils/https" -I"$SRC/utils/https/mbedtls/include")
 if [[ "${JAVA_POSIX_THREADS_TEST:-0}" == 1 ]]; then FLAGS+=(-D_TTHREAD_PLATFORM_DEFINED_ -D_TTHREAD_POSIX_); fi
+if [[ "${JAVA_3DS_TIME_TEST:-0}" == 1 ]]; then FLAGS+=(-DCRIMSON_TEST_3DS_TIME); fi
 OBJS=()
 REBUILD=0
 STAMP="$OUT/flags.txt"

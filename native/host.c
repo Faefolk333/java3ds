@@ -8,10 +8,14 @@
 #include "stereo.h"
 #include "audio/midi_engine.h"
 static volatile LONG frames;static unsigned peak;static int pauseFailed;static ULONGLONG start;static const char*config;static int autoplay,laststate=-999;
+#ifdef CRIMSON_TEST_3DS_TIME
+long long crimson_test_3ds_time(void){FILETIME ft;ULARGE_INTEGER t;GetSystemTimeAsFileTime(&ft);t.LowPart=ft.dwLowDateTime;t.HighPart=ft.dwHighDateTime;return (long long)(t.QuadPart/10000)-11644473600000LL+2208988800000LL;}
+#endif
 int crimson_text_input(const char*label,const char*initial,int maximum,int constraints,char*result,size_t capacity){(void)label;(void)constraints;if(crimson_cancelled())return -1;printf("HOST_TEXT_INPUT requested max=%d\n",maximum);const char*value=getenv("JAVA_TEXT_INPUT");if(!value)value=initial&&*initial?initial:"Player";snprintf(result,capacity,"%.*s",maximum,value);return 1;}
 const char*crimson_launch_config(void){return config;}
 void crimson_gc_wait_report(const char*s){fprintf(stderr,"GC_WAIT %s\n",s);}
 void crimson_stage(int s,int d){
+if(s==97){FILETIME f;ULARGE_INTEGER t;GetSystemTimeAsFileTime(&f);t.LowPart=f.dwLowDateTime;t.HighPart=f.dwHighDateTime;unsigned expected=(unsigned)(t.QuadPart/10000000ULL-11644473600ULL);if((unsigned)(expected-(unsigned)d)>2&&(unsigned)((unsigned)d-expected)>2){fprintf(stderr,"CLOCK_EPOCH_FAIL Java=%u host=%u\n",(unsigned)d,expected);exit(4);}printf("CLOCK_EPOCH_PASS Java=%u host=%u\n",(unsigned)d,expected);}
 #ifdef CRIMSON_CP_ALLOCATION_TEST
  if(s==85){extern void crimson_arm_cp_failure(void);crimson_arm_cp_failure();}
 #endif

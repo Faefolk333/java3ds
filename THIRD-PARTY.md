@@ -70,4 +70,13 @@ https://github.com/viznut/unscii . The subset, pinned revision and provenance
 are under `third-party/unscii`. This does not use the separately licensed
 unscii-16-full font. `tools/build_unicode_font.py` combines the subset with the
 existing public-domain ASCII font. EKA2L1 was inspected for feasibility only;
-no EKA2L1 engine or phone firmware is included.
+no EKA2L1 engine or phone firmware was included in 0.3.10.
+
+## Initial Symbian CPU component (0.3.11)
+
+The separate Java3DS Symbian CPU Probe uses the EKA2L1 dyncom CPU subset,
+revision 78dbf9fccae273a23173fd67d916e7461234a9ec. GPL-3.0-or-later; original
+EKA2L1/Citra/Skyeye/ARM/SoftFloat notices remain in the files, with full subset
+source, LICENSE, revision and modification notes under third-party/eka2l1-cpu.
+Its own instruction fixture and platform/input bridge source are included.
+The probe links no phone firmware, Symbian OS/kernel or commercial game data.

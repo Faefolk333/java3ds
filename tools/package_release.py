@@ -3,15 +3,16 @@ import hashlib, shutil, zipfile
 
 root=Path(__file__).resolve().parents[1]
 out=root/'dist';out.mkdir(exist_ok=True)
-target=Path('D:/nintendo 3ds/games/Java3DS-0.3.10')
+target=Path('D:/nintendo 3ds/games/Java3DS-0.3.11')
 target.mkdir(parents=True,exist_ok=True)
-install=out/'Java3DS-0.3.10-test.zip'
+install=out/'Java3DS-0.3.11-test.zip'
 licenses=[root/'THIRD-PARTY.md']
-for folder in ('minijvm','TinySoundFont','GeneralUser-GS','curl','mbedtls','zlib','J2ME-Loader-API','FreeJ2ME-M3G','opencore-amr','unscii'):
+for folder in ('minijvm','TinySoundFont','GeneralUser-GS','curl','mbedtls','zlib','J2ME-Loader-API','FreeJ2ME-M3G','opencore-amr','unscii','eka2l1-cpu'):
  licenses.extend(p for p in (root/'third-party'/folder).glob('LICENSE*') if p.is_file())
 with zipfile.ZipFile(install,'w',zipfile.ZIP_DEFLATED,compresslevel=6) as z:
  for ext in ('3dsx','smdh'):
   z.write(root/f'work/arm/java_pocket.{ext}',f'3ds/java-3ds/java_pocket.{ext}')
+  z.write(root/f'work/arm/java3ds-symbian-probe.{ext}',f'3ds/java3ds-symbian-probe/java3ds-symbian-probe.{ext}')
  z.write(root/'README.md','README.md')
  z.write(root/'README-cs.md','CTI-ME.md')
  z.write(root/'VALIDATION.md','VALIDATION.md')
@@ -19,8 +20,8 @@ with zipfile.ZipFile(install,'w',zipfile.ZIP_DEFLATED,compresslevel=6) as z:
  z.write(root/'CIA.md','CIA.md')
  z.write(root/'COMPATIBILITY.md','COMPATIBILITY.md')
  z.write(root/'SYMBIAN.md','SYMBIAN.md')
- for p in (root/'validation/0.3.10').rglob('*'):
-  if p.is_file():z.write(p,'validation/0.3.10/'+p.relative_to(root/'validation/0.3.10').as_posix())
+ for p in (root/'validation/0.3.11').rglob('*'):
+  if p.is_file():z.write(p,'validation/0.3.11/'+p.relative_to(root/'validation/0.3.11').as_posix())
  z.write(root/'work/arm/java3ds.cia','cias/Java3DS.cia')
  z.writestr('3ds/java-3ds/games/ADD-YOUR-GAMES-HERE.txt','Add your JAR/JAD games here. A JAD also needs its matching local JAR.\n')
  for p in licenses:z.write(p,'licenses/'+p.relative_to(root).as_posix())
@@ -28,7 +29,7 @@ with zipfile.ZipFile(install,'w',zipfile.ZIP_DEFLATED,compresslevel=6) as z:
  z.write(root/'third-party/opencore-amr/opencore/NOTICE','licenses/opencore-amr/NOTICE')
  z.write(root/'third-party/stb_image.h','licenses/stb_image.h')
  z.write(root/'third-party/font8x8/font8x8_basic.h','licenses/font8x8_basic.h')
-source=out/'Java3DS-0.3.10-source-test.zip'
+source=out/'Java3DS-0.3.11-source-test.zip'
 with zipfile.ZipFile(source,'w',zipfile.ZIP_DEFLATED,compresslevel=6) as z:
  for folder in ('native','java','tools','tests','third-party','romfs','assets','validation'):
   for p in (root/folder).rglob('*'):
@@ -42,11 +43,13 @@ with zipfile.ZipFile(source,'w',zipfile.ZIP_DEFLATED,compresslevel=6) as z:
   z.write(root/'work'/name,'java-3ds-launcher/work/'+name)
 
 checks=[]
+probe=out/'java3ds-symbian-probe.3dsx'
+shutil.copy2(root/'work/arm/java3ds-symbian-probe.3dsx',probe)
 raw=out/"java3ds.3dsx"
 shutil.copy2(root/"work/arm/java_pocket.3dsx",raw)
 cia=out/"java3ds.cia"
 shutil.copy2(root/"work/arm/java3ds.cia",cia)
-for p in (install,source,raw,cia):
+for p in (install,source,raw,cia,probe):
  if p.suffix==".zip":
   with zipfile.ZipFile(p) as z:assert z.testzip() is None
  shutil.copy2(p,target/p.name)

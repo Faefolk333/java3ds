@@ -1,4 +1,22 @@
-# Java3DS 0.3.10 — testovací sestavení
+# Java3DS 0.3.11 — testovací sestavení
+
+Opraven čas VM na konzoli: osGetTime počítá od roku 1900, systémové časové
+limity vláken a Java od roku 1970. Dříve se tak krátká čekání mohla změnit v
+prakticky nekonečná nebo přetéct. Testovací VM s napodobenými hodinami 3DS nyní
+prochází 22 testy dvakrát včetně porovnání s nezávislým časem PC a timed wait.
+Gladiator v host testu došel do boje, LOTR a Orcs II do hry, Resident Evil za
+výběr mise do výběru výbavy. Výsledek na fyzické konzoli je stále nutné ověřit.
+Oba dodané Orcs II JARy jsou obsahově stejné. Uložené pozice se zachovávají.
+
+V instalačním ZIPu je navíc samostatný Java3DS Symbian CPU Probe pro Homebrew
+Launcher. Portuje CPU interpret EKA2L1 na ARM11, kontroluje instrukce a měří
+rychlost. Spodní displej předvádí páčku/směry jako dotykový joystick a A/B jako
+dotyková akční tlačítka. Výsledky ukládá do /3ds/java-3ds/symbian-probe.log.
+Hlavní aplikace tento test také rozbalí na SD při startu po aktualizaci CIA.
+**Tento první test ještě nespouští Symbian ani SIS hry.** Zbývá port systému,
+načítání aplikací, grafiky, zvuku a propojení s hlavní aplikací. Viz SYMBIAN.md.
+
+## Předchozí změny 0.3.10
 
 Nově: oprava priorit VM/Java/GC vláken a rekurzivního wait(), samostatné
 pozastavení při HOME/zavření víka, omezené čekání při ukončení a úvodní načítání.

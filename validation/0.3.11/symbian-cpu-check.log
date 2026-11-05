@@ -1,0 +1,2 @@
+SYMBIAN_CPU arm=1 thumb=1 exclusive=1 vfp=1 context=1 bounded_slice=1 faults=0 instructions=1000000 us=5248
+SYMBIAN_CPU_PASS real_EKA2L1_dyncom_project_owned_guest_programs_no_phone_OS

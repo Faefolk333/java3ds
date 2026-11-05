@@ -1,4 +1,20 @@
-# Compatibility work — 0.3.10
+# Compatibility work — 0.3.11
+
+The console-only Unix/1900 epoch mismatch in VM mutex/condition deadlines is
+fixed. A Nintendo-clock host build reaches Gladiator combat, LOTR gameplay,
+Orcs II's world and Resident Evil's item selection after mission selection.
+The two supplied Orcs II JARs have identical SHA-256; difference in observed
+behavior is not a different code build. Existing saves/settings are not reset.
+No console retest of these exact failure points has been completed. The latest
+provided logs instead show Stack Attack missing Siemens APIs/NPE, American
+Gangster and Orcs II, and a previous DawnStar run; those logs do not establish
+the cause of each reported stall. Stack Attack's missing vendor APIs remain.
+
+Symbian CPU/input foundation is implemented in the separate probe. Full SIS,
+N-Gage kernel/game execution on 3DS is not implemented. PC EKA2L1 successfully
+imported N-Gage QD and N95, and the owner reports PC game execution works.
+
+## Earlier 0.3.10 investigation
 
 Updated host interaction evidence: DawnStar and the supplied Russian Java Elder
 Scrolls Travels both reach a dungeon after character creation and name input.

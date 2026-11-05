@@ -1,0 +1,12 @@
+STAGE 40 0
+RAM cache ready: 3 JARs, 2674717 bytes
+STAGE 41 3
+Java3DS: Resident Evil - The Missions 320x240
+VM_AUDIO_LOAD handle=0 bytes=4162
+VM_AUDIO_START 0 result 0
+STAGE 80 0
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+RAM cache hits: 941
+VM_EXIT run=0 result=0 frames=675 peak=16835

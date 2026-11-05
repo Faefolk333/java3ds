@@ -1,0 +1,18 @@
+work\symbian-cpu-3ds\common_src_bytes.cpp.o ARMv6K
+work\symbian-cpu-3ds\cpu_src_12l1r_exclusive_monitor.cpp.o ARMv6K
+work\symbian-cpu-3ds\cpu_src_dyncom_armstate.cpp.o ARMv6K
+work\symbian-cpu-3ds\cpu_src_dyncom_armsupp.cpp.o ARMv6K
+work\symbian-cpu-3ds\cpu_src_dyncom_arm_dyncom.cpp.o ARMv6K
+work\symbian-cpu-3ds\cpu_src_dyncom_arm_dyncom_dec.cpp.o ARMv6K
+work\symbian-cpu-3ds\cpu_src_dyncom_arm_dyncom_interpreter.cpp.o ARMv6K
+work\symbian-cpu-3ds\cpu_src_dyncom_arm_dyncom_thumb.cpp.o ARMv6K
+work\symbian-cpu-3ds\cpu_src_dyncom_arm_dyncom_trans.cpp.o ARMv6K
+work\symbian-cpu-3ds\cpu_src_dyncom_vfp_vfp.cpp.o ARMv6K
+work\symbian-cpu-3ds\cpu_src_dyncom_vfp_vfpdouble.cpp.o ARMv6K
+work\symbian-cpu-3ds\cpu_src_dyncom_vfp_vfpsingle.cpp.o ARMv6K
+work\arm\symbian-cpu_probe.o ARMv6K
+work\arm\symbian-probe_3ds.o ARMv6K
+CPU_OBJECTS_V6K 14
+LINKED_DMB_DSB_ISB_INSTRUCTIONS 0
+SDK libgcc armv6k/fpu/libgcc.a(_sync_dmb.o) carries v7 attributes; unused code removed by --gc-sections.
+Final ELF attribute alone is v7; the existing Java ELF has the same SDK attribute.

@@ -1,0 +1,27 @@
+STAGE 40 0
+RAM cache ready: 3 JARs, 2641930 bytes
+STAGE 41 3
+Java3DS: LOTR Middle-earth Defence 240x320
+STAGE 70 2
+STAGE 71 2
+STAGE 72 2
+RAM cache hits: 690
+VM_EXIT run=0 result=2 frames=80 peak=0
+STAGE 40 0
+RAM cache ready: 3 JARs, 2641930 bytes
+STAGE 41 3
+Java3DS: LOTR Middle-earth Defence 240x320
+STAGE 70 2
+STAGE 71 2
+STAGE 72 2
+RAM cache hits: 690
+VM_EXIT run=1 result=2 frames=80 peak=0
+STAGE 40 0
+RAM cache ready: 3 JARs, 2641930 bytes
+STAGE 41 3
+Java3DS: LOTR Middle-earth Defence 240x320
+STAGE 70 2
+STAGE 71 2
+STAGE 72 2
+RAM cache hits: 690
+VM_EXIT run=2 result=2 frames=76 peak=0

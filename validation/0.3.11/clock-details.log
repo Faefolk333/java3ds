@@ -1,0 +1,24 @@
+STAGE 40 0
+RAM cache ready: 3 JARs, 1557374 bytes
+STAGE 41 3
+CLOCK_EPOCH_PASS Java=1793897472 host=1793897472
+STAGE 97 1793897472
+CLOCK_WAIT_PASS Unix_epoch bounded_absolute_condition_deadline
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+RAM cache hits: 277
+STEREO_VISIBLE_FRAMES 0
+VM_EXIT run=0 result=0 frames=0 peak=0
+STAGE 40 0
+RAM cache ready: 3 JARs, 1557374 bytes
+STAGE 41 3
+CLOCK_EPOCH_PASS Java=1793897472 host=1793897472
+STAGE 97 1793897472
+CLOCK_WAIT_PASS Unix_epoch bounded_absolute_condition_deadline
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+RAM cache hits: 277
+STEREO_VISIBLE_FRAMES 0
+VM_EXIT run=1 result=0 frames=0 peak=0

@@ -1913,11 +1913,19 @@ void threadinfo_destroy(JavaThreadInfo *threadInfo) {
 
 s64 currentTimeMillis() {
 #ifdef __3DS__
-    return (s64)osGetTime();
+    s64 platform_ms=(s64)osGetTime();
+#elif defined(CRIMSON_TEST_3DS_TIME)
+    extern s64 crimson_test_3ds_time(void);
+    s64 platform_ms=crimson_test_3ds_time();
 #else
     struct timespec tv;
     timespec_get(&tv, TIME_UTC);
     return ((s64) tv.tv_sec) * MILL_2_SEC_SCALE + tv.tv_nsec / NANO_2_MILLS_SCALE;
+#endif
+#if defined(__3DS__) || defined(CRIMSON_TEST_3DS_TIME)
+    // libctru osGetTime is relative to 1900. Java and CLOCK_REALTIME (also
+    // pthread mutex/condition deadlines) both use the Unix epoch, 1970.
+    return platform_ms-2208988800000LL;
 #endif
 }
 

@@ -1,0 +1,26 @@
+[
+  {
+    "game": "resident",
+    "exit": 0,
+    "wall_ms": 60237,
+    "screens": 22
+  },
+  {
+    "game": "gladiator",
+    "exit": 0,
+    "wall_ms": 60252,
+    "screens": 39
+  },
+  {
+    "game": "lotr",
+    "exit": 0,
+    "wall_ms": 60215,
+    "screens": 53
+  },
+  {
+    "game": "orcs",
+    "exit": 0,
+    "wall_ms": 60290,
+    "screens": 63
+  }
+]
