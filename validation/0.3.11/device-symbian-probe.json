@@ -1,0 +1,19 @@
+{
+  "source": "owner-supplied New 3DS probe log",
+  "log_sha256": "a0077ee722aae865d01301e6e60136f23bc7bdfc4d552aa30843b35aab882613",
+  "results": {
+    "new_model": 1,
+    "arm": 1,
+    "thumb": 1,
+    "exclusive": 1,
+    "vfp": 1,
+    "context": 1,
+    "bounded_slice": 1,
+    "faults": 0,
+    "cache_bytes": 8388608,
+    "instructions": 1000000,
+    "cpu_us": 117078
+  },
+  "million_guest_instructions_per_second": 8.541314337450247,
+  "scope": "Original small CPU fixtures and hot arithmetic/branch loop only; no phone OS/game, rendering or touch gameplay validation."
+}

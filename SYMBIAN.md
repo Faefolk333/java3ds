@@ -11,12 +11,21 @@ interpreter adapted to ARM11/devkitARM. Its translation cache is bounded to
 type mismatches in decoder/VFP signatures are corrected. A host integration
 probe executes ARM and Thumb instructions, memory loads/stores, SVC callbacks,
 exclusive operations, VFP32/VFP64, context restoration and bounded time slices.
-The same test compiles/links for 3DS; physical accuracy/speed need validation.
+The owner ran this probe on New 3DS on 2026-11-05. ARM, Thumb, exclusives,
+VFP, context restoration and bounded slices all report PASS, with zero recorded
+faults. Its one-million-instruction arithmetic/branch loop took 117078 us
+(8.54 million guest instructions/s). This validates these small fixtures on
+hardware; it is not a game-speed estimate or exhaustive CPU conformance test.
+Evidence: validation/0.3.11/device-symbian-probe.log and .json. Old 3DS is untested.
 
 Run the separate probe through Homebrew Launcher. It records the CPU results
 and benchmark in `/3ds/java-3ds/symbian-probe.log`. The main CIA/3DSX launcher
-extracts it to `/3ds/java3ds-symbian-probe` at startup, so a main-app Wi-Fi update
-provides it too. The lower screen previews
+extracts it to `/3ds/java3ds-symbian-probe` at startup in the corrected source.
+The published 0.3.11 build incorrectly applies JAR validation to the probe and
+leaves that folder empty: manually download the release's standalone 3DSX into
+that folder and launch it in Homebrew Launcher. The fix is on main for the next
+build, with real JAR/3DSX/SMDH copy and rejection regression checks.
+The lower screen previews
 Circle Pad/D-pad movement as virtual joystick touches, A/B as virtual action
 touches, and direct touchscreen input. X toggles portrait/landscape coordinates.
 The mapper has configurable normalized anchors. It models one pointer: action

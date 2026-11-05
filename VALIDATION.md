@@ -1,6 +1,6 @@
 # Java3DS 0.3.11 validation — 2026-11-05
 
-Physical console validation remains required. Current evidence is in
+Physical Java game/lifecycle validation remains required. Current evidence is in
 validation/0.3.11; do not interpret host passes as console/game certification.
 
 * Final CIA is title 000400000F3A3D00, version 59 / 0.3.11. CTRTool verifies
@@ -24,8 +24,10 @@ validation/0.3.11; do not interpret host passes as console/game certification.
   visible, while the last recorded Orcs II run ends with stage 72.
 * The real EKA2L1 dyncom subset compiles and links for ARMv6K/devkitARM. Its host
   test passes ARM, Thumb, memory, SVC, exclusives, VFP32/VFP64, context restore and
-  bounded instruction slices. Cache is 8 MiB. ARM execution on physical hardware
-  and speed remain untested; the separate 3DSX probe records those results.
+  bounded instruction slices. Cache is 8 MiB. The owner supplied a physical New
+  3DS probe result: all six checks PASS, zero recorded faults, one million guest
+  instructions in 117078 us (8.54 M instr/s). This is a hot arithmetic/branch
+  loop, not a game/OS performance test. Old 3DS remains untested.
   All new CPU/probe objects have ARMv6K attributes. The final ELF inherits a v7
   attribute from the SDK's libgcc _sync_dmb.o, as does the existing Java app;
   no DMB/DSB/ISB instruction from that member remains in the linked CPU probe.

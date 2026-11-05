@@ -1,0 +1,2 @@
+Symbian CPU probe; no OS/game execution
+new_model=1 arm=1 thumb=1 exclusive=1 vfp=1 context=1 bounded_slice=1 faults=0 cache_bytes=8388608 instructions=1000000 cpu_us=117078
