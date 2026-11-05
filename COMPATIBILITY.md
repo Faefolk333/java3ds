@@ -1,4 +1,17 @@
-# Compatibility work — 0.3.9
+# Compatibility work — 0.3.10
+
+Updated host interaction evidence: DawnStar and the supplied Russian Java Elder
+Scrolls Travels both reach a dungeon after character creation and name input.
+Correct 176x208 profiles, numeric controls, right-softkey confirmation and Unicode
+font rendering are included. Nintendo A confirms their custom menus and B backs
+out. Gladiator 3D reaches combat. All three supplied LOTR CRCs use portrait and
+the two formerly uncovered variants reach gameplay. Devil May Cry no longer
+floods missing renderPrimitives exceptions; triangle/quad support is partial.
+None of these host results establishes console speed, full playthroughs or HOME
+stability. Native-call recovery and the system name keyboard need device tests.
+Symbian/N-Gage inventory and missing execution backend are documented in SYMBIAN.md.
+
+## Earlier 0.3.9 investigation
 
 The previous device reports remain authoritative; PC exit 0 is not gameplay
 certification. This pass inspected 16 supplied game JARs and added targeted

@@ -1,0 +1,603 @@
+Java3DS: The Elder Scrolls 320x240
+Did not find Pluto-Server-URL in JAR! Using default of http://localhost/essm
+User ID is NULL!
+IN START HELPER THREAD IN UICANVAS
+Helper thread in UICanvas: Thread[Thread-4,5,main]
+num active threads = 2
+Just before helper thread loop in UICanvas
+Progress pct is 0
+numTableRows=43
+Progress pct is 5
+Number of spells is 25
+Starting allocateAllUIs
+LOADING WARDEN IMAGES
+Progress pct is 20
+Progress pct is 20
+SUCCESSFULLY LOADED MONSTER IMAGES!!
+Progress pct is 20
+ >>>> СОЗДАНИЕ CAMP ПОДЗЕМЕЛЬЯ <<<<<<
+ After creating dungeons
+Progress pct is 98
+End of splash, changing to next
+Start of createNewGame
+In getGameAdvancementLevel, giftPoints = 0
+In checkOpenAndPopulateDungeons, gameAdvLevel = 0
+in getRandomItem, res = 90
+in getRandomItem, res = 47
+in getRandomItem, res = 97
+in getRandomItem, res = 598
+in getRandomItem, res = 89
+in getRandomItem, res = 42
+in getRandomItem, res = 87
+in getRandomItem, res = 89
+in getRandomItem, res = 98
+in getRandomItem, res = 97
+in getRandomItem, res = 97
+in getRandomItem, res = 3
+in getRandomItem, res = 32
+in getRandomItem, res = 88
+in getRandomItem, res = 22
+in getRandomItem, res = 96
+in getRandomItem, res = 88
+in getRandomItem, res = 97
+in getRandomItem, res = 96
+in getRandomItem, res = 96
+in getRandomItem, res = 91
+in getRandomItem, res = 23
+in getRandomItem, res = 42
+in getRandomItem, res = 3158
+in getRandomItem, res = 97
+in getRandomItem, res = 97
+in getRandomItem, res = 12
+in getRandomItem, res = 96
+in getRandomItem, res = 42
+in getRandomItem, res = 88
+in getRandomItem, res = 47
+in getRandomItem, res = 33
+in getRandomItem, res = 1110
+in getRandomItem, res = 23
+in getRandomItem, res = 33
+in getRandomItem, res = 97
+in getRandomItem, res = 91
+in getRandomItem, res = 97
+in getRandomItem, res = 37
+in getRandomItem, res = 2902
+in getRandomItem, res = 38
+in getRandomItem, res = 89
+in getRandomItem, res = 43
+in getRandomItem, res = 87
+in getRandomItem, res = 5462
+in getRandomItem, res = 8
+in getRandomItem, res = 8
+in getRandomItem, res = 23
+type is form2, size is 3
+Start of createNewGame
+In getGameAdvancementLevel, giftPoints = 0
+In checkOpenAndPopulateDungeons, gameAdvLevel = 0
+type is form2, size is 3
+Start of createNewGame
+In getGameAdvancementLevel, giftPoints = 0
+In checkOpenAndPopulateDungeons, gameAdvLevel = 0
+Exception in loadGameState
+java.lang.Exception: No valid record store!
+Start of createNewGame
+In getGameAdvancementLevel, giftPoints = 0
+In checkOpenAndPopulateDungeons, gameAdvLevel = 0
+type is form2, size is 3
+type is form2, size is 3
+type is form2, size is 3
+Java3DS: Devil May Cry by Racer_Team 320x240
+Java3DS: Devil May Cry 3D 320x240
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.n(l:-1)
+    at l.b(l:-1)
+    at l.a(l:-1)
+    at l.p(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.n(l:-1)
+    at l.b(l:-1)
+    at l.a(l:-1)
+    at l.p(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.n(l:-1)
+    at l.b(l:-1)
+    at l.a(l:-1)
+    at l.p(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.n(l:-1)
+    at l.b(l:-1)
+    at l.a(l:-1)
+    at l.p(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.n(l:-1)
+    at l.b(l:-1)
+    at l.a(l:-1)
+    at l.p(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.n(l:-1)
+    at l.b(l:-1)
+    at l.a(l:-1)
+    at l.p(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.n(l:-1)
+    at l.b(l:-1)
+    at l.a(l:-1)
+    at l.p(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pump(Display.java:8)
+    at crimson.GameMain.main(GameMain.java:27)
+java.lang.NoSuchMethodException: renderPrimitives
+    at l.a(l:-1)
+    at l.s(l:-1)
+    at l.a(l:-1)
+    at l.paint(l:-1)
+    at javax.microedition.lcdui.Canvas.pump(Canvas.java:15)
+    at javax.microedition.lcdui.Canvas.serviceRepaints(Canvas.java:11)
+    at l.run(l:-1)
+    at javax.microedition.lcdui.Display.pumpJava3DS: Gladiator 240x320

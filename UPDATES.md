@@ -1,83 +1,61 @@
-# Private Wi-Fi updates
+# Wi-Fi updates and temporary public testing
 
-Repository: https://github.com/Faefolk333/java3ds (private).
+Channel: https://github.com/Faefolk333/java3ds . The owner's current policy is
+to make the repository public for a test window, keep it public until the owner
+says testing has finished, then return it to private. This is not authorization
+for a permanent public release. There is no automatic timeout.
 
-## One-time setup on the SD card
+## Updating inside Java3DS 0.3.10+
 
-Create a **fine-grained personal access token** in GitHub:
-https://github.com/settings/personal-access-tokens/new
+Connect the console to Wi-Fi. Java3DS checks at startup; **Y** in the library
+opens updates, and **A** checks/installs an offered newer build. Exit and reopen
+after installation. Anonymous checks/downloads work while the repository is
+public. No token file is required for the test window. While it is private the
+app reports that the test channel is private; it cannot bypass GitHub access.
 
-* Resource owner: `Faefolk333`.
-* Repository access: **Only select repositories → java3ds**.
-* Repository permissions: **Contents → Read-only**. Metadata read access is implicit.
-* Choose an expiry date. When the token expires, replace the SD file.
+**Bootstrap from 0.3.9:** that installed version stops before making a network
+request if no token file exists. Install 0.3.10 once using CIA/QR or replace the
+3DSX manually. Subsequent public-window updates use the in-app updater.
 
-Save only the token, on one line, in the plain UTF-8/ASCII file:
-`/3ds/java-3ds/github-token.txt` on the SD card. No quotes or UTF-8 BOM.
-Do not put the token in a commit, ZIP, release notes, or chat.
-The installed application, sources and installer do not contain a token.
+A legacy optional `/3ds/java-3ds/github-token.txt` read-only token still works
+for private access. Requests try anonymously first; authentication is retried
+only for API access failures and only at `api.github.com`. No shared credential
+is embedded in the application, QR, source or release.
 
-Start Java3DS with Wi-Fi connected. When that file exists, the library checks
-for a new release at startup. **Y → Wi-Fi updates** also checks manually.
-**A** installs an offered newer version; **B** postpones it.
-Exit and reopen Java3DS after installation. The current running process does
-not replace itself in memory.
+## Preparing a test build
 
-Only published releases are offered. A local test build does not become a
-Wi-Fi update until its matching assets are attached to a newer release.
+1. Increase app/UI version and CIA title version; compile, test and package.
+2. Commit and tag matching sources. Upload verified CIA, 3DSX, installation ZIP,
+   complete corresponding sources/licenses and SHA256SUMS while still private.
+3. Publish the test release with GitHub's Pre-release flag **unchecked**, because
+   the updater uses `/releases/latest`. Name it clearly as a test build.
+4. Confirm asset sizes and GitHub `sha256:` digests, then open the authorized
+   public test window. Verify the anonymous latest-release and asset paths.
+5. Keep it public until the owner says testing is finished; then restore private
+   visibility. A later permanent release needs their instruction.
 
-## Publishing a later version
+Asset names must be **java3ds.cia** and **java3ds.3dsx**. CIA uses title ID
+`000400000F3A3D00`; its own CIA is verified before system installation. HOME is
+temporarily disabled during replacement; games remain unavailable until restart.
+Games/settings/RMS saves remain on SD. The CIA path needs console testing.
 
-1. Increase the version in `native/updater.cpp`, the UI and packaging metadata.
-2. Build and validate the application. Commit sources and tag `vX.Y.Z`.
-3. In this private repository, publish a release for that tag. Leave the
-   GitHub **Pre-release** flag unchecked: this repository is the private update
-   channel, and the updater uses GitHub's latest-release endpoint.
-4. Attach the standalone 3DSX with the exact asset name **java3ds.3dsx**.
-   It must include the complete RomFS, runtime, SoundFont, profiles and CA bundle.
-   Attach **java3ds.cia** for HOME Menu installations, the SD installation ZIP
-   and the complete corresponding source ZIP (including component licenses).
-5. GitHub's release asset metadata must contain a `sha256:` digest. Releases
-   without a digest, invalid tag, or compatible asset are rejected.
+3DSX writes an `.update` download, verifies size/SHA-256/magic, backs up the
+installed executable as `.previous`, then replaces it. Verification failure
+retains the old application. If power fails between renames, restore `.previous`.
+The token is sent only to the API, never to redirected asset hosts.
 
-The updater uses HTTPS with certificate and hostname verification, bounded
-downloads, SHA-256, size and 3DSX-magic checks. The GitHub bearer token is sent
-only to `api.github.com`, never to the asset CDN after a redirect. GitHub and
-GitHub asset CDN hosts are the only accepted destinations.
+HTTPS uses libcurl/mbedTLS with certificate and hostname verification. Only
+GitHub/API/asset CDN destinations are allowed. Downloads and metadata are bounded.
+Shutdown cancels the network worker and waits at most two seconds; a worker that
+cannot unwind causes process recovery instead of freeing its live state.
 
-It writes `<installed executable>.update`, verifies it, renames the installed
-executable to `.previous`, then installs the download. Existing games, settings,
-RMS saves and the token are preserved. It installs over the executable path
-supplied by Homebrew Launcher, including the older `java_pocket.3dsx` filename.
-If a power loss happens between the two renames, restore the `.previous` file
-on the SD card. A failed verification leaves the installed application intact.
+Bundled CA roots (collected through verified system trust; reproducible with
+`tools/collect_update_roots.py`):
 
-The private repository needs to remain accessible to the SD token. A future
-public release channel would require a separate public repository or a change
-of access architecture; the application never carries a shared private token.
+* USERTrust ECC: `4ff460d54b9c86dabfbcfc5712e0400d2bed3fbc4d4fbdaa86e06adcd2a9ad7a`
+* ISRG Root X1: `96bcec06264976f37460779acf28c5a7cfe8a3c0aae11a8ffcee05c0bddf08c6`
 
-## TLS roots
-
-The bundled roots came from locally verified TLS chains for the API and asset
-hosts, using the system trust store; no verification was disabled.
-
-* USERTrust ECC Certification Authority:
-  `4ff460d54b9c86dabfbcfc5712e0400d2bed3fbc4d4fbdaa86e06adcd2a9ad7a`
-* ISRG Root X1:
-  `96bcec06264976f37460779acf28c5a7cfe8a3c0aae11a8ffcee05c0bddf08c6`
-
-`tools/collect_update_roots.py` reproduces the collection with Python 3.13+.
-Review the resulting CA names and fingerprints before publishing an update.
-Transport uses devkitPro's libcurl + mbedTLS, avoiding the console's old HTTPS
-service. Real console Wi-Fi/TLS and SD installation still need hardware testing.
-
-## CIA channel (0.3.1+)
-
-The installed HOME Menu build selects `java3ds.cia` from the same private
-release. It verifies SHA-256 and size, then checks Title ID
-`000400000F3A3D00` with the system installer before installation. RomFS is
-closed before replacement. After success, exit and reopen the application;
-returning to games is disabled until restart. The CIA replaces the installed
-title on SD; the `.previous` backup applies only to the 3DSX build.
-No GitHub token is embedded in either application or in the QR code.
-The CIA self-update path still needs a physical-console test.
+The production updater can be built with test-only host service/thread adapters
+using `tests/build-updater-network-check.sh` (MinGW libcurl required). It verifies
+real anonymous HTTPS, metadata/SHA/size, 3DSX installation, backup and save
+preservation; this does not emulate the console CIA installer or Wi-Fi stack.

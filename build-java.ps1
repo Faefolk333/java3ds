@@ -7,10 +7,10 @@ if(!(Test-Path "$root/work/minijvm_rt.jar")){Copy-Item "$root/romfs/java/minijvm
 $classOutput=Join-Path $root ('work/classes-'+[Guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Force $classOutput | Out-Null
 $sources=Get-ChildItem "$root/java" -Recurse -Filter '*.java' | ForEach-Object FullName
-& "$jdk/javac.exe" --release 8 -cp "$root/work/minijvm_rt.jar" -d $classOutput $sources
+& "$jdk/javac.exe" --release 8 -encoding UTF-8 -cp "$root/work/minijvm_rt.jar" -d $classOutput $sources
 if($LASTEXITCODE){throw 'MIDP compilation failed'}
 & "$jdk/jar.exe" --create --file "$root/work/midp.jar" -C $classOutput .
-& "$jdk/javac.exe" --release 8 -cp "$root/work/midp.jar" -d "$root/work/demo" "$root/tests/LauncherCheck.java"
+& "$jdk/javac.exe" --release 8 -encoding UTF-8 -cp "$root/work/midp.jar" -d "$root/work/demo" "$root/tests/LauncherCheck.java"
 if($LASTEXITCODE){throw 'Demo compilation failed'}
 Copy-Item "$root/tests/check.txt" "$root/work/demo/check.txt"
 & "$jdk/jar.exe" --create --file "$root/romfs/demo/LauncherCheck.jar" --manifest "$root/tests/demo.mf" -C "$root/work/demo" .

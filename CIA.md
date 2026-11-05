@@ -7,14 +7,15 @@ remain under `/3ds/java-3ds` on SD, shared with the 3DSX edition.
 
 ## QR installation
 
-The repository stays private. A standard FBI QR cannot use the token belonging
-to Java3DS, so the QR installer serves only the CIA from your PC on the LAN.
+The repository is public only during authorized test windows. The optional LAN
+QR installer serves just the CIA from the PC without a GitHub credential.
 On this PC, run `Start-QR-Install.ps1` in the delivered release folder. Keep
 that PC awake and connect the 3DS to the same home network. In FBI, choose
 **Remote Install > Scan QR Code**, scan `Java3DS-install-QR.png`, and confirm.
 The server exits after 24 hours. Starting it again produces a new QR.
 Only the CIA is served; there is no directory listing or GitHub credential.
-This initial installation is separate from private GitHub updates inside the app.
+Version 0.3.9 without a token needs this one-time installation; 0.3.10 and newer
+can update anonymously inside the app while the test channel is public.
 
 Generic invocation (Python with qrcode and Pillow):
 
@@ -30,7 +31,7 @@ Python executable if `python3` is not on PATH. With devkitARM,
 libctru and the same portlibs as the 3DSX build, run `bash build-cia.sh`.
 The checked-in generated banner is sufficient; Blender is not needed for a
 normal application rebuild. Output: `work/arm/java3ds.cia`, title ID
-`000400000F3A3D00`, product code `CTR-P-J3DS`, title version 57 (0.3.9).
+`000400000F3A3D00`, product code `CTR-P-J3DS`, title version 58 (0.3.10).
 Keep this title ID for future updates. The executable supports Old/New 3DS;
 64 MiB/124 MiB memory profiles are encoded in its exheader. The CIA build
 reserves 4 MiB of linear memory and caps the regular heap at 48 MiB (Old) / 80 MiB (New), with resource-limit checks.

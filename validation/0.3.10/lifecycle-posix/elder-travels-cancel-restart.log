@@ -1,0 +1,75 @@
+STAGE 40 0
+RAM cache ready: 3 JARs, 1690201 bytes
+STAGE 41 3
+Java3DS: The Elder Scrolls 176x208
+Did not find Pluto-Server-URL in JAR! Using default of http://localhost/essm
+User ID is NULL!
+IN START HELPER THREAD IN UICANVAS
+Helper thread in UICanvas: Thread[Thread-4,5,main]
+num active threads = 2
+Just before helper thread loop in UICanvas
+Progress pct is 0
+Progress pct is 0
+numTableRows=43
+Number of spells is 25
+Starting allocateAllUIs
+LOADING WARDEN IMAGES
+SUCCESSFULLY LOADED MONSTER IMAGES!!
+ >>>> СОЗДАНИЕ CAMP ПОДЗЕМЕЛЬЯ <<<<<<
+ After creating dungeons
+Progress pct is 100
+STAGE 70 2
+STAGE 71 2
+STAGE 72 2
+RAM cache hits: 824
+VM_EXIT run=0 result=2 frames=5 peak=0
+STAGE 40 0
+RAM cache ready: 3 JARs, 1690201 bytes
+STAGE 41 3
+Java3DS: The Elder Scrolls 176x208
+Did not find Pluto-Server-URL in JAR! Using default of http://localhost/essm
+User ID is NULL!
+IN START HELPER THREAD IN UICANVAS
+Helper thread in UICanvas: Thread[Thread-4,5,main]
+num active threads = 2
+Just before helper thread loop in UICanvas
+Progress pct is 0
+Progress pct is 0
+numTableRows=43
+Number of spells is 25
+Starting allocateAllUIs
+LOADING WARDEN IMAGES
+SUCCESSFULLY LOADED MONSTER IMAGES!!
+ >>>> СОЗДАНИЕ CAMP ПОДЗЕМЕЛЬЯ <<<<<<
+ After creating dungeons
+Progress pct is 100
+STAGE 70 2
+STAGE 71 2
+STAGE 72 2
+RAM cache hits: 824
+VM_EXIT run=1 result=2 frames=5 peak=0
+STAGE 40 0
+RAM cache ready: 3 JARs, 1690201 bytes
+STAGE 41 3
+Java3DS: The Elder Scrolls 176x208
+Did not find Pluto-Server-URL in JAR! Using default of http://localhost/essm
+User ID is NULL!
+IN START HELPER THREAD IN UICANVAS
+Helper thread in UICanvas: Thread[Thread-4,5,main]
+num active threads = 2
+Just before helper thread loop in UICanvas
+Progress pct is 0
+Progress pct is 0
+numTableRows=43
+Number of spells is 25
+Starting allocateAllUIs
+LOADING WARDEN IMAGES
+SUCCESSFULLY LOADED MONSTER IMAGES!!
+ >>>> СОЗДАНИЕ CAMP ПОДЗЕМЕЛЬЯ <<<<<<
+ After creating dungeons
+Progress pct is 100
+STAGE 70 2
+STAGE 71 2
+STAGE 72 2
+RAM cache hits: 824
+VM_EXIT run=2 result=2 frames=5 peak=0

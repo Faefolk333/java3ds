@@ -12,5 +12,6 @@ public class TextField extends Item {
  public void insert(String value,int at){if(value==null)throw new NullPointerException();at=Math.max(0,Math.min(text.length(),at));setString(text.substring(0,at)+value+text.substring(at));caret=at+value.length();}
  public void insert(char[] value,int offset,int length,int at){insert(new String(value,offset,length),at);}public void delete(int offset,int length){if(offset<0||length<0||offset>text.length()-length)throw new StringIndexOutOfBoundsException();setString(text.substring(0,offset)+text.substring(offset+length));caret=offset;}
  public void setInitialInputMode(String mode){}
+ boolean edit(){if((constraints&UNEDITABLE)!=0)return false;String value=crimson.Native.textInput(getLabel()==null?"Enter text":getLabel(),text,maximum,constraints);if(value==null)return false;try{setString(value);return true;}catch(IllegalArgumentException invalid){return false;}}
  void render(Graphics g,int x,int y,int width){super.render(g,x,y,width);String value=text;if((constraints&PASSWORD)!=0){StringBuffer b=new StringBuffer();for(int i=0;i<text.length();i++)b.append('*');value=b.toString();}g.drawString(value,x,y+16,20);}int height(){return 38;}
 }

@@ -1,0 +1,31 @@
+STAGE 40 0
+RAM cache ready: 3 JARs, 1689789 bytes
+STAGE 41 3
+Java3DS: The Elder Scrolls 176x208
+Did not find Pluto-Server-URL in JAR! Using default of http://localhost/essm
+User ID is NULL!
+IN START HELPER THREAD IN UICANVAS
+Helper thread in UICanvas: Thread[Thread-4,5,main]
+num active threads = 2
+Just before helper thread loop in UICanvas
+Progress pct is 0
+Progress pct is 0
+numTableRows=43
+Number of spells is 25
+Starting allocateAllUIs
+LOADING WARDEN IMAGES
+SUCCESSFULLY LOADED MONSTER IMAGES!!
+ >>>> СОЗДАНИЕ CAMP ПОДЗЕМЕЛЬЯ <<<<<<
+ After creating dungeons
+Progress pct is 100
+Progress pct is 100
+Progress pct is 100
+Progress pct is 100
+Progress pct is 100
+End of splash, changing to next
+STAGE 80 0
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+RAM cache hits: 831
+VM_EXIT run=0 result=0 frames=17 peak=0

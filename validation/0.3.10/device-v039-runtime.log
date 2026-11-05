@@ -1,0 +1,217 @@
+AUDIO ready: MIDI/WAV/AMR, 22050 Hz, core 2
+VM stage 40 0
+RAM cache ready: 3 JARs, 1679237 bytes
+VM stage 41 3
+VM stage 70 2
+VM stage 71 2
+VM stage 72 2
+RAM cache hits: 970
+AUDIO ready: MIDI/WAV/AMR, 22050 Hz, core 2
+VM stage 40 0
+RAM cache ready: 3 JARs, 1826082 bytes
+VM stage 41 3
+AUDIO load handle=0 bytes=3051 type=MIDI
+AUDIO command handle=0 op=1 value=99 result=0
+AUDIO midi PCM handle=0 peak=4905
+AUDIO command handle=0 op=2 value=0 result=0
+AUDIO command handle=0 op=3 value=0 result=0
+AUDIO load handle=0 bytes=13028 type=MIDI
+AUDIO command handle=0 op=1 value=99 result=0
+AUDIO midi PCM handle=0 peak=12375
+VM stage 70 2
+VM stage 71 2
+VM stage 72 2
+RAM cache hits: 891
+AUDIO ready: MIDI/WAV/AMR, 22050 Hz, core 2
+VM stage 40 0
+RAM cache ready: 3 JARs, 2572689 bytes
+VM stage 41 3
+AUDIO load handle=0 bytes=2605 type=MIDI
+AUDIO load handle=1 bytes=8674 type=MIDI
+AUDIO load handle=2 bytes=4376 type=MIDI
+AUDIO load handle=32 bytes=4514 type=WAV
+AUDIO load handle=33 bytes=2904 type=WAV
+AUDIO load handle=34 bytes=8200 type=WAV
+AUDIO load handle=35 bytes=10896 type=WAV
+AUDIO load handle=36 bytes=11124 type=WAV
+AUDIO load handle=37 bytes=5654 type=WAV
+VM stage 70 2
+VM stage 71 2
+VM stage 72 2
+RAM cache hits: 845
+AUDIO ready: MIDI/WAV/AMR, 22050 Hz, core 2
+VM stage 40 0
+RAM cache ready: 3 JARs, 2513268 bytes
+VM stage 41 3
+AUDIO load handle=0 bytes=358 type=WAV
+AUDIO load handle=1 bytes=870 type=WAV
+AUDIO load handle=2 bytes=582 type=WAV
+AUDIO load handle=3 bytes=710 type=WAV
+AUDIO load handle=4 bytes=5158 type=WAV
+AUDIO load handle=5 bytes=1382 type=WAV
+AUDIO load handle=6 bytes=646 type=WAV
+AUDIO load handle=7 bytes=934 type=WAV
+AUDIO load handle=8 bytes=742 type=WAV
+AUDIO load handle=9 bytes=678 type=WAV
+AUDIO load handle=10 bytes=582 type=WAV
+AUDIO load handle=11 bytes=998 type=WAV
+AUDIO load handle=12 bytes=230 type=WAV
+AUDIO load handle=13 bytes=230 type=WAV
+AUDIO load handle=14 bytes=5542 type=WAV
+AUDIO load handle=15 bytes=2790 type=WAV
+AUDIO load handle=16 bytes=9607 type=MIDI
+AUDIO midi PCM handle=16 peak=5282
+-1 result=0
+ê´-K4Lz1QdÆ.~Æà}?Ωﬂ“êù6ÕæN-ãñGC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8317450 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+

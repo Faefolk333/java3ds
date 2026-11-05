@@ -1,0 +1,42 @@
+[
+  {
+    "case": "HOME suspend 1",
+    "exit": 0,
+    "wall_ms": 3137
+  },
+  {
+    "case": "HOME suspend 2",
+    "exit": 2,
+    "wall_ms": 3646
+  },
+  {
+    "case": "gladiator cancel/restart",
+    "runs": 3,
+    "exit": 2,
+    "wall_ms": 9654
+  },
+  {
+    "case": "dawnstar cancel/restart",
+    "runs": 3,
+    "exit": 2,
+    "wall_ms": 9580
+  },
+  {
+    "case": "elder-travels cancel/restart",
+    "runs": 3,
+    "exit": 2,
+    "wall_ms": 9521
+  },
+  {
+    "case": "devil cancel/restart",
+    "runs": 3,
+    "exit": 2,
+    "wall_ms": 9657
+  },
+  {
+    "case": "lotr-other cancel/restart",
+    "runs": 3,
+    "exit": 2,
+    "wall_ms": 9592
+  }
+]

@@ -23,6 +23,7 @@ static bool themeEnabled,themeAudible;
 static uint32_t midiAudible;
 static LightLock audioLock;
 static std::atomic<bool> running{false},paused{false};
+static std::atomic<bool> suspended{false};
 static std::atomic<int> toneMode{1};
 extern "C" void crimson_audio_tone(int mode){toneMode.store(mode>=0&&mode<=2?mode:1);}
 static Thread audioThread;
@@ -34,6 +35,7 @@ static void stream(void*){
  unsigned next=0;
  AudioToneFilter tone;
  while(running.load()){
+  if(suspended.load()){svcSleepThread(10000000);continue;}
   ndspWaveBuf*w=&waves[next];
   if(w->status==NDSP_WBUF_FREE||w->status==NDSP_WBUF_DONE){
    int16_t*pcm=output+next*FRAMES;
@@ -50,14 +52,18 @@ static void stream(void*){
    }
    LightLock_Unlock(&audioLock);
    publish_buffer:
+   if(suspended.load())continue;
    tone.configure(toneMode.load(),RATE);if(paused.load())tone.reset();else tone.apply(pcm,FRAMES);
    memset(w,0,sizeof(*w));w->data_pcm16=pcm;w->nsamples=FRAMES;
    if(R_FAILED(DSP_FlushDataCache(pcm,FRAMES*sizeof(*pcm)))){fprintf(stderr,"AUDIO cache failure\n");running.store(false);break;}
    ndspChnWaveBufAdd(0,w);next=(next+1)%BUFFERS;
+   // Let APT/UI run even when synthesis underruns and every buffer is ready.
+   svcSleepThread(1000000);
   }else svcSleepThread(2000000);
  }
 }
 extern "C" void crimson_audio_pause(int value){paused.store(value!=0);}
+extern "C" void crimson_audio_suspend(int value){suspended.store(value!=0);}
 extern "C" int crimson_audio_init(){
  paused.store(false);
  LightLock_Init(&audioLock);

@@ -1048,6 +1048,9 @@ s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, s64 waitms) {
     // wait会释放锁，因此保存锁的拥有者和计数
     void *saveThread = mb->thread_lock->owner_thread;
     s32 saveCount = mb->thread_lock->count;
+    // Object.wait releases the complete recursive Java monitor. libctru's
+    // recursive condition syscall explicitly rejects a recursion count != 1.
+    for(s32 level=1;level<saveCount;level++)mtx_unlock(&mb->thread_lock->mutex_lock);
     // wait期间减少锁计数，因为锁会被释放
     if (saveCount > 0 && runtime->thrd_info->held_locks) {
         // 从 held_locks 中临时移除该锁
@@ -1070,6 +1073,7 @@ s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, s64 waitms) {
     runtime->thrd_info->thread_status = thread_status;
 
     //wait结束时，获得锁后恢复锁的拥有者和计数
+    for(s32 level=1;level<saveCount;level++)mtx_lock(&mb->thread_lock->mutex_lock);
     mb->thread_lock->owner_thread = saveThread;
     mb->thread_lock->count = saveCount;
     // 恢复锁计数和 curThreadLock 状态
@@ -1087,9 +1091,9 @@ s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, s64 waitms) {
 //if the thread is waiting , wake it up
 s32 jthread_wakeup(Runtime *runtime) {
     MemoryBlock *tl = runtime->thrd_info->curThreadLock;
-    jthread_lock(tl, runtime);
-    jthread_notify(tl, runtime);
-    jthread_unlock(tl, runtime);
+    // Caller may be interrupting a different runtime. Do not acquire a native
+    // mutex on behalf of that runtime (or block behind its sleeping monitor).
+    jthread_notifyAll(tl, runtime);
     return 0;
 }
 
@@ -1129,9 +1133,10 @@ s32 check_throw_interruptexception(Runtime *runtime) {
 s32 check_suspend_and_pause(Runtime *runtime) {
     JavaThreadInfo *threadInfo = runtime->thrd_info;
     MiniJVM *jvm = runtime->jvm;
-    if (__atomic_load_n(&jvm->crimson_paused,__ATOMIC_RELAXED) && !__atomic_load_n(&jvm->crimson_stop,__ATOMIC_RELAXED)) {
+    extern int crimson_platform_suspended;
+    if ((__atomic_load_n(&jvm->crimson_paused,__ATOMIC_RELAXED)||__atomic_load_n(&crimson_platform_suspended,__ATOMIC_ACQUIRE)) && !__atomic_load_n(&jvm->crimson_stop,__ATOMIC_RELAXED)) {
         jthread_block_enter(runtime);
-        while(__atomic_load_n(&jvm->crimson_paused,__ATOMIC_RELAXED) && !__atomic_load_n(&jvm->crimson_stop,__ATOMIC_RELAXED))threadSleep(10);
+        while((__atomic_load_n(&jvm->crimson_paused,__ATOMIC_RELAXED)||__atomic_load_n(&crimson_platform_suspended,__ATOMIC_ACQUIRE)) && !__atomic_load_n(&jvm->crimson_stop,__ATOMIC_RELAXED))threadSleep(10);
         jthread_block_exit(runtime);
     }
     if (threadInfo->suspend_count && !threadInfo->no_pause) {

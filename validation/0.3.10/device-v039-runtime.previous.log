@@ -1,0 +1,498 @@
+AUDIO ready: MIDI/WAV/AMR, 22050 Hz, core 2
+VM stage 40 0
+RAM cache ready: 3 JARs, 2630959 bytes
+VM stage 41 3
+VM stage 70 2
+VM stage 71 2
+VM stage 72 2
+RAM cache hits: 1189
+AUDIO ready: MIDI/WAV/AMR, 22050 Hz, core 2
+VM stage 40 0
+RAM cache ready: 3 JARs, 1681104 bytes
+VM stage 41 3
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+
+GC T=0x8aa9c10 status=1 suspend=1 no_pause=0
+last=javax/microedition/lcdui/Canvas.pump native=0
+

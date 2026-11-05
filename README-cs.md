@@ -1,4 +1,26 @@
-# Java3DS 0.3.9 — privátní alpha
+# Java3DS 0.3.10 — testovací sestavení
+
+Nově: oprava priorit VM/Java/GC vláken a rekurzivního wait(), samostatné
+pozastavení při HOME/zavření víka, omezené čekání při ukončení a úvodní načítání.
+Po pěti sekundách neukončeného nativního volání CIA obnoví celý proces;
+3DSX proces ukončí. Cizí živé vlákno se neuvolňuje do další hry. HOME a tento
+obnovovací postup je stále potřeba ověřit přímo na konzoli.
+
+DawnStar i Java Elder Scrolls Travels prošly v interaktivním PC testu až do
+podzemí. A potvrzuje jejich nabídky, B se vrací, jméno zadává systémová
+klávesnice. Přibyla azbuka. Gladiator 3D prošel do boje. Všechny tři dodané
+varianty LOTR mají profil Portrait; obraz se vejde pomocí Scale to fit.
+
+Aktualizace už během veřejného testování nepotřebují token. Z verze 0.3.9 bez
+tokenu je ještě nutná jednorázová instalace nové CIA/QR, potom lze používat
+Y → Wi-Fi updates → A. Repozitář zůstane veřejný, dokud nenapíšete, že testování
+skončilo; poté se vrátí do soukromého režimu. Podrobnosti: UPDATES.md.
+
+Nové Symbian/N-Gage hry jsou prověřené jako nativní aplikace, ale neběží v
+Java VM. Chybí kompatibilní firmware telefonu i port emulátoru pro 3DS.
+Podpora spuštění Symbianu zatím hotová není; viz SYMBIAN.md.
+
+## Předchozí změny 0.3.9
 
 Nová CIA zachovává původní aplikaci, hry, uložené pozice i nastavení na SD.
 Menu hry otevře L + R nebo tlačítko na dotykovém displeji. START + SELECT

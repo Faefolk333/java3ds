@@ -1,0 +1,12 @@
+STAGE 40 0
+RAM cache ready: 3 JARs, 1515017 bytes
+STAGE 41 3
+PAUSE_REQUEST
+PAUSE_FROZEN frames=24
+PAUSE_RESUMED frames=52
+STAGE 70 2
+STAGE 71 2
+STAGE 72 2
+RAM cache hits: 277
+VM_EXIT run=0 result=2 frames=53 peak=0
+PAUSE_TEST PASS

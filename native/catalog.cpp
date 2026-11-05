@@ -43,8 +43,9 @@ bool inspectGame(const std::string&path,GameInfo&g,std::string&error){
  if(g.pop){g.nativeWidth=320;g.nativeHeight=240;g.resolutionKnown=true;}
  // This supplied LOTR build explicitly rejects landscape despite its filename.
  if(g.crc==0xd2c8911bu){g.nativeWidth=120;g.nativeHeight=160;g.resolutionKnown=true;g.properties["launcher.keypad"]="harem-siemens";}
- if(g.crc==0x68f550d4u){g.nativeWidth=240;g.nativeHeight=320;g.resolutionKnown=true;g.properties["launcher.compat.note"]="This build requires a portrait phone screen";}
+ if((g.crc==0x68f550d4u||g.crc==0x9c8c91b8u||g.crc==0xa3d6b8f2u)){g.nativeWidth=240;g.nativeHeight=320;g.resolutionKnown=true;g.properties["launcher.compat.note"]="This build requires a portrait phone screen";}
  for(unsigned i=0;i<mz_zip_reader_get_num_files(&z);i++){mz_zip_archive_file_stat st;if(!mz_zip_reader_file_stat(&z,i,&st))continue;std::string n=st.m_filename;if(n.size()<6||n.substr(n.size()-6)!=".class"||st.m_uncomp_size>2*1024*1024)continue;std::vector<unsigned char>b;if(!zipEntry(z,n.c_str(),b,2*1024*1024))continue;std::string code(b.begin(),b.end());if(code.find("com/mascotcapsule/micro3d/")!=std::string::npos)g.properties["launcher.micro3d"]="experimental";else if(g.unsupported.empty()&&code.find("javax/microedition/m3g/")!=std::string::npos)g.properties["launcher.m3g"]="experimental";}
+ if(g.crc==0xf604dae4u||g.crc==0x06253d5bu){g.nativeWidth=176;g.nativeHeight=208;g.resolutionKnown=true;g.properties["launcher.controls"]="vir2l-right-confirm";g.properties["launcher.keypad"]="numeric";}
  if(g.crc==0x0dbd9f30u)g.properties["launcher.raycaster"]="doom2-columns-v1";
  if(g.crc==0x2e771edcu)g.properties["launcher.raycaster"]="orcs2-columns-v1";
  if(mz_zip_reader_locate_file(&z,"Reg/Util.class",nullptr,0)>=0&&mz_zip_reader_locate_file(&z,"RegStarter.class",nullptr,0)>=0)g.unsupported="Requires unavailable Reg/Util native library";

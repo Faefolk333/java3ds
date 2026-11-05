@@ -1,0 +1,49 @@
+STAGE 40 0
+RAM cache ready: 3 JARs, 2583241 bytes
+STAGE 41 3
+Java3DS: Devil May Cry 3D 320x240
+VM_AUDIO_LOAD handle=0 bytes=2605
+VM_AUDIO_LOAD handle=1 bytes=8674
+VM_AUDIO_LOAD handle=2 bytes=4376
+VM_AUDIO_LOAD handle=3 bytes=4514
+VM_AUDIO_LOAD handle=4 bytes=2904
+VM_AUDIO_LOAD handle=5 bytes=8200
+VM_AUDIO_LOAD handle=6 bytes=10896
+VM_AUDIO_LOAD handle=7 bytes=11124
+VM_AUDIO_LOAD handle=8 bytes=5654
+VM_AUDIO_START 8 result 0
+VM_AUDIO_LOAD handle=9 bytes=2605
+VM_AUDIO_START 9 result 0
+VM_AUDIO_START 8 result 0
+VM_AUDIO_START 8 result 0
+VM_AUDIO_START 8 result 0
+VM_AUDIO_LOAD handle=10 bytes=8674
+VM_AUDIO_START 10 result 0
+VM_AUDIO_START 8 result 0
+VM_AUDIO_START 8 result 0
+VM_AUDIO_LOAD handle=11 bytes=2605
+VM_AUDIO_LOAD handle=12 bytes=8674
+VM_AUDIO_LOAD handle=13 bytes=4376
+VM_AUDIO_LOAD handle=14 bytes=4514
+VM_AUDIO_LOAD handle=15 bytes=2904
+VM_AUDIO_LOAD handle=16 bytes=8200
+VM_AUDIO_LOAD handle=17 bytes=10896
+VM_AUDIO_LOAD handle=18 bytes=11124
+VM_AUDIO_LOAD handle=19 bytes=5654
+VM_AUDIO_LOAD handle=20 bytes=4376
+VM_AUDIO_START 20 result 0
+VM_AUDIO_START 15 result 0
+VM_AUDIO_START 14 result 0
+VM_AUDIO_START 15 result 0
+VM_AUDIO_START 14 result 0
+VM_AUDIO_START 15 result 0
+VM_AUDIO_START 14 result 0
+VM_AUDIO_START 15 result 0
+VM_AUDIO_START 14 result 0
+VM_AUDIO_START 14 result 0
+STAGE 80 0
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+RAM cache hits: 930
+VM_EXIT run=0 result=0 frames=735 peak=32768

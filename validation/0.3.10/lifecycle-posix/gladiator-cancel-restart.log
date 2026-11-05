@@ -1,0 +1,203 @@
+STAGE 40 0
+RAM cache ready: 3 JARs, 2524232 bytes
+STAGE 41 3
+Java3DS: Gladiator 240x320
+VM_AUDIO_LOAD handle=0 bytes=358
+VM_AUDIO_LOAD handle=1 bytes=870
+VM_AUDIO_LOAD handle=2 bytes=582
+VM_AUDIO_LOAD handle=3 bytes=710
+VM_AUDIO_LOAD handle=4 bytes=5158
+VM_AUDIO_LOAD handle=5 bytes=1382
+VM_AUDIO_LOAD handle=6 bytes=646
+VM_AUDIO_LOAD handle=7 bytes=934
+VM_AUDIO_LOAD handle=8 bytes=742
+VM_AUDIO_LOAD handle=9 bytes=678
+VM_AUDIO_LOAD handle=10 bytes=582
+VM_AUDIO_LOAD handle=11 bytes=998
+VM_AUDIO_LOAD handle=12 bytes=230
+VM_AUDIO_LOAD handle=13 bytes=230
+VM_AUDIO_LOAD handle=14 bytes=5542
+VM_AUDIO_LOAD handle=15 bytes=2790
+STAGE 70 2
+STAGE 71 2
+STAGE 72 2
+RAM cache hits: 1038
+VM_EXIT run=0 result=2 frames=156 peak=0
+STAGE 40 0
+RAM cache ready: 3 JARs, 2524232 bytes
+STAGE 41 3
+Java3DS: Gladiator 240x320
+VM_AUDIO_LOAD handle=16 bytes=358
+VM_AUDIO_LOAD handle=17 bytes=870
+VM_AUDIO_LOAD handle=18 bytes=582
+VM_AUDIO_LOAD handle=19 bytes=710
+VM_AUDIO_LOAD handle=20 bytes=5158
+VM_AUDIO_LOAD handle=21 bytes=1382
+VM_AUDIO_LOAD handle=22 bytes=646
+VM_AUDIO_LOAD handle=23 bytes=934
+VM_AUDIO_LOAD handle=24 bytes=742
+VM_AUDIO_LOAD handle=25 bytes=678
+VM_AUDIO_LOAD handle=26 bytes=582
+VM_AUDIO_LOAD handle=27 bytes=998
+VM_AUDIO_LOAD handle=28 bytes=230
+VM_AUDIO_LOAD handle=29 bytes=230
+VM_AUDIO_LOAD handle=30 bytes=5542
+VM_AUDIO_LOAD handle=31 bytes=2790
+STAGE 70 2
+STAGE 71 2
+STAGE 72 2
+RAM cache hits: 1038
+VM_EXIT run=1 result=2 frames=168 peak=0
+STAGE 40 0
+RAM cache ready: 3 JARs, 2524232 bytes
+STAGE 41 3
+Java3DS: Gladiator 240x320
+VM_AUDIO_LOAD handle=-1 bytes=358
+javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c e0 
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:35)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:38)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (0) javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c e0 
+VM_AUDIO_LOAD handle=-1 bytes=870
+javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c 60 
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:35)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:38)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (1) javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c 60 
+VM_AUDIO_LOAD handle=-1 bytes=582
+javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c 23 
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:35)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:38)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (2) javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c 23 
+VM_AUDIO_LOAD handle=-1 bytes=710
+javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c 46 
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:35)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:38)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (3) javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c 46 
+VM_AUDIO_LOAD handle=-1 bytes=5158
+javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c 16 
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:35)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:38)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (4) javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c 16 
+VM_AUDIO_LOAD handle=-1 bytes=1382
+javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c ac 
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:35)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:38)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (5) javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c ac 
+VM_AUDIO_LOAD handle=-1 bytes=646
+javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c ae 
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:35)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:38)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (6) javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c ae 
+VM_AUDIO_LOAD handle=-1 bytes=934
+javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c 61 
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:35)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:38)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (7) javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c 61 
+VM_AUDIO_LOAD handle=-1 bytes=742
+javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c 88 
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:35)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:38)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (8) javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c 88 
+VM_AUDIO_LOAD handle=-1 bytes=678
+javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c 88 
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:35)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:38)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (9) javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c 88 
+VM_AUDIO_LOAD handle=-1 bytes=582
+javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c d0 
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:35)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:38)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (10) javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c d0 
+VM_AUDIO_LOAD handle=-1 bytes=998
+javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c a2 
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:35)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:38)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (11) javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c a2 
+VM_AUDIO_LOAD handle=-1 bytes=230
+javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c 2e 
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:35)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:38)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (12) javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c 2e 
+VM_AUDIO_LOAD handle=-1 bytes=230
+javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c a2 
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:35)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:38)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (13) javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c a2 
+VM_AUDIO_LOAD handle=-1 bytes=5542
+javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c ac 
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:35)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:38)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (14) javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c ac 
+VM_AUDIO_LOAD handle=-1 bytes=2790
+javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c 6c 
+    at javax.microedition.media.Manager$NativePlayer.realize(Manager.java:35)
+    at javax.microedition.media.Manager$NativePlayer.prefetch(Manager.java:38)
+    at ae.<init>(ae:-1)
+    at o.b(o:-1)
+    at Main.MainMIDlet.run(Main/MainMIDlet:-1)
+    at java.lang.Thread.run(Thread.java:322)
+Sound(): (15) javax.microedition.media.MediaException: Unsupported media audio/amr header=23 21 41 4d 52 a 3c 6c 
+STAGE 70 2
+STAGE 71 2
+STAGE 72 2
+RAM cache hits: 1038
+VM_EXIT run=2 result=2 frames=158 peak=0

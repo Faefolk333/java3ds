@@ -1,4 +1,4 @@
-# Java3DS — private alpha 0.3.9
+# Java3DS — test build 0.3.10
 
 Java ME / JAR / JAD launcher for Nintendo 3DS, with a shared MIDI synthesizer.
 Extract the installation ZIP to the root of the SD card, replacing
@@ -7,7 +7,34 @@ with Java Pocket 3DS. Games, settings and saves are retained. Start **Java3DS**
 from Homebrew Launcher; add your JAR/JAD files under `/3ds/java-3ds/games/`.
 A JAD also needs its matching local JAR. Original game JARs are not bundled.
 
-## Changes in 0.3.9
+## Changes in 0.3.10
+
+VM/Java/GC thread priorities now agree and stay below APT's event thread.
+Recursive Object.wait releases/restores every monitor level. HOME/lid hooks
+only update atomic suspend flags; VM/audio pause independently of the game menu.
+These address scheduling and GC waits observed in the supplied console logs;
+physical HOME/lid behavior still needs a console retest.
+
+Normal cancellation unwinds the VM. A native call that has not stopped after
+five seconds triggers process recovery: CIA relaunches itself; 3DSX ends the
+process. No live worker's memory is freed for reuse. Recovery is a fallback,
+not a promise that every native call cancels instantaneously.
+
+All three supplied LOTR variants default to portrait (use Scale to fit).
+DawnStar and the supplied Elder Scrolls Travels have correct 176x208 profiles,
+A/right-softkey and B/left-softkey menu confirmation, numeric game controls,
+Unicode/Cyrillic text and a system keyboard for names. Both reached actual
+dungeon gameplay in interactive host tests. Gladiator 3D reached combat.
+Micro3D triangle/quad renderPrimitives now serves the supplied Devil May Cry;
+this is partial API support, not a complete Micro3D implementation.
+
+The updater no longer requires a token during authorized public test windows.
+Install this build once manually when coming from token-less 0.3.9. See
+[UPDATES.md](UPDATES.md). Startup displays runtime preparation progress.
+Symbian files were inventoried, but a Symbian execution backend is **not**
+implemented; see [SYMBIAN.md](SYMBIAN.md).
+
+## Earlier changes in 0.3.9
 
 Cancellation requests now reach the VM immediately, including requests during
 launch preparation. Interrupted native calls no longer treat an error status

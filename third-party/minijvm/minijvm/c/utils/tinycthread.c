@@ -23,6 +23,11 @@ freely, subject to the following restrictions:
 */
 
 #include "tinycthread.h"
+#ifdef __3DS__
+#include <3ds.h>
+#include <stdio.h>
+#include "crimson_thread_policy.h"
+#endif
 #include <stdlib.h>
 
 /* Platform specific includes */
@@ -613,6 +618,11 @@ int thrd_create(thrd_t *thr, thrd_start_t func, void *arg)
   }
   int create_result = pthread_create(thr, &attr, _thrd_wrapper_function, (void *)ti);
   pthread_attr_destroy(&attr);
+  if(create_result == 0) {
+    // Match the VM worker, keeping APT's event thread above every game thread.
+    Result priority_result=svcSetThreadPriority(threadGetHandle((Thread)*thr),CRIMSON_VM_PRIORITY);
+    if(R_FAILED(priority_result))fprintf(stderr,"VM thread priority failed: %08lx\n",(unsigned long)priority_result);
+  }
   if(create_result != 0)
 #else
   if(pthread_create(thr, NULL, _thrd_wrapper_function, (void *)ti) != 0)
@@ -752,7 +762,10 @@ int thrd_sleep(const struct timespec *duration, struct timespec *remaining)
 
 void thrd_yield(void)
 {
-#if defined(_TTHREAD_WIN32_)
+#if defined(__3DS__)
+  // sched_yield() need not schedule a lower-priority lock owner on Horizon.
+  svcSleepThread(1000000LL);
+#elif defined(_TTHREAD_WIN32_)
   Sleep(0);
 #else
   sched_yield();

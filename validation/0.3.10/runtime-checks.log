@@ -1,0 +1,25 @@
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+TITLE Compatibility probes MIDLETS 1 POP 0
+NATIVE 320x240 KNOWN 0 BACKEND 
+MicroPrimitivesCheck PASS
+TextInputCheck PASS
+RecursiveMonitorCheck PASS
+UnicodeFontCheck PASS
+Vir2LMenuCheck PASS
+RaycasterCheck PASS
+ChoiceApiCheck PASS
+RenderCompatibility PASS
+MotionCompatibility PASS
+M3GCompatibility PASS
+M3GSpanCheck PASS
+MicroPoseCheck PASS
+MicroBatchCheck PASS
+MicroBlendCheck PASS
+ArcCheck PASS
+GameCanvasFlushCheck PASS
+MediaPlayerCheck PASS
+RmsCompatibility PASS
+ControlsCheck PASS
+DirectGraphicsCheck PASS
+ShutdownReentry PASS

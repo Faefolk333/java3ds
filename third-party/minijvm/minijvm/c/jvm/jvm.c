@@ -853,6 +853,7 @@ s32 get_jvm_state(MiniJVM *jvm) {
     return jvm->jvm_state;
 }
 
+int crimson_platform_suspended; // Atomic lifecycle flag; separate from per-game pause.
 static MiniJVM *g_jvm = NULL;
 
 void _on_jvm_sig_print(s32 no) {

@@ -1,4 +1,40 @@
-# Java3DS 0.3.9 validation — 2026-11-05
+# Java3DS 0.3.10 validation — 2026-11-05
+
+Test build; physical 3DS HOME/lid, self-recovery, keyboard and CIA self-update
+still require console verification. These limits must not be inferred away from
+successful host results.
+
+* CIA and 3DSX compile against the rebuilt modified ARM VM. CTRTool confirms
+  title 000400000F3A3D00, version 58 / 0.3.10 and all content hashes. Three
+  expected unsigned signature failures remain. Exact extracted RomFS, banner,
+  icon and original audio PCM comparisons pass; banner format regression passes.
+
+* 21 runtime probes each pass twice with both Win32 and POSIX threading. New
+  probes cover recursive monitor ownership/timed waits, Cyrillic/Greek/Latin
+  pixels, both Vir2L menu layouts, name editing and Micro3D primitives.
+* Both host threading modes pause/resume a live VM through the platform suspend
+  flag; cancellation while suspended also finishes. Five real games each cancel
+  and restart three times per threading mode, including complete stage-72 cleanup.
+  Request at 3000 ms; three-run totals 9521–9739 ms. This measures PC behavior.
+* Interactive DawnStar and Elder Scrolls Travels probes create/name a character
+  and enter the actual dungeon. Screenshots/logs in validation/0.3.10. The host
+  keyboard bridge supplies Player; the real 3DS keyboard is compiled, not tested.
+* Gladiator 3D reaches combat; two previously unprofiled LOTR variants reach
+  gameplay in 240x320 portrait. Devil May Cry completes its 60s host run without
+  the reported missing renderPrimitives method. These are short checks.
+* Nested HOME/lid reason tracking and audio suspend/resume preserve menu pause
+  in service-stub tests. Audio failure/Old/New/core-fallback checks pass.
+* Production updater logic reaches real GitHub HTTPS without a token and reports
+  the private channel correctly. Metadata parsing, hashes, install/backup and
+  rejection checks pass; public-window download evidence is recorded separately.
+* Source inspection of libctru identified pthread priority 0x3F versus old VM
+  worker 0x30, with APT event thread 0x31. VM/Java/GC now use 0x34; contended
+  spin loops sleep positively so lower-priority owners can run. Recursive
+  libctru condition waits require depth one; Object.wait now releases all levels.
+* Symbian audit includes added N-Gage archives and bounded SISX controllers;
+  no ROM/RPKG/VPL was supplied. No Symbian execution backend is implemented.
+
+## Previous 0.3.9 validation
 
 PC and file validation completed; physical 3DS results remain unverified.
 

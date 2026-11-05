@@ -1,0 +1,202 @@
+{
+  "folder": "D:\\HRY JAVA\\Symbian hry",
+  "firmware_files": [],
+  "execution_backend": "Not implemented for 3DS; EKA2L1 platform port and device firmware required",
+  "files": [
+    {
+      "file": "Asphalt Urban GT 2 (USA, Europe) (En,Fr,De,Es,It) (Demo) (v2.0.196).7z",
+      "bytes": 10572178,
+      "format": "7z game archive",
+      "e32_candidates": [
+        "system/apps/6rbc/6rbc.app",
+        "system/libs/ecomserver.exe",
+        "system/libs/loadersrvngs.exe"
+      ],
+      "firmware_candidates": []
+    },
+    {
+      "file": "Call of Duty (USA, Europe) (En,Fr,De,Es,It) (Review Kit 110) (v1.2).7z",
+      "bytes": 19860063,
+      "format": "7z game archive",
+      "e32_candidates": [
+        "system/apps/6r48/6r48.app",
+        "system/libs/ecomserver.exe",
+        "system/libs/loadersrvngs.exe"
+      ],
+      "firmware_candidates": []
+    },
+    {
+      "file": "Elder Scrolls Travels, The - Shadowkey (USA, Europe) (En,Fr,De,Es,It) (26.10.2004)/system/apps/6r51/6r51.app",
+      "bytes": 1075184,
+      "format": "E32 image",
+      "kernel": "EKA1",
+      "uid3": "101fd3f6",
+      "cpu": "ARMv4",
+      "heap_min": 4096,
+      "heap_max": 1048576,
+      "stack": 8192
+    },
+    {
+      "file": "Elder Scrolls Travels, The - Shadowkey (USA, Europe) (En,Fr,De,Es,It) (26.10.2004)/system/libs/ecomserver.exe",
+      "bytes": 30284,
+      "format": "E32 image",
+      "kernel": "EKA1",
+      "uid3": "10009d8f",
+      "cpu": "ARMv4",
+      "heap_min": 4096,
+      "heap_max": 1048576,
+      "stack": 8192
+    },
+    {
+      "file": "Elder Scrolls Travels, The - Shadowkey (USA, Europe) (En,Fr,De,Es,It) (26.10.2004).7z",
+      "bytes": 9280740,
+      "format": "7z game archive",
+      "e32_candidates": [
+        "system/apps/6r51/6r51.app",
+        "system/libs/ecomserver.exe"
+      ],
+      "firmware_candidates": []
+    },
+    {
+      "file": "Hero of Sparta HD v1.01(2).sisx",
+      "bytes": 50366368,
+      "format": "SISX (S60v3 or newer)",
+      "uid3": "20030e78",
+      "controller_native_or_jar_targets": [
+        "!:\\sys\\bin\\HeroOfSparta.exe"
+      ]
+    },
+    {
+      "file": "Prince-of-Persia-HD_Symbian_EN_S60-5th/Prince Of Persia HD (S60 5th)(Adventure).sis",
+      "bytes": 11195608,
+      "format": "SISX (S60v3 or newer)",
+      "uid3": "2001ef02",
+      "controller_native_or_jar_targets": [
+        "!:\\sys\\bin\\PrinceOfPersia_0x2001EF02.exe"
+      ]
+    },
+    {
+      "file": "The Elder Scrolls Travels - Shadowkey [176x208] (Nokia N-Gage) (andrew-lviv.net)/The_Elder_Scrolls_Travels_Shadowkey/system/apps/6R51/6R51.APP",
+      "bytes": 1075184,
+      "format": "E32 image",
+      "kernel": "EKA1",
+      "uid3": "101fd3f6",
+      "cpu": "ARMv4",
+      "heap_min": 4096,
+      "heap_max": 1048576,
+      "stack": 8192
+    },
+    {
+      "file": "The Elder Scrolls Travels - Shadowkey [176x208] (Nokia N-Gage) (andrew-lviv.net)/The_Elder_Scrolls_Travels_Shadowkey/system/libs/ECOMSERVER.EXE",
+      "bytes": 30284,
+      "format": "E32 image",
+      "kernel": "EKA1",
+      "uid3": "10009d8f",
+      "cpu": "ARMv4",
+      "heap_min": 4096,
+      "heap_max": 1048576,
+      "stack": 8192
+    },
+    {
+      "file": "Tom Clancy's Splinter Cell - Chaos Theory (USA, Europe) (En,Fr,De,Es,It) (v1.0.240).7z",
+      "bytes": 23755940,
+      "format": "7z game archive",
+      "e32_candidates": [
+        "system/apps/6r73/6r73.app",
+        "system/libs/ecomserver.exe",
+        "system/libs/loadersrvngs.exe"
+      ],
+      "firmware_candidates": []
+    },
+    {
+      "file": "Tomb Raider Starring Lara Croft (USA, Europe) (En,Fr,De,Es,It) (v1.0)/system/apps/tombraider/gsbapp.app",
+      "bytes": 61498,
+      "format": "E32 image",
+      "kernel": "EKA1",
+      "uid3": "101fbf94",
+      "cpu": "ARMv4",
+      "heap_min": 4096,
+      "heap_max": 1048576,
+      "stack": 32768
+    },
+    {
+      "file": "Tomb Raider Starring Lara Croft (USA, Europe) (En,Fr,De,Es,It) (v1.0)/system/apps/tombraider/tombraider.app",
+      "bytes": 84547,
+      "format": "E32 image",
+      "kernel": "EKA1",
+      "uid3": "101fbf9d",
+      "cpu": "ARMv4",
+      "heap_min": 4096,
+      "heap_max": 1048576,
+      "stack": 32768
+    },
+    {
+      "file": "Tomb Raider Starring Lara Croft (USA, Europe) (En,Fr,De,Es,It) (v1.0)/system/apps/tr/tr.app",
+      "bytes": 512,
+      "format": "E32 image",
+      "kernel": "EKA1",
+      "uid3": "00000000",
+      "cpu": "ARMv4",
+      "heap_min": 4096,
+      "heap_max": 1048576,
+      "stack": 8192
+    },
+    {
+      "file": "Tomb Raider Starring Lara Croft (USA, Europe) (En,Fr,De,Es,It) (v1.0)/system/libs/ecomserver.exe",
+      "bytes": 29936,
+      "format": "E32 image",
+      "kernel": "EKA1",
+      "uid3": "10009d8f",
+      "cpu": "ARMv4",
+      "heap_min": 4096,
+      "heap_max": 1048576,
+      "stack": 8192
+    },
+    {
+      "file": "Tomb Raider Starring Lara Croft (USA, Europe) (En,Fr,De,Es,It) (v1.0)/system/programs/airplayserver.exe",
+      "bytes": 22223,
+      "format": "E32 image",
+      "kernel": "EKA1",
+      "uid3": "10005b7c",
+      "cpu": "ARMv4",
+      "heap_min": 4096,
+      "heap_max": 1048576,
+      "stack": 32768
+    },
+    {
+      "file": "Tomb Raider Starring Lara Croft (USA, Europe) (En,Fr,De,Es,It) (v1.0)/system/programs/relauncher.exe",
+      "bytes": 1368,
+      "format": "E32 image",
+      "kernel": "EKA1",
+      "uid3": "00000000",
+      "cpu": "ARMv4",
+      "heap_min": 4096,
+      "heap_max": 1048576,
+      "stack": 8192
+    },
+    {
+      "file": "Tony Hawk's Pro Skater (USA, Europe) (En,Fr,De,Es,It) (Review Kit 4208) (v2.9).7z",
+      "bytes": 15108264,
+      "format": "7z game archive",
+      "e32_candidates": [
+        "system/apps/tonyhawk/gsbapp.app",
+        "system/apps/tony/tony.app",
+        "system/apps/tonyhawk/tonyhawk.app",
+        "system/programs/airplayserver.exe",
+        "system/libs/ecomserver.exe",
+        "system/programs/relauncher.exe",
+        "system/apps/tonyhawk/tonyhawk.exe"
+      ],
+      "firmware_candidates": []
+    },
+    {
+      "file": "Worms World Party (USA, Europe) (Demo) (v0.9.1214).7z",
+      "bytes": 3840312,
+      "format": "7z game archive",
+      "e32_candidates": [
+        "system/apps/6r87/6r87.app"
+      ],
+      "firmware_candidates": []
+    }
+  ]
+}

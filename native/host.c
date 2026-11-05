@@ -4,9 +4,11 @@
 #include <string.h>
 #include <windows.h>
 #include "raster.h"
+#include "text_input.h"
 #include "stereo.h"
 #include "audio/midi_engine.h"
 static volatile LONG frames;static unsigned peak;static int pauseFailed;static ULONGLONG start;static const char*config;static int autoplay,laststate=-999;
+int crimson_text_input(const char*label,const char*initial,int maximum,int constraints,char*result,size_t capacity){(void)label;(void)constraints;if(crimson_cancelled())return -1;printf("HOST_TEXT_INPUT requested max=%d\n",maximum);const char*value=getenv("JAVA_TEXT_INPUT");if(!value)value=initial&&*initial?initial:"Player";snprintf(result,capacity,"%.*s",maximum,value);return 1;}
 const char*crimson_launch_config(void){return config;}
 void crimson_gc_wait_report(const char*s){fprintf(stderr,"GC_WAIT %s\n",s);}
 void crimson_stage(int s,int d){
@@ -15,13 +17,14 @@ void crimson_stage(int s,int d){
 #endif
 if(s==60){if(laststate!=d){printf("GAME_STATE %d\n",d);laststate=d;}}else if(s>=40&&s!=61&&s!=63)printf("STAGE %d %d\n",s,d);}
 void crimson_music(int a,int b,int c){}
+static void test_pause(int value){if(getenv("JAVA_HOME_TEST"))crimson_set_suspended(value);else crimson_pause_game(value);}
 static MidiEngine*audio;static CRITICAL_SECTION audioLock;static volatile LONG audioRunning;
 static DWORD WINAPI audio_stream(void*p){int16_t buffer[220];ULONGLONG runStart=0;int phase=0;LONG freeze=0;while(InterlockedCompareExchange(&audioRunning,0,0)){
  if(getenv("JAVA_PAUSE_TEST")&&start){ULONGLONG t=GetTickCount64()-start;if(runStart!=start){runStart=start;phase=0;}
-  if(phase==0&&t>500){crimson_pause_game(1);phase=1;printf("PAUSE_REQUEST\n");}
+  if(phase==0&&t>500){test_pause(1);phase=1;printf("PAUSE_REQUEST\n");}
   if(phase==1&&t>750){freeze=InterlockedCompareExchange(&frames,0,0);phase=2;}
-  if(phase==2&&t>1250){if(InterlockedCompareExchange(&frames,0,0)!=freeze)pauseFailed=1;crimson_pause_game(0);phase=3;printf("PAUSE_FROZEN frames=%ld\n",freeze);}
-  if(phase==3&&t>1750){if(InterlockedCompareExchange(&frames,0,0)<=freeze)pauseFailed=1;printf("PAUSE_RESUMED frames=%ld\n",InterlockedCompareExchange(&frames,0,0));phase=4;if(atoi(getenv("JAVA_PAUSE_TEST"))==2)crimson_pause_game(1);}
+  if(phase==2&&t>1250){if(InterlockedCompareExchange(&frames,0,0)!=freeze)pauseFailed=1;test_pause(0);phase=3;printf("PAUSE_FROZEN frames=%ld\n",freeze);}
+  if(phase==3&&t>1750){if(InterlockedCompareExchange(&frames,0,0)<=freeze)pauseFailed=1;printf("PAUSE_RESUMED frames=%ld\n",InterlockedCompareExchange(&frames,0,0));phase=4;if(atoi(getenv("JAVA_PAUSE_TEST"))==2)test_pause(1);}
  }
  if(start&&GetTickCount64()-start>(getenv("JAVA_ABORT_MS")?atoi(getenv("JAVA_ABORT_MS")):(getenv("JAVA_RUN_MS")?atoi(getenv("JAVA_RUN_MS"))+2000:32000)))crimson_request_stop();EnterCriticalSection(&audioLock);midi_engine_render(audio,buffer,220);LeaveCriticalSection(&audioLock);for(int i=0;i<220;i++){unsigned a=abs(buffer[i]);if(a>peak)peak=a;}Sleep(10);}return 0;}
 int crimson_audio_load(const void*p,int n){EnterCriticalSection(&audioLock);int h=midi_engine_load(audio,p,n);LeaveCriticalSection(&audioLock);printf("VM_AUDIO_LOAD handle=%d bytes=%d\n",h,n);return h;}
@@ -37,7 +40,7 @@ void crimson_publish(const uint32_t*p){
  if(frames%(getenv("JAVA_CAPTURE_EVERY")?atoi(getenv("JAVA_CAPTURE_EVERY")):100)==0)capture_ppm("work/host-frame.ppm",p);
 }
 int crimson_motion(int kind,int sample[3]){sample[0]=kind?1250:0;sample[1]=kind?-2500:0;sample[2]=kind?3750:9807;return kind==0||kind==1;}
-int crimson_buttons(void){ULONGLONG t=GetTickCount64()-start;if(t>(getenv("JAVA_RUN_MS")?atoi(getenv("JAVA_RUN_MS")):30000))return 0x40000000;const char*script=getenv("JAVA_INPUT");if(script&&t>2000&&t%1600<200){if(!strcmp(script,"right-softkey"))return t<28000?8192:0;if(!strcmp(script,"softkeys"))return t<16000?64:16;if(!strcmp(script,"blades"))return t<6500?8192:t<15000?64:16;if(!strcmp(script,"blades-play"))return t<6500?8192:t<25000?64:24;if(!strcmp(script,"soul-game"))return t<14000?64:t<35000?8192:24;if(!strcmp(script,"soul-title"))return t>=9500&&t<10000?64:0;if(!strcmp(script,"soul"))return t<14000?64:16;if(!strcmp(script,"mm2"))return t<24000?32:t<32000?64:16;}return autoplay&&t>2000&&t%1800<200?16:0;}
+int crimson_buttons(void){ULONGLONG t=GetTickCount64()-start;if(t>(getenv("JAVA_RUN_MS")?atoi(getenv("JAVA_RUN_MS")):30000))return 0x40000000;const char*inputFile=getenv("JAVA_INPUT_FILE");if(inputFile){unsigned value=0;FILE*f=fopen(inputFile,"r");if(f){fscanf(f,"%u",&value);fclose(f);}return value;}const char*script=getenv("JAVA_INPUT");if(script&&t>2000&&t%1600<200){if(!strcmp(script,"right-softkey"))return t<28000?8192:0;if(!strcmp(script,"softkeys"))return t<16000?64:16;if(!strcmp(script,"blades"))return t<6500?8192:t<15000?64:16;if(!strcmp(script,"blades-play"))return t<6500?8192:t<25000?64:24;if(!strcmp(script,"soul-game"))return t<14000?64:t<35000?8192:24;if(!strcmp(script,"soul-title"))return t>=9500&&t<10000?64:0;if(!strcmp(script,"soul"))return t<14000?64:16;if(!strcmp(script,"mm2"))return t<24000?32:t<32000?64:16;}return autoplay&&t>2000&&t%1800<200?16:0;}
 int main(int argc,char**argv){
 setvbuf(stdout,NULL,_IONBF,0);setvbuf(stderr,NULL,_IONBF,0);
 #ifdef CRIMSON_CP_ALLOCATION_TEST

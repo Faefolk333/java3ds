@@ -1,0 +1,16 @@
+STAGE 40 0
+RAM cache ready: 3 JARs, 1691656 bytes
+STAGE 41 3
+Java3DS: DawnStar by milaro 176x208
+Did not find Pluto-Server-URL in JAR! Using default of http://localhost/essm
+User ID is NULL!
+>>> MEMORY: Very start of startapp: Free memory is 24974132
+LOADING WARDEN IMAGES
+>>> MEMORY: end of startapp: Free memory is 22769623
+traitor is 2
+STAGE 80 0
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+RAM cache hits: 651
+VM_EXIT run=0 result=0 frames=50 peak=0

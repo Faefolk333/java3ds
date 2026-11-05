@@ -62,3 +62,12 @@ Decoder-only OpenCORE AMR-NB from BelledonneCommunications/opencore-amr,
 commit 3b67218fb8efb776bcd79e7445774e02d778321d, Apache-2.0. Upstream headers,
 LICENSE and provenance are retained under third-party/opencore-amr. Build flags
 and decoder source selection are in tools/build-amr.py. No encoder is linked.
+
+## Unicode bitmap font (0.3.10)
+
+Unscii-8 glyph subset U+0080–U+052F, public domain / CC0, from
+https://github.com/viznut/unscii . The subset, pinned revision and provenance
+are under `third-party/unscii`. This does not use the separately licensed
+unscii-16-full font. `tools/build_unicode_font.py` combines the subset with the
+existing public-domain ASCII font. EKA2L1 was inspected for feasibility only;
+no EKA2L1 engine or phone firmware is included.

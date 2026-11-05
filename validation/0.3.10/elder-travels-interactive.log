@@ -1,0 +1,85 @@
+STAGE 40 0
+RAM cache ready: 3 JARs, 1690201 bytes
+STAGE 41 3
+Java3DS: The Elder Scrolls 176x208
+Did not find Pluto-Server-URL in JAR! Using default of http://localhost/essm
+User ID is NULL!
+IN START HELPER THREAD IN UICANVAS
+Helper thread in UICanvas: Thread[Thread-4,5,main]
+num active threads = 2
+Just before helper thread loop in UICanvas
+Progress pct is 0
+Progress pct is 0
+numTableRows=43
+Number of spells is 25
+Starting allocateAllUIs
+LOADING WARDEN IMAGES
+SUCCESSFULLY LOADED MONSTER IMAGES!!
+ >>>> СОЗДАНИЕ CAMP ПОДЗЕМЕЛЬЯ <<<<<<
+ After creating dungeons
+Progress pct is 100
+Progress pct is 100
+Progress pct is 100
+Progress pct is 100
+Progress pct is 100
+End of splash, changing to next
+VIR2L_MENU ready: A=right softkey, B=left softkey
+Start of createNewGame
+In getGameAdvancementLevel, giftPoints = 0
+In checkOpenAndPopulateDungeons, gameAdvLevel = 0
+in getRandomItem, res = 90
+in getRandomItem, res = 47
+in getRandomItem, res = 97
+in getRandomItem, res = 598
+in getRandomItem, res = 89
+in getRandomItem, res = 42
+in getRandomItem, res = 87
+in getRandomItem, res = 89
+in getRandomItem, res = 98
+in getRandomItem, res = 97
+in getRandomItem, res = 97
+in getRandomItem, res = 3
+in getRandomItem, res = 32
+in getRandomItem, res = 88
+in getRandomItem, res = 22
+in getRandomItem, res = 96
+in getRandomItem, res = 88
+in getRandomItem, res = 97
+in getRandomItem, res = 96
+in getRandomItem, res = 96
+in getRandomItem, res = 91
+in getRandomItem, res = 23
+in getRandomItem, res = 42
+in getRandomItem, res = 3158
+in getRandomItem, res = 97
+in getRandomItem, res = 97
+in getRandomItem, res = 12
+in getRandomItem, res = 96
+in getRandomItem, res = 42
+in getRandomItem, res = 88
+in getRandomItem, res = 47
+in getRandomItem, res = 33
+in getRandomItem, res = 1110
+in getRandomItem, res = 23
+in getRandomItem, res = 33
+in getRandomItem, res = 97
+in getRandomItem, res = 91
+in getRandomItem, res = 97
+in getRandomItem, res = 37
+in getRandomItem, res = 2902
+in getRandomItem, res = 38
+in getRandomItem, res = 89
+in getRandomItem, res = 43
+in getRandomItem, res = 87
+in getRandomItem, res = 5462
+in getRandomItem, res = 8
+in getRandomItem, res = 8
+in getRandomItem, res = 23
+type is form2, size is 3
+HOST_TEXT_INPUT requested max=10
+STAGE 80 0
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+RAM cache hits: 836
+VM_EXIT run=0 result=0 frames=113 peak=0

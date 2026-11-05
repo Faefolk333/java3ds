@@ -1,0 +1,2 @@
+state=5 message=Test channel is private. Check during testing.
+ANONYMOUS_PRIVATE_CHECK_PASS network_reached_no_token

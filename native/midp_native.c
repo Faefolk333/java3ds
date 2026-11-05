@@ -3,6 +3,7 @@
 #include "jvm_util.h"
 #include "crimson_zip_cache.h"
 #include "raster.h"
+#include "text_input.h"
 #include "stereo.h"
 #include "audio/device_3ds.h"
 #define STB_IMAGE_IMPLEMENTATION
@@ -13,6 +14,13 @@
 #include "../third-party/stb_image.h"
 static int arg(Runtime*r,int n){return localvar_getInt(r->localvar,n);}
 static Instance* arr(Runtime*r,int n){return localvar_getRefer(r->localvar,n);}
+static s32 textInput(Runtime*r,JClass*c){
+ (void)c;Instance*label=arr(r,0),*initial=arr(r,1);Utf8String*a=utf8_create(),*b=utf8_create();if(!a||!b){if(a)utf8_destroy(a);if(b)utf8_destroy(b);push_ref(r->stack,NULL);return 0;}
+ if(label)jstring_2_utf8(label,a,r);if(initial)jstring_2_utf8(initial,b,r);char text[1024]={};
+ jthread_block_enter(r);int status=crimson_text_input(utf8_cstr(a),utf8_cstr(b),arg(r,2),arg(r,3),text,sizeof(text));jthread_block_exit(r);utf8_destroy(a);utf8_destroy(b);
+ if(status<0||crimson_cancelled())return RUNTIME_STATUS_ERROR;
+ push_ref(r->stack,status?jstring_create_cstr(text,r):NULL);return 0;
+}
 static s32 decode(Runtime*r,JClass*c){
  (void)c;Instance*b=arr(r,0);int o=arg(r,1),n=arg(r,2),w=0,h=0,channels;
  if(!b||o<0||n<0||o>b->arr_length-n){push_ref(r->stack,NULL);return 0;}
@@ -66,7 +74,7 @@ static s32 text(Runtime*r,JClass*c){
  (void)c;int tw=arg(r,1),th=arg(r,2);uint32_t*d=target(r,tw,th);Instance*font=arr(r,3),*str=arr(r,4);if(!d||!font||!str)return 0;
  int dx=arg(r,5),dy=arg(r,6),scale=arg(r,7),color=arg(r,8)|0xff000000,cx=arg(r,9),cy=arg(r,10),cw=arg(r,11),ch=arg(r,12);if(scale<1||scale>4)return 0;
  Instance*shadow=arr(r,13);float*z=crimson_stereo_target(d);if(crimson_stereo_mode()&&shadow&&shadow->arr_length>=tw*th)z=(float*)shadow->arr_body;float layer=crimson_stereo_layer();
- int length=jstring_get_count(str,r);for(int i=0;i<length;i++){unsigned code=jstring_char_at(str,i,r);if(code>127)code=63;if(code>=font->arr_length)continue;uint64_t bits;memcpy(&bits,font->arr_body+code*8,8);
+ int length=jstring_get_count(str,r);for(int i=0;i<length;i++){unsigned code=jstring_char_at(str,i,r);if(code>=(unsigned)font->arr_length)code=63;if(code>=font->arr_length)continue;uint64_t bits;memcpy(&bits,font->arr_body+code*8,8);
  for(int y=0;y<8*scale;y++){int yy=dy+y;if(yy<0||yy>=th||yy<cy||yy>=cy+ch)continue;for(int x=0;x<8*scale;x++){int xx=dx+i*8*scale+x;if(xx<0||xx>=tw||xx<cx||xx>=cx+cw)continue;if(bits&((uint64_t)1<<((y/scale)*8+x/scale))){d[yy*tw+xx]=color;if(z)z[yy*tw+xx]=layer;}}}}return 0;
 }
 
@@ -136,6 +144,7 @@ static java_native_method methods[]={
  {"crimson/Native","arc","([IIIIIIIIIIIIII[FZ)V",arc},
  {"crimson/Native","microBegin","()V",microBegin},
  {"crimson/Native","microBegin","(II)V",microBeginSize},
+ {"crimson/Native","textInput","(Ljava/lang/String;Ljava/lang/String;II)Ljava/lang/String;",textInput},
  {"crimson/Native","stereoAuto2D","(Z)V",stereoAuto2D},
  {"crimson/Native","stereoMode","()I",stereoMode},
  {"crimson/Native","stereoRect","([FIIIIII)V",stereoRect},
@@ -165,12 +174,14 @@ static unsigned pop_sample_lock,pop_sample_disabled;
 extern const char* crimson_launch_config(void);
 static void*oom_reserve;
 void crimson_release_oom_reserve(void){free(oom_reserve);oom_reserve=NULL;}
+extern int crimson_platform_suspended;
+void crimson_set_suspended(int value){__atomic_store_n(&crimson_platform_suspended,value!=0,__ATOMIC_RELEASE);}
 static MiniJVM*active_vm;static unsigned vm_lock;static int pause_requested,cancel_requested;
 int crimson_cancelled(void){return __atomic_load_n(&cancel_requested,__ATOMIC_ACQUIRE);}
 void crimson_reset_stop(void){__atomic_store_n(&cancel_requested,0,__ATOMIC_RELEASE);}
-void crimson_request_stop(void){__atomic_store_n(&cancel_requested,1,__ATOMIC_RELEASE);while(__atomic_exchange_n(&vm_lock,1,__ATOMIC_ACQUIRE)){}if(active_vm){__atomic_store_n(&active_vm->crimson_paused,0,__ATOMIC_RELEASE);__atomic_store_n(&active_vm->crimson_stop,1,__ATOMIC_RELEASE);}__atomic_store_n(&vm_lock,0,__ATOMIC_RELEASE);}
-void crimson_pause_game(int paused){while(__atomic_exchange_n(&vm_lock,1,__ATOMIC_ACQUIRE)){}__atomic_store_n(&pause_requested,paused,__ATOMIC_RELEASE);if(active_vm)__atomic_store_n(&active_vm->crimson_paused,paused,__ATOMIC_RELEASE);__atomic_store_n(&vm_lock,0,__ATOMIC_RELEASE);}
-static void active_set(MiniJVM*j){while(__atomic_exchange_n(&vm_lock,1,__ATOMIC_ACQUIRE)){}active_vm=j;if(j)__atomic_store_n(&j->crimson_paused,__atomic_load_n(&pause_requested,__ATOMIC_RELAXED),__ATOMIC_RELEASE);__atomic_store_n(&vm_lock,0,__ATOMIC_RELEASE);}
+void crimson_request_stop(void){__atomic_store_n(&cancel_requested,1,__ATOMIC_RELEASE);while(__atomic_exchange_n(&vm_lock,1,__ATOMIC_ACQUIRE))thrd_yield();if(active_vm){__atomic_store_n(&active_vm->crimson_paused,0,__ATOMIC_RELEASE);__atomic_store_n(&active_vm->crimson_stop,1,__ATOMIC_RELEASE);}__atomic_store_n(&vm_lock,0,__ATOMIC_RELEASE);}
+void crimson_pause_game(int paused){while(__atomic_exchange_n(&vm_lock,1,__ATOMIC_ACQUIRE))thrd_yield();__atomic_store_n(&pause_requested,paused,__ATOMIC_RELEASE);if(active_vm)__atomic_store_n(&active_vm->crimson_paused,paused,__ATOMIC_RELEASE);__atomic_store_n(&vm_lock,0,__ATOMIC_RELEASE);}
+static void active_set(MiniJVM*j){while(__atomic_exchange_n(&vm_lock,1,__ATOMIC_ACQUIRE))thrd_yield();active_vm=j;if(j)__atomic_store_n(&j->crimson_paused,__atomic_load_n(&pause_requested,__ATOMIC_RELAXED),__ATOMIC_RELEASE);__atomic_store_n(&vm_lock,0,__ATOMIC_RELEASE);}
 int crimson_run_game(const char*boot,const char*cp,const char*mainclass){
  __atomic_store_n(&pop_sample_disabled,0,__ATOMIC_RELAXED);
  __atomic_store_n(&pop_last_method,NULL,__ATOMIC_RELAXED);
@@ -203,10 +214,10 @@ int crimson_run_game(const char*boot,const char*cp,const char*mainclass){
  active_set(j);
  if(crimson_cancelled())__atomic_store_n(&j->crimson_stop,1,__ATOMIC_RELEASE);
  if(!result){native_reg_lib(j,methods,sizeof(methods)/sizeof(methods[0]));ArrayList*a=arraylist_create(0);result=call_main(j,(char*)mainclass,a);crimson_stage(70,result);arraylist_destroy(a);}
- while(__atomic_exchange_n(&pop_sample_lock,1,__ATOMIC_ACQUIRE)){}
+ while(__atomic_exchange_n(&pop_sample_lock,1,__ATOMIC_ACQUIRE))thrd_yield();
  __atomic_store_n(&pop_sample_disabled,1,__ATOMIC_RELAXED);
  __atomic_store_n(&pop_sample_lock,0,__ATOMIC_RELEASE);
- active_set(NULL);crimson_stage(71,result);set_jvm_state(j,JVM_STATUS_STOPED);thread_stop_all(j);jvm_destroy(j);crimson_stage(72,result);jvm_printf("RAM cache hits: %lld\n",crimson_zip_cache_hits());crimson_zip_cache_clear();jvm_destroy_mem_alloc();micro_reset();crimson_release_oom_reserve();__atomic_store_n(&pause_requested,0,__ATOMIC_RELEASE);return result;
+ crimson_request_stop();active_set(NULL);crimson_stage(71,result);set_jvm_state(j,JVM_STATUS_STOPED);thread_stop_all(j);jvm_destroy(j);crimson_stage(72,result);jvm_printf("RAM cache hits: %lld\n",crimson_zip_cache_hits());crimson_zip_cache_clear();jvm_destroy_mem_alloc();micro_reset();crimson_release_oom_reserve();__atomic_store_n(&pause_requested,0,__ATOMIC_RELEASE);return result;
 }
 
 extern MethodInfo *pop_last_method;
