@@ -1,0 +1,7 @@
+{
+  "triangles": 10000,
+  "compared_pixels": 40960000,
+  "changed_pixels": 0,
+  "reference_cpu_ms": 121.0,
+  "optimized_cpu_ms": 106.0
+}

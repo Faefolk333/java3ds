@@ -1,0 +1,20 @@
+STAGE 40 0
+RAM cache ready: 3 JARs, 1534615 bytes
+STAGE 41 3
+MICRO_BATCH_PASS exact_pixels perspective parallel clipping alpha patterns invalid_indices reference_ms=46 batch_ms=21
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+RAM cache hits: 278
+STEREO_VISIBLE_FRAMES 0
+VM_EXIT run=0 result=0 frames=0 peak=0
+STAGE 40 0
+RAM cache ready: 3 JARs, 1534615 bytes
+STAGE 41 3
+MICRO_BATCH_PASS exact_pixels perspective parallel clipping alpha patterns invalid_indices reference_ms=46 batch_ms=19
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+RAM cache hits: 278
+STEREO_VISIBLE_FRAMES 0
+VM_EXIT run=1 result=0 frames=0 peak=0

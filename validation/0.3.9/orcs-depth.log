@@ -1,0 +1,50 @@
+STAGE 40 0
+RAM cache ready: 3 JARs, 2002844 bytes
+STAGE 41 3
+Java3DS: Orcs & Elves II 320x240
+STEREO_FRAME frame=1 nonzero=76800 min=-82 max=0
+STEREO_FRAME frame=2 nonzero=76800 min=-82 max=0
+STEREO_FRAME frame=3 nonzero=6164 min=0 max=19
+STEREO_FRAME frame=4 nonzero=6164 min=0 max=19
+VM_AUDIO_LOAD handle=0 bytes=259
+VM_AUDIO_LOAD handle=1 bytes=192
+STEREO_FRAME frame=5 nonzero=14880 min=-12 max=37
+STEREO_FRAME frame=50 nonzero=12367 min=-128 max=0
+VM_AUDIO_LOAD handle=0 bytes=259
+VM_AUDIO_LOAD handle=1 bytes=192
+VM_AUDIO_LOAD handle=2 bytes=4060
+VM_AUDIO_START 2 result 0
+STEREO_FRAME frame=100 nonzero=13968 min=-128 max=0
+STEREO_FRAME frame=150 nonzero=13968 min=-128 max=0
+VM_AUDIO_LOAD handle=0 bytes=259
+VM_AUDIO_LOAD handle=1 bytes=192
+VM_AUDIO_LOAD handle=2 bytes=153
+RAYCASTER_DEPTH world=320x188 wall_columns=320
+STEREO_FRAME frame=200 nonzero=75865 min=-128 max=63
+STEREO_FRAME frame=250 nonzero=75907 min=-128 max=63
+STEREO_FRAME frame=300 nonzero=75907 min=-128 max=63
+STEREO_FRAME frame=350 nonzero=75940 min=-128 max=63
+STEREO_FRAME frame=400 nonzero=75940 min=-128 max=63
+STEREO_FRAME frame=450 nonzero=75940 min=-128 max=63
+STEREO_FRAME frame=500 nonzero=75973 min=-128 max=63
+STEREO_FRAME frame=550 nonzero=75973 min=-128 max=63
+STEREO_FRAME frame=600 nonzero=75973 min=-128 max=63
+STEREO_FRAME frame=650 nonzero=75973 min=-128 max=63
+STEREO_FRAME frame=700 nonzero=75973 min=-128 max=63
+STEREO_FRAME frame=750 nonzero=75973 min=-128 max=63
+STEREO_FRAME frame=800 nonzero=75973 min=-128 max=63
+STEREO_FRAME frame=850 nonzero=75973 min=-128 max=63
+STEREO_FRAME frame=900 nonzero=75973 min=-128 max=63
+STEREO_FRAME frame=950 nonzero=75973 min=-128 max=63
+STEREO_FRAME frame=1000 nonzero=75973 min=-128 max=63
+STEREO_FRAME frame=1050 nonzero=75973 min=-128 max=63
+STEREO_FRAME frame=1100 nonzero=75940 min=-128 max=63
+STEREO_FRAME frame=1150 nonzero=75940 min=-128 max=63
+STEREO_FRAME frame=1200 nonzero=75907 min=-128 max=63
+STAGE 80 0
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+RAM cache hits: 855
+STEREO_VISIBLE_FRAMES 1050
+VM_EXIT run=0 result=0 frames=1214 peak=0

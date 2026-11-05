@@ -1,4 +1,54 @@
-# Java3DS 0.3.8 validation — 2026-11-02
+# Java3DS 0.3.9 validation — 2026-11-05
+
+PC and file validation completed; physical 3DS results remain unverified.
+
+- CIA/3DSX compile with ARM runtime rebuilt from the modified VM. Same title
+  000400000F3A3D00, title version 57. CTRTool container/hash checks and exact
+  extracted RomFS/icon/banner/BCWAV comparisons pass. Expected unsigned
+  ticket/TMD/access-descriptor signature failures are not content hash failures.
+- Sixteen runtime probes each pass twice in one host process, including new
+  Choice/TextField/Siemens form/softkey and reflection-based column-depth checks.
+- Seven real-game one-shot forced cancellations: 1152–1295 ms total with the
+  request at 1000 ms. Four games each pass three forced cancel/restart runs in
+  one process (3418–3746 ms total). These are PC latencies, not device timings.
+  Catalogue cancellation removes the partial archive. MIDI seek cancellation
+  stops after two 256-sample blocks and then permits recovery.
+- Micro3D before/after extracted C pixel loops: 10,000 triangles, 40,960,000
+  compared pixels, zero differences; 121 ms versus 106 ms host CPU. Full-game
+  and physical 3DS FPS still require measurement.
+- Soft audio output gain: 1 kHz 0.9997, 9 kHz 0.0735; Warm 9 kHz 0.0279.
+  Original bypass is exact. Silence/reset, mixed background/effects, mute,
+  pause, core-2/Old/fallback and device-failure stub checks pass. Tiny filter
+  state is flushed before denormal arithmetic can stall silent buffers.
+- Settings round-trip/migration preserves sound tone, phone orientation and
+  Fit (including portrait). Catalogue JAR/JAD, resource preservation, ZIP
+  content detection and preparation cancellation pass. Actual C++ menu preview
+  was visually checked; nine game menu rows fit the lower display.
+- Real host probes: Elder Scrolls Travels completes dungeon/image loading;
+  DawnStar passes its prior allocation error; Harem reaches the first level;
+  LOTR portrait no longer shows the mode warning; Stack reaches menu/help.
+  These are startup/short interaction results, not game completion.
+- Orcs & Elves 2 and Doom II RPG each complete a 45s host run and emit actual
+  wall-column depth (320×188 and 320×164). 1050 and 415 frames contain positive
+  model depth respectively. HUD/menu depth is separate; floor/objects are
+  approximate. No claim of generic support for every Doom-engine JAR.
+- Treasure's 3D menu renders with MIDI when the proper right softkey is used.
+  Reported in-game black world is still unverified/unfixed. Spore Creatures
+  lacks its JAR, the supplied NFS Run requires custom native registration code,
+  and all reported slow games still need console speed/compatibility retests.
+- Banner uses the Faedrops 0.27 mesh-facing layout, with no timed counter-spin.
+  276536-byte CGFX, 87 dictionary lookups and 739673 serialized vertex samples
+  pass; max authored position error 0.004231 scene units. Four authored rotation
+  channels are retained in file data. HOME's actual interpretation/rocking
+  still needs a physical test. The Blender original was not edited.
+
+Evidence: validation/0.3.9. Baseline failures and optional missing-API preload
+warnings are retained to distinguish earlier errors from the final probes.
+The referenced emulators are source/behavior references; Android or Symbian
+emulators have not been embedded into the 3DS application.
+
+## Earlier validation (0.3.8)
+
 
 PC checks completed; physical-console verification remains pending:
 

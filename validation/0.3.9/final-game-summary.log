@@ -1,0 +1,5 @@
+{"game": "orcs-depth", "exit": 0, "wall_ms": 45268, "captures": 1052}
+{"game": "doom-depth", "exit": 0, "wall_ms": 45300, "captures": 443}
+{"game": "treasure-final", "exit": 0, "wall_ms": 45199, "captures": 13}
+{"game": "harem-final", "exit": 0, "wall_ms": 45302, "captures": 6}
+{"game": "stack-final", "exit": 0, "wall_ms": 45175, "captures": 0}

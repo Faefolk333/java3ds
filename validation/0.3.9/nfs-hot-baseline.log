@@ -1,0 +1,27 @@
+RAM cache ready: 3 JARs, 2145727 bytes
+RAM cache hits: 1013
+STAGE 40 0
+STAGE 41 3
+Java3DS: Need for Speed Hot Pursuit 320x240
+VM_AUDIO_LOAD handle=0 bytes=15396
+VM_AUDIO_LOAD handle=1 bytes=21601
+VM_AUDIO_LOAD handle=2 bytes=13814
+VM_AUDIO_LOAD handle=3 bytes=16261
+VM_AUDIO_LOAD handle=4 bytes=6334
+VM_AUDIO_LOAD handle=5 bytes=959
+VM_AUDIO_LOAD handle=6 bytes=1043
+VM_AUDIO_LOAD handle=7 bytes=6044
+VM_AUDIO_LOAD handle=8 bytes=8044
+VM_AUDIO_LOAD handle=9 bytes=8044
+VM_AUDIO_LOAD handle=10 bytes=3564
+VM_AUDIO_LOAD handle=11 bytes=8044
+VM_AUDIO_LOAD handle=12 bytes=6334
+VM_AUDIO_START 12 result 0
+VM_AUDIO_LOAD handle=13 bytes=21601
+VM_AUDIO_START 13 result 0
+STAGE 80 0
+STAGE 80 0
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+VM_EXIT run=0 result=0 frames=869 peak=32768

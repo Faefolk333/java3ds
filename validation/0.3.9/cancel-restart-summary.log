@@ -1,0 +1,4 @@
+{'game': 'gladiator', 'runs': 3, 'exit': 2, 'wall_ms': 3532}
+{'game': 'harem-final', 'runs': 3, 'exit': 2, 'wall_ms': 3418}
+{'game': 'stack-final', 'runs': 3, 'exit': 2, 'wall_ms': 3746}
+{'game': 'dawnstar', 'runs': 3, 'exit': 2, 'wall_ms': 3567}

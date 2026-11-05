@@ -1,0 +1,15 @@
+RAM cache ready: 3 JARs, 1670187 bytes
+method not exist :javax/microedition/lcdui/TextField.<init>(Ljava/lang/String;Ljava/lang/String;II)V
+method not exist :javax/microedition/lcdui/TextField.getString()Ljava/lang/String;
+RAM cache hits: 588
+STAGE 40 0
+STAGE 41 3
+Java3DS: DawnStar by milaro 320x240
+Did not find Pluto-Server-URL in JAR! Using default of http://localhost/essm
+User ID is NULL!
+>>> MEMORY: Very start of startapp: Free memory is 24974138
+STAGE 80 0
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+VM_EXIT run=0 result=0 frames=1 peak=0

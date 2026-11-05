@@ -1,0 +1,98 @@
+[
+  {
+    "game": "elder-travels",
+    "source": "the_elder_scrolls_tr_158818.jar",
+    "exit": 0,
+    "captures": 0
+  },
+  {
+    "game": "elder-iv",
+    "source": "the_elder_scrolls_iv_320x240_136049 (1).jar",
+    "exit": 0,
+    "captures": 905
+  },
+  {
+    "game": "stack",
+    "source": "stack_attack_advanced-54806.jar",
+    "exit": 0,
+    "captures": 0
+  },
+  {
+    "game": "spore",
+    "source": "spore_320x240_163136.jar",
+    "exit": 0,
+    "captures": 6
+  },
+  {
+    "game": "snowboard",
+    "source": "snowboard_hero_3d_320x240_136121.jar",
+    "exit": 0,
+    "captures": 17
+  },
+  {
+    "game": "re4",
+    "source": "resident_evil_4_153601.jar",
+    "exit": 0,
+    "captures": 5
+  },
+  {
+    "game": "harem",
+    "source": "Prince-of-Persia-Harem-Adventures_J2ME_EN_v108.jar",
+    "exit": 0,
+    "captures": 3
+  },
+  {
+    "game": "dawnstar",
+    "source": "dawnstar_7pxda9cx.jar",
+    "exit": 0,
+    "captures": 0
+  },
+  {
+    "game": "dirt",
+    "source": "colin_mcrae_dirt_2d_320x240_187848.jar",
+    "exit": 0,
+    "captures": 5
+  },
+  {
+    "game": "gladiator",
+    "source": "Gladiator 3D [240x320] (Nokia 6280, 5300) (andrew-lviv.net).jar",
+    "exit": 0,
+    "captures": 17
+  },
+  {
+    "game": "nfs-run",
+    "source": "need_for_speed_the_r_320x240_176163.jar",
+    "exit": 11,
+    "captures": 0
+  },
+  {
+    "game": "nfs-hot",
+    "source": "need_for_speed_hot_252570.jar",
+    "exit": 0,
+    "captures": 14
+  },
+  {
+    "game": "nfs-carbon",
+    "source": "need_for_speed_carb_253150.jar",
+    "exit": 0,
+    "captures": 19
+  },
+  {
+    "game": "lotr",
+    "source": "The Lord of the Rings - Middle-Earth Defence [320x240] (E71 E72) (andrew-lviv.net).jar",
+    "exit": 0,
+    "captures": 13
+  },
+  {
+    "game": "tron",
+    "source": "tron_legacy_320x240_188264.jar",
+    "exit": 0,
+    "captures": 4
+  },
+  {
+    "game": "treasure",
+    "source": "treasure_trove_3d_320x240_135841.jar",
+    "exit": 0,
+    "captures": 7
+  }
+]

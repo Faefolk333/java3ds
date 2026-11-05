@@ -41,7 +41,13 @@ bool inspectGame(const std::string&path,GameInfo&g,std::string&error){
  // Some touch builds describe their fixed canvas using vendor attributes.
  if(!g.resolutionKnown){int w=atoi(g.properties["LGE-MIDlet-TargetLCD-Width"].c_str()),h=atoi(g.properties["LGE-MIDlet-TargetLCD-Height"].c_str());if(w>=64&&w<=480&&h>=64&&h<=640&&w*h<=512*512){g.nativeWidth=w;g.nativeHeight=h;g.resolutionKnown=true;}}
  if(g.pop){g.nativeWidth=320;g.nativeHeight=240;g.resolutionKnown=true;}
+ // This supplied LOTR build explicitly rejects landscape despite its filename.
+ if(g.crc==0xd2c8911bu){g.nativeWidth=120;g.nativeHeight=160;g.resolutionKnown=true;g.properties["launcher.keypad"]="harem-siemens";}
+ if(g.crc==0x68f550d4u){g.nativeWidth=240;g.nativeHeight=320;g.resolutionKnown=true;g.properties["launcher.compat.note"]="This build requires a portrait phone screen";}
  for(unsigned i=0;i<mz_zip_reader_get_num_files(&z);i++){mz_zip_archive_file_stat st;if(!mz_zip_reader_file_stat(&z,i,&st))continue;std::string n=st.m_filename;if(n.size()<6||n.substr(n.size()-6)!=".class"||st.m_uncomp_size>2*1024*1024)continue;std::vector<unsigned char>b;if(!zipEntry(z,n.c_str(),b,2*1024*1024))continue;std::string code(b.begin(),b.end());if(code.find("com/mascotcapsule/micro3d/")!=std::string::npos)g.properties["launcher.micro3d"]="experimental";else if(g.unsupported.empty()&&code.find("javax/microedition/m3g/")!=std::string::npos)g.properties["launcher.m3g"]="experimental";}
+ if(g.crc==0x0dbd9f30u)g.properties["launcher.raycaster"]="doom2-columns-v1";
+ if(g.crc==0x2e771edcu)g.properties["launcher.raycaster"]="orcs2-columns-v1";
+ if(mz_zip_reader_locate_file(&z,"Reg/Util.class",nullptr,0)>=0&&mz_zip_reader_locate_file(&z,"RegStarter.class",nullptr,0)>=0)g.unsupported="Requires unavailable Reg/Util native library";
  mz_zip_reader_end(&z);if(g.midlets.empty()){error="No launchable MIDlet found";return false;}g.title=g.properties["MIDlet-Name"];if(g.title.empty())g.title=g.midlets[0].title;
  char id[24];snprintf(id,sizeof(id),"%08lx",(unsigned long)g.crc);g.id=id;return true;
 }
@@ -71,15 +77,18 @@ static bool resourcePatch(std::vector<unsigned char>&b){
    }c.p=end;}}}
  if(!c.ok)return false;std::vector<unsigned char>out;out.insert(out.end(),b.begin(),b.begin()+8);put2(out,next);out.insert(out.end(),b.begin()+10,b.begin()+poolEnd);out.insert(out.end(),extra.begin(),extra.end());out.insert(out.end(),b.begin()+poolEnd,b.end());b.swap(out);return true;
 }
-bool prepareGame(const GameInfo&game,const GameSettings&s,const std::string&profilePath,const std::string&dest,std::string&error){
+bool prepareGame(const GameInfo&game,const GameSettings&s,const std::string&profilePath,const std::string&dest,std::string&error,bool(*cancel)()){
+ if(cancel&&cancel()){error="Launch cancelled";return false;}
  mz_zip_archive input={},output={},profile={};bool patch=game.pop&&s.width==400&&s.height==240;
  if(!mz_zip_reader_init_file(&input,game.jar.c_str(),0)){error="Cannot open game JAR";return false;}
  if(patch&&!mz_zip_reader_init_file(&profile,profilePath.c_str(),0)){mz_zip_reader_end(&input);error="Widescreen profile missing";return false;}
  std::string temp=dest+".part";bool ok=mz_zip_writer_init_file(&output,temp.c_str(),0)!=0;uint64_t total=0;unsigned count=mz_zip_reader_get_num_files(&input);
  if(count>4096)ok=false;
- for(unsigned i=0;ok&&i<count;i++){mz_zip_archive_file_stat st;if(!mz_zip_reader_file_stat(&input,i,&st)){ok=false;break;}if(st.m_is_directory)continue;if(st.m_uncomp_size>16*1024*1024||(total+=st.m_uncomp_size)>64*1024*1024){ok=false;break;}
+ for(unsigned i=0;ok&&i<count;i++){if(cancel&&cancel()){error="Launch cancelled";ok=false;break;}mz_zip_archive_file_stat st;if(!mz_zip_reader_file_stat(&input,i,&st)){ok=false;break;}if(st.m_is_directory)continue;if(st.m_uncomp_size>16*1024*1024||(total+=st.m_uncomp_size)>64*1024*1024){ok=false;break;}
   std::string name=st.m_filename;std::vector<unsigned char>data;bool replaced=patch&&zipEntry(profile,name.c_str(),data,16*1024*1024);
-  if(!replaced){data.resize((size_t)st.m_uncomp_size);if(!mz_zip_reader_extract_to_mem(&input,i,data.data(),data.size(),0)){ok=false;break;}if(name.size()>6&&name.substr(name.size()-6)==".class"&&!resourcePatch(data)){error="Invalid or unsupported class file";ok=false;break;}}
+  bool klass=name.size()>6&&name.substr(name.size()-6)==".class";
+  if(!replaced&&!klass){if(!mz_zip_writer_add_from_zip_reader(&output,&input,i))ok=false;continue;}
+  if(!replaced){data.resize((size_t)st.m_uncomp_size);if(!mz_zip_reader_extract_to_mem(&input,i,data.data(),data.size(),0)){ok=false;break;}if(klass&&!resourcePatch(data)){error="Invalid or unsupported class file";ok=false;break;}}
   if(!mz_zip_writer_add_mem(&output,name.c_str(),data.data(),data.size(),MZ_BEST_SPEED))ok=false;
  }
  if(ok)ok=mz_zip_writer_finalize_archive(&output)!=0;mz_zip_writer_end(&output);mz_zip_reader_end(&input);if(patch)mz_zip_reader_end(&profile);
@@ -90,5 +99,5 @@ bool writeLaunchConfig(const GameInfo&g,const GameSettings&s,const std::string&s
  std::string mapping;for(int i=0;i<14;i++){if(i)mapping+=",";mapping+=std::to_string(s.bindings[i]);}props["launcher.bindings"]=mapping;
  for(auto&kv:props)if(kv.first.find_first_of("\r\n=")==std::string::npos&&kv.second.find_first_of("\r\n")==std::string::npos)fprintf(f,"%s=%s\n",kv.first.c_str(),kv.second.c_str());bool ok=!ferror(f);if(fclose(f))ok=false;if(!ok)error="Cannot save launch settings";return ok;
 }
-bool loadSettings(const std::string&p,GameSettings&s){FILE*f=fopen(p.c_str(),"r");if(!f)return false;int w,h,scale,keys,midlet;bool ok=fscanf(f,"%d %d %d %d %d",&w,&h,&scale,&keys,&midlet)==5;int hidden=0,bindings[14]={},timeout=30,stereo=3,strength=3,filter=0,schema=0;if(ok){fscanf(f,"%d",&hidden);for(int i=0;i<14;i++)if(fscanf(f,"%d",&bindings[i])!=1)break;fscanf(f,"%d",&timeout);fscanf(f,"%d %d",&stereo,&strength);fscanf(f,"%d %d",&filter,&schema);if(schema<2&&stereo==0)stereo=3;}fclose(f);if(ok&&w>=64&&w<=480&&h>=64&&h<=640&&w*h<=512*512&&scale>=0&&scale<=2&&keys>=0&&keys<=2&&midlet>=0&&midlet<64){s={w,h,scale,keys,midlet};s.hideBottom=hidden==1;s.bottomTimeout=timeout>=0&&timeout<=300?timeout:30;s.stereo=stereo>=0&&stereo<=3?stereo:3;s.filter=filter>=0&&filter<DISPLAY_FILTER_COUNT?filter:0;s.stereoStrength=strength>=1&&strength<=6?strength:3;for(int i=0;i<14;i++){int b=bindings[i];if(b==0||(b>=-7&&b<=-1)||(b>=48&&b<=57)||b==35||b==42||b==1001||b==1002)s.bindings[i]=b;}return true;}return false;}
-bool saveSettings(const std::string&p,const GameSettings&s){std::string temp=p+".new";FILE*f=fopen(temp.c_str(),"w");if(!f)return false;bool ok=fprintf(f,"%d %d %d %d %d\n",s.width,s.height,s.scale,s.keys,s.midlet)>0;if(ok){fprintf(f,"%d",s.hideBottom?1:0);for(int b:s.bindings)fprintf(f," %d",b);fprintf(f,"\n%d\n%d %d\n%d 2\n",s.bottomTimeout,s.stereo,s.stereoStrength,s.filter);if(ferror(f))ok=false;}if(fclose(f))ok=false;if(ok){remove(p.c_str());ok=rename(temp.c_str(),p.c_str())==0;}if(!ok)remove(temp.c_str());return ok;}
+bool loadSettings(const std::string&p,GameSettings&s){FILE*f=fopen(p.c_str(),"r");if(!f)return false;int w,h,scale,keys,midlet;bool ok=fscanf(f,"%d %d %d %d %d",&w,&h,&scale,&keys,&midlet)==5;int hidden=0,bindings[14]={},timeout=30,stereo=3,strength=3,filter=0,schema=0,tone=1,orientation=0;if(ok){fscanf(f,"%d",&hidden);for(int i=0;i<14;i++)if(fscanf(f,"%d",&bindings[i])!=1)break;fscanf(f,"%d",&timeout);fscanf(f,"%d %d",&stereo,&strength);fscanf(f,"%d %d",&filter,&schema);if(schema>=3)fscanf(f,"%d %d",&tone,&orientation);if(schema<2&&stereo==0)stereo=3;}fclose(f);if(ok&&w>=64&&w<=480&&h>=64&&h<=640&&w*h<=512*512&&scale>=0&&scale<=2&&keys>=0&&keys<=2&&midlet>=0&&midlet<64){s={w,h,scale,keys,midlet};s.hideBottom=hidden==1;s.bottomTimeout=timeout>=0&&timeout<=300?timeout:30;s.stereo=stereo>=0&&stereo<=3?stereo:3;s.filter=filter>=0&&filter<DISPLAY_FILTER_COUNT?filter:0;s.tone=tone>=0&&tone<=2?tone:1;s.orientation=orientation>=0&&orientation<=2?orientation:0;s.stereoStrength=strength>=1&&strength<=6?strength:3;for(int i=0;i<14;i++){int b=bindings[i];if(b==0||(b>=-7&&b<=-1)||(b>=48&&b<=57)||b==35||b==42||b==1001||b==1002)s.bindings[i]=b;}return true;}return false;}
+bool saveSettings(const std::string&p,const GameSettings&s){std::string temp=p+".new";FILE*f=fopen(temp.c_str(),"w");if(!f)return false;bool ok=fprintf(f,"%d %d %d %d %d\n",s.width,s.height,s.scale,s.keys,s.midlet)>0;if(ok){fprintf(f,"%d",s.hideBottom?1:0);for(int b:s.bindings)fprintf(f," %d",b);fprintf(f,"\n%d\n%d %d\n%d 3 %d %d\n",s.bottomTimeout,s.stereo,s.stereoStrength,s.filter,s.tone,s.orientation);if(ferror(f))ok=false;}if(fclose(f))ok=false;if(ok){remove(p.c_str());ok=rename(temp.c_str(),p.c_str())==0;}if(!ok)remove(temp.c_str());return ok;}

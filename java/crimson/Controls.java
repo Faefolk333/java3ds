@@ -1,7 +1,7 @@
 package crimson;
 /** Raw 3DS buttons to phone keys. Kept separate so movement never needs a circle gesture. */
 public final class Controls {
- private static int raw;public static final int[]bindings=new int[14];
+ public static boolean siemens;public static int phoneCode(int key){if(!siemens)return key;switch(key){case -1:return 50;case -2:return 56;case -3:return 52;case -4:return 54;case -5:return 53;case -6:return -21;case -7:return -22;default:return key;}}private static int raw;public static final int[]bindings=new int[14];
  public static boolean jumpHeld(){return GameMain.keyProfile!=2||(raw&32)!=0;}
  private static boolean climbing(int state){return state==8||state==36||state==37||state==42||state==13;}
  /** Filter the game's decoded player commands, not its menus or scripted actors. */

@@ -1,0 +1,28 @@
+STAGE 40 0
+RAM cache ready: 3 JARs, 1534615 bytes
+STAGE 41 3
+STEREO_FRAME frame=1 nonzero=0 min=0 max=0
+STEREO_FRAME frame=2 nonzero=0 min=0 max=0
+STEREO_FRAME frame=3 nonzero=0 min=0 max=0
+STEREO_FRAME frame=4 nonzero=0 min=0 max=0
+GAMECANVAS_FLUSH_PASS no_double_paint buffer_objects partial hidden_canvas same_current
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+RAM cache hits: 404
+STEREO_VISIBLE_FRAMES 0
+VM_EXIT run=0 result=0 frames=4 peak=0
+STAGE 40 0
+RAM cache ready: 3 JARs, 1534615 bytes
+STAGE 41 3
+STEREO_FRAME frame=1 nonzero=0 min=0 max=0
+STEREO_FRAME frame=2 nonzero=0 min=0 max=0
+STEREO_FRAME frame=3 nonzero=0 min=0 max=0
+STEREO_FRAME frame=4 nonzero=0 min=0 max=0
+GAMECANVAS_FLUSH_PASS no_double_paint buffer_objects partial hidden_canvas same_current
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+RAM cache hits: 404
+STEREO_VISIBLE_FRAMES 0
+VM_EXIT run=1 result=0 frames=4 peak=0

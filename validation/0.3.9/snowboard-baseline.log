@@ -1,0 +1,19 @@
+RAM cache ready: 3 JARs, 2281931 bytes
+RAM cache hits: 1707
+STAGE 40 0
+STAGE 41 3
+Java3DS: SnowboardHero 320x240
+VM_AUDIO_LOAD handle=0 bytes=2464
+VM_AUDIO_LOAD handle=1 bytes=3994
+VM_AUDIO_LOAD handle=2 bytes=4052
+VM_AUDIO_LOAD handle=3 bytes=2040
+VM_AUDIO_LOAD handle=4 bytes=2052
+VM_AUDIO_LOAD handle=5 bytes=4050
+VM_AUDIO_LOAD handle=6 bytes=2084
+STAGE 80 0
+M3G_PROFILE native_spans=256426 native_pixels=4440665 fallback_pixels=0
+STAGE 80 0
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+VM_EXIT run=0 result=0 frames=1030 peak=0

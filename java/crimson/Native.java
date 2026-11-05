@@ -23,6 +23,7 @@ public final class Native {
  public static native void stereoRegion(int[] target,int tw,int th,int[] source,int sw,int sh,int sx,int sy,int w,int h,int t,int x,int y,int cx,int cy,int cw,int ch,float[] sourceDepth,float[] destinationDepth);
  public static native void stereoLayer(int[] target,int index,int count);
  public static native void stereoM3G(int[] target,int width,int height,short[] depth,float[] destinationDepth);
+ public static native void stereoColumns(float[] destination,int width,int height,int[] distances);
  public static native void present();
  public static native int buttons();
  public static native boolean motion(int kind,int[] sample);

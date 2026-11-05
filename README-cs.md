@@ -1,24 +1,40 @@
-# Java3DS 0.3.8 — privátní alpha
+# Java3DS 0.3.9 — privátní alpha
 
-CRT má čtyři výraznější volby: Scanlines, RGB grille, Shadow mask a Color TV.
-Jsou viditelné i v tmavších barevných plochách; černá zůstává černá. Staré jemné
-filtry i Off zůstávají. Barevné masky se počítají předem do tabulek.
+Nová CIA zachovává původní aplikaci, hry, uložené pozice i nastavení na SD.
+Menu hry otevře L + R nebo tlačítko na dotykovém displeji. START + SELECT
+požádá o ukončení hry; požadavek nyní rovnou přerušuje VM, přípravu JARu,
+čekání vláken a delší zvukové operace. V PC testu prošlo i opakované zrušení
+spuštění a další start ve stejné aplikaci. Rychlost na konzoli je nutné ověřit.
 
-Zrychlilo se předání obrazu GameCanvas: hotový obraz i hloubka se kopírují přímo
-po řádcích. PC benchmark 1 000 předání: medián 147 -> 29 ms bez stereo a
-845 -> 280 ms s měřicí stereo cestou. Není to násobek FPS celé hry ani měření 3DS.
-Na New 3DS zvuk zkusí další jádro CPU (core 2); při nedostupnosti se vrátí na
-původní cestu. Old 3DS nevyžaduje toto dodatečné jádro.
+Display má Scale to fit (zachová proporce, umí zmenšit vysoký obraz), Fill screen
+a Native pixels. Před spuštěním lze zvolit Phone screen: Auto / Portrait /
+Landscape. Dodaný LOTR potřebuje Portrait, i když název souboru říká 320 × 240.
+Harem Adventures má profil Siemens 120 × 160 a upravené kódy ovládání; PC test
+se dostal do první úrovně. Přibyla základní podpora formulářových prvků a
+Siemens API. Elder Scrolls Travels a DawnStar se posunuly přes původní chyby
+načítání. Úplné dohrání a rychlost těchto her zatím nejsou ověřené.
 
-Banner zatím není potvrzený jako opravený na konzoli. Minulý billboard na
-pomocném rodiči nezastavil otáčení připojených modelů. Nový export přidává
-samostatnou korekci oběhu podle odhadovaných osmi sekund, původní pětisekundová
-animace je zachovaná. Test hotového CGFX porovnává 640 transformací s GLB.
-Při jiném časování HOME Menu nebo vlivu mikrofonu/pohybu může vzniknout drift.
-Nejde o univerzální vypnutí otáčení. Prosím ověř hlavně delší přehrávání banneru.
-Originály na ploše a vzhled modelů se nemění. Číslo verze na banneru není.
+Sound tone v menu hry: Original / Soft / Warm. Soft je výchozí, tlumí ostré
+výšky ve výsledném zvuku; ovlivňuje nyní i efekty. Original filtr vyřadí.
 
-Předchozí opravy 0.3.7:
+Micro3D má méně dělení v kreslicí smyčce: PC srovnání 10 000 trojúhelníků
+mělo shodný obraz a čas 121 -> 106 ms. Nejde o zvýšení FPS celé hry o stejné
+procento. Orcs & Elves 2 a Doom II RPG mají experimentální stereo podle
+vzdáleností stěn. Podlaha a samostatné objekty nemají přesnou hloubku.
+
+Banner používá navázání modelů z funkčního Faedrops 0.27. Odstranil jsem
+časované protiootáčení, zachoval pětisekundovou animaci a nepřidal číslo verze.
+Soubory prošly kontrolami, chování vlastní rotace v HOME Menu zatím musí
+potvrdit konzole. Originální Blender soubor na ploše zůstal zachovaný.
+
+Nejsou vyřešené všechny hry. Dodaný NFS The Run vyžaduje externí Reg/Util
+knihovnu; aplikace tuto verzi odmítne s vysvětlením. Spore Creatures je stále
+jen malý JAD bez herního JARu. Symbian emulace nebyla přidána. Další omezení
+a konkrétní testy jsou v COMPATIBILITY.md a VALIDATION.md.
+
+Předchozí funkce 0.3.8/0.3.7:
+
+
 
 GameCanvas nyní zveřejní hotový obraz bez druhého volání kreslení hry. V PC testu
 Moorhuhn funguje menu, kuřata, zaměřovač a střelba. Skryté plátno nemůže přepsat
@@ -38,7 +54,7 @@ PC test Blades 320 × 240 se zapnutou hudbou ji spustil a vytvořil zvuk.
 zkouší odhad hloubky běžných obrázků a spritů, Auto přidává hloubku modelů.
 Witcher a Soul of Darkness v testech již předávají různé hloubky. Jde o odhad,
 ne o obnovenou geometrii. Orcs & Elves II předává hotový obraz z vlastního rendereru;
-pro skutečnou hloubku jeho scény je stále potřeba zvláštní adaptér. Nově uložené
+0.3.9 přidává zvláštní adaptér vzdáleností stěn pro tuto dodanou verzi. Nově uložené
 Off zůstane zachované, starý výchozí stav Off se jednou převede na Auto.
 
 V herním menu je CRT, v 0.3.8 rozšířené o výraznější barevné profily. Jemné filtry ovlivňují jen

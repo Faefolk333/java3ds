@@ -1,4 +1,42 @@
-# Compatibility work — 0.3.8
+# Compatibility work — 0.3.9
+
+The previous device reports remain authoritative; PC exit 0 is not gameplay
+certification. This pass inspected 16 supplied game JARs and added targeted
+adapters rather than embedding an Android emulator.
+
+| Supplied game | Current evidence / remaining limitation |
+|---|---|
+| Elder Scrolls Travels | New TextField/UI APIs allow monster images, dungeon creation and progress 100 in host startup. Gameplay not certified. |
+| DawnStar | Passes prior UI allocation exception, loads Warden images; full gameplay not verified. |
+| Harem Adventures | Verified fixed 120×160 Siemens build and key codes. New host screenshots show first level. |
+| LOTR Middle-earth Defence | Decompiled width<=height check explains the mode prompt. Corrected to 240×320; host probe no longer shows landscape warning. Manual orientation also available. |
+| Stack Attack Advanced | Added missing Siemens title/Form/Command/Resource and MIDP item APIs. No longer hits prior append/setLayout errors, now reaches menu/help in a host interaction probe; playable level not certified. |
+| Orcs & Elves 2 | CRC 2e771edc: actual k.m world buffer + k.p wall distances, 320×188. Host gameplay emits stereo depth. Floor/object stereo approximate. |
+| Doom II RPG | CRC 0dbd9f30: actual j.c world buffer + j.d wall distances, 320×164. Host gameplay emits stereo depth. Profile does not cover Doom RPG I/other builds. |
+| Spore, Snowboard Hero 3D, Dirt, Gladiator 3D, NFS Hot Pursuit/Carbon, Tron | Baseline startup probes recorded. Generic renderer/preparation/wait improvements apply; playable speed is not yet established. Supplied Dirt filename is the 2D build. |
+| Resident Evil “4” | Supplied manifest identifies Resident Evil: The Missions. Baseline only reached menus; not fixed/certified. |
+| Treasure Trove 3D | 3D menu and MIDI render when using the right softkey. Reported in-game black world is not yet resolved. |
+| NFS The Run | This JAR contains RegStarter/Reg.Util and calls missing custom natives. Launcher now refuses it with an explicit unsupported-library message rather than entering the observed exception/crash path. It does not bypass registration or implement that library. |
+| Spore Creatures | Only 454-byte JAD exists; matching 687220-byte JAR is absent. Cannot be repaired by a VM change. |
+
+Cancellation is now pending even before VM initialization, has native triangle,
+MIDI-seek and AMR polls, short sleep/monitor polls, and correct ERROR versus
+EXCEPTION handling. No worker is forcibly terminated and no live VM memory is
+freed. Seven one-shot host cancels returned 0.15–0.30s after a 1s request; four
+games each completed three cancel/restart cycles in one process. Physical
+console latency and other long native operations still require testing.
+
+TextField/Form support is basic; full MIDP layout, text editing, vendor files,
+wireless messaging and other optional APIs remain incomplete. Symbian is not
+implemented. Existing emulators are implementation references:
+[AbyssME / JavaEmulator](https://github.com/EriArk/JavaEmulator),
+[J2ME-Loader](https://github.com/nikita36078/J2ME-Loader),
+[FreeJ2ME-Plus](https://github.com/TASEmulators/freej2me-plus),
+[EKA2L1](https://github.com/EKA2L1/EKA2L1).
+Android/desktop code is not a ready-to-install 3DS runtime.
+
+## Earlier reports and work (0.3.8 and before)
+
 
 The user's 0.3.3 console report: Blades 240×320 launches slowly; the 320×240
 variant crashes the system; Outland launches but is impractically slow; Worms

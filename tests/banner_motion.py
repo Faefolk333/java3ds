@@ -1,7 +1,6 @@
-"""Evaluate serialized banner TRS against the original GLB, including HOME orbit.
+"""Check Faedrops mesh-facing layout and serialized authored vertex motion.
 
-This checks a specified orbit period, not HOME Menu hardware timing. A console
-retest is still required; a guessed period cannot establish complete cancellation.
+This validates file data; HOME Menu billboard/rotation behavior needs hardware.
 """
 import argparse,bisect,json,math,struct
 from pathlib import Path
@@ -40,40 +39,57 @@ def quaternion(q):
  x,y,z,w=q;return [math.atan2(2*(w*x+y*z),1-2*(x*x+y*y)),math.asin(max(-1,min(1,2*(w*y-z*x)))),math.atan2(2*(w*z+x*y),1-2*(y*y+z*z))]
 data=b.index(b'DATA');model=dictionary(ptr(data+12))['COMMON'];skel=ptr(model+0xe0);bones=dictionary(ptr(skel+28))
 animation=dictionary(ptr(data+12+9*8))['COMMON'];assert b[animation:animation+4]==b'CANM';members=dictionary(ptr(animation+28))
-assert set(members)=={'Facing anchor','GreasePencil.001','GreasePencil.002','Text','Text.001'}
+names={'name_GreasePencil_001','name_GreasePencil_002','name_Text','name_Text_001'}
+assert set(members)==names
+assert f(animation+20)==300 and u(animation+16)==1,'Keep the authored five-second loop'
+assert not any('anchor' in n.lower() or 'marker' in n.lower() for n in bones),'No timed counter-rotation or build marker'
+for name,at in bones.items():
+ assert u(at+212)==(5 if name in names else 0),(name,'billboard must belong to each actual mesh')
+ if name in names:assert struct.unpack_from('<9f',b,at+32)==(1,1,1,0,0,0,0,0,0)
 for name,at in members.items():assert string(ptr(at+4))==name and u(at+16)==5,'Bad animation target/type'
-for at in bones.values():assert u(at+212)==0,'Non-inherited parent billboard is not a solution'
-anchor=bones['Facing anchor'];assert struct.unpack_from('<9f',b,anchor+32)==(1,1,1,0,0,0,0,0,0)
+mesh_names=[]
+for i in range(u(model+0xb4)):
+ mesh=ptr(ptr(model+0xb8)+i*4);mesh_names.append(string(ptr(mesh+112)))
+assert set(mesh_names)==names,(mesh_names,names)
+
 def transform(name,t):
  at=bones[name];base=list(struct.unpack_from('<9f',b,at+32));member=members.get(name)
  if member is not None:base=[value(member,i,t,base[i]) for i in range(9)]
  return trs(base[:3],base[3:6],base[6:])
-glb=(root/'assets/banner/banner.glb').read_bytes();json_size=struct.unpack_from('<I',glb,12)[0];g=json.loads(glb[20:20+json_size]);raw=glb[28+json_size:]
-def accessor(index):
- a=g['accessors'][index];v=g['bufferViews'][a['bufferView']];size={'SCALAR':1,'VEC3':3,'VEC4':4}[a['type']];assert a['componentType']==5126
- start=v.get('byteOffset',0)+a.get('byteOffset',0);stride=v.get('byteStride',size*4)
- return [struct.unpack_from('<'+'f'*size,raw,start+i*stride) for i in range(a['count'])]
-tracks={}
-for anim in g['animations']:
- for c in anim['channels']:
-  s=anim['samplers'][c['sampler']];tracks[c['target']['node'],c['target']['path']]=(accessor(s['input']),accessor(s['output']))
-def source(index,seconds):
- node=g['nodes'][index];parts={k:node.get(k,v) for k,v in [('scale',[1,1,1]),('rotation',[0,0,0,1]),('translation',[0,0,0])]}
- for k in parts:
-  if (index,k) in tracks:
-   times,values=tracks[index,k];j=max(0,bisect.bisect_right([t[0] for t in times],seconds+1e-6)-1);parts[k]=values[j]
- return trs(parts['scale'],quaternion(parts['rotation']),parts['translation'])
-info=json.loads((root/'assets/banner/manifest.json').read_text())['orbit_compensation'];period=info['seconds_per_turn'];total=f(animation+20);assert total==info['combined_seconds']*60
-assert abs(value(members['Facing anchor'],4,total,0)+2*math.pi*total/(period*60))<1e-4
+
+def load_glb(path):
+ glb=path.read_bytes();n=struct.unpack_from('<I',glb,12)[0];g=json.loads(glb[20:20+n]);raw=glb[28+n:]
+ def accessor(index):
+  a=g['accessors'][index];v=g['bufferViews'][a['bufferView']];width={'SCALAR':1,'VEC3':3,'VEC4':4}[a['type']];assert a['componentType']==5126
+  start=v.get('byteOffset',0)+a.get('byteOffset',0);stride=v.get('byteStride',width*4)
+  return [struct.unpack_from('<'+'f'*width,raw,start+i*stride) for i in range(a['count'])]
+ tracks={}
+ for anim in g.get('animations',[]):
+  for c in anim['channels']:
+   sampler=anim['samplers'][c['sampler']];tracks[c['target']['node'],c['target']['path']]=(accessor(sampler['input']),accessor(sampler['output']))
+ def source(index,seconds):
+  node=g['nodes'][index];parts={k:node.get(k,v) for k,v in [('scale',[1,1,1]),('rotation',[0,0,0,1]),('translation',[0,0,0])]}
+  for k in parts:
+   if (index,k) in tracks:
+    times,values=tracks[index,k];j=max(0,bisect.bisect_right([t[0] for t in times],seconds+1e-6)-1);parts[k]=values[j]
+  return trs(parts['scale'],quaternion(parts['rotation']),parts['translation'])
+ return g,accessor,source
+original,original_data,original_pose=load_glb(root/'assets/banner/banner.glb')
+prepared,prepared_data,_=load_glb(root/'assets/banner/banner-facing.glb')
+prepared_nodes={n['name']:n for n in prepared['nodes'] if 'mesh' in n}
 maximum=0;samples=0
-for tick in range(0,int(total),15):
- home=trs([1,1,1],[0,2*math.pi*tick/(period*60),0],[0,0,0]);cancel=multiply(home,transform('Facing anchor',tick))
- for i,node in enumerate(g['nodes']):
+for tick in [i*2.5 for i in range(121)]:
+ for index,node in enumerate(original['nodes']):
   if 'mesh' not in node:continue
-  name=node['name'];assert struct.unpack_from('<i',b,bones[name]+12)[0]==u(anchor+8)
-  actual=multiply(cancel,transform(name,tick));expected=source(i,(tick%300)/60)
-  error=max(abs(actual[y][x]-expected[y][x]) for y in range(4) for x in range(4));maximum=max(maximum,error);samples+=1
-assert maximum<.001,(maximum,samples)
-report={'serialized_TRS_samples':samples,'max_matrix_error':maximum,'assumed_HOME_orbit_seconds':period,'authored_loop_seconds':5,'hardware_timing_verified':False,'CGFX_bytes':len(b)}
+  name='name_'+node['name'].replace('.','_');actual=transform(name,tick);expected=original_pose(index,tick/60)
+  old=original['meshes'][node['mesh']]['primitives'];new=prepared['meshes'][prepared_nodes[name]['mesh']]['primitives']
+  for a,z in zip(old,new):
+   before=original_data(a['attributes']['POSITION']);after=prepared_data(z['attributes']['POSITION']);assert len(before)==len(after)
+   for v,w in zip(before,after):
+    av=[sum(actual[y][k]*list(w+(1,))[k] for k in range(4)) for y in range(3)]
+    ev=[sum(expected[y][k]*list(v+(1,))[k] for k in range(4)) for y in range(3)]
+    maximum=max(maximum,max(abs(a-e) for a,e in zip(av,ev)));samples+=1
+assert maximum<.015,maximum
+report={'serialized_vertex_samples':samples,'max_authored_vertex_error_scene_units':maximum,'authored_loop_seconds':5,'mesh_bound_billboard':5,'timed_counter_rotation':False,'rotation_channels_retained':4,'hardware_motion_verified':False,'CGFX_bytes':len(b)}
 if args.output:args.output.write_text(json.dumps(report,indent=2)+'\n')
 print('BANNER_MOTION_PASS',json.dumps(report))

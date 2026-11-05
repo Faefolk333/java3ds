@@ -15,6 +15,8 @@ int crimson_gc_diagnostic(void);
 int crimson_gc_completed(void);
 int crimson_gc_wait_errors(void);
 void crimson_request_stop(void);
+void crimson_reset_stop(void);
+int crimson_cancelled(void);
 void crimson_pause_game(int paused);
 int crimson_run_game(const char* boot,const char* cp,const char* mainclass);
 #ifdef __cplusplus

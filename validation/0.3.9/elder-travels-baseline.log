@@ -1,0 +1,21 @@
+RAM cache ready: 3 JARs, 1674699 bytes
+method not exist :javax/microedition/lcdui/TextField.<init>(Ljava/lang/String;Ljava/lang/String;II)V
+method not exist :javax/microedition/lcdui/TextField.getString()Ljava/lang/String;
+method not exist :javax/microedition/lcdui/ChoiceGroup.<init>(Ljava/lang/String;I)V
+method not exist :javax/microedition/lcdui/ChoiceGroup.append(Ljava/lang/String;Ljavax/microedition/lcdui/Image;)I
+method not exist :javax/microedition/lcdui/ChoiceGroup.size()I
+method not exist :javax/microedition/lcdui/ChoiceGroup.getString(I)Ljava/lang/String;
+method not exist :javax/microedition/lcdui/ChoiceGroup.getSelectedIndex()I
+method not exist :javax/microedition/lcdui/ChoiceGroup.setSelectedIndex(IZ)V
+RAM cache hits: 587
+STAGE 40 0
+STAGE 41 3
+Java3DS: The Elder Scrolls 320x240
+Did not find Pluto-Server-URL in JAR! Using default of http://localhost/essm
+User ID is NULL!
+Barfed in initSplash
+STAGE 80 0
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+VM_EXIT run=0 result=0 frames=1 peak=0

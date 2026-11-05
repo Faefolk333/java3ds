@@ -6,6 +6,7 @@
 int audioFailure,audioDspExits,audioLinearFrees;
 bool audioNewModel=true,audioDenyCore2=false;int audioLastCore,audioCore2Attempts;
 std::atomic<unsigned> audioBuffers{0},audioNonzero{0};
+extern "C" int crimson_cancelled(void){return 0;}
 int main(){
  audioFailure=1;assert(crimson_audio_init()==-1);assert(crimson_audio_load("MThd",4)<0);crimson_audio_shutdown();assert(audioDspExits==0);
  audioFailure=2;assert(crimson_audio_init()==-3);assert(audioDspExits==1);

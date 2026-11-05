@@ -12,6 +12,8 @@
 #include <cstring>
 #include "midi_engine.h"
 #include "device_3ds.h"
+#include "tone_filter.h"
+extern "C" int crimson_cancelled(void);
 static constexpr int RATE=22050,FRAMES=1024,BUFFERS=3;
 static MidiEngine* engine;
 static MidiEngine* background;
@@ -21,6 +23,8 @@ static bool themeEnabled,themeAudible;
 static uint32_t midiAudible;
 static LightLock audioLock;
 static std::atomic<bool> running{false},paused{false};
+static std::atomic<int> toneMode{1};
+extern "C" void crimson_audio_tone(int mode){toneMode.store(mode>=0&&mode<=2?mode:1);}
 static Thread audioThread;
 static int16_t* output;
 static ndspWaveBuf waves[BUFFERS];
@@ -28,6 +32,7 @@ static bool dsp;
 static int loadTheme(MidiEngine*e){FILE*f=fopen(AUDIO_THEME,"rb");if(!f)return -1;unsigned char data[16384];size_t n=fread(data,1,sizeof(data),f);int extra=fgetc(f);bool ok=!ferror(f)&&extra==EOF;fclose(f);return ok?midi_engine_load(e,data,(int)n):-1;}
 static void stream(void*){
  unsigned next=0;
+ AudioToneFilter tone;
  while(running.load()){
   ndspWaveBuf*w=&waves[next];
   if(w->status==NDSP_WBUF_FREE||w->status==NDSP_WBUF_DONE){
@@ -45,6 +50,7 @@ static void stream(void*){
    }
    LightLock_Unlock(&audioLock);
    publish_buffer:
+   tone.configure(toneMode.load(),RATE);if(paused.load())tone.reset();else tone.apply(pcm,FRAMES);
    memset(w,0,sizeof(*w));w->data_pcm16=pcm;w->nsamples=FRAMES;
    if(R_FAILED(DSP_FlushDataCache(pcm,FRAMES*sizeof(*pcm)))){fprintf(stderr,"AUDIO cache failure\n");running.store(false);break;}
    ndspChnWaveBufAdd(0,w);next=(next+1)%BUFFERS;
@@ -60,6 +66,7 @@ extern "C" int crimson_audio_init(){
  if(!engine){fprintf(stderr,"AUDIO soundfont unavailable\n");crimson_audio_shutdown();return -2;}
  effects=midi_engine_clone(engine);if(!effects){crimson_audio_shutdown();return -2;}
  background=midi_engine_clone(engine);theme=background?loadTheme(background):-1;
+ midi_engine_set_cancel(engine,crimson_cancelled);midi_engine_set_cancel(effects,crimson_cancelled);midi_engine_set_cancel(background,crimson_cancelled);
  if(theme<0){fprintf(stderr,"AUDIO background unavailable\n");crimson_audio_shutdown();return -2;}
  themeEnabled=themeAudible=false;midiAudible=0;
  midi_engine_control(background,theme,MIDI_VOLUME,80);

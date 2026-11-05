@@ -9,6 +9,8 @@ typedef struct MidiEngine MidiEngine;
 enum { MIDI_START=1,MIDI_STOP,MIDI_CLOSE,MIDI_SEEK,MIDI_VOLUME,MIDI_STATE,MIDI_POSITION,MIDI_KIND,MIDI_DURATION };
 MidiEngine* midi_engine_open(const char* soundfont,int sample_rate);
 MidiEngine* midi_engine_clone(MidiEngine* source);
+/* Optional cooperative stop callback for long seeks/AMR decoding. */
+void midi_engine_set_cancel(MidiEngine* engine,int (*cancelled)(void));
 int midi_engine_current(MidiEngine* engine);
 int midi_engine_bank_loaded(MidiEngine* engine);
 void midi_engine_close(MidiEngine* engine);

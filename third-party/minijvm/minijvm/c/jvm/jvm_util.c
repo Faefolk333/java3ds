@@ -864,11 +864,12 @@ s32 jthread_lock(MemoryBlock *mb, Runtime *runtime) {
     s64 waitTime = currentTimeMillis();
 #endif
     struct timespec t;
-    t.tv_nsec = 5 * NANO_2_MILLS_SCALE;
-    t.tv_sec = 0;
 
     //can pause when lock
-    while (mtx_timedlock(&jtl->mutex_lock, &t) != thrd_success) {
+    for (;;) {
+        // C11 timed mutexes take an absolute deadline, not a duration.
+        s64 until=currentTimeMillis()+5;t.tv_sec=until/1000;t.tv_nsec=(until%1000)*1000000;
+        if(mtx_timedlock(&jtl->mutex_lock,&t)==thrd_success)break;
         if(runtime->thrd_info->is_stop || __atomic_load_n(&runtime->jvm->crimson_stop,__ATOMIC_RELAXED)){runtime->thrd_info->is_stop=1;return -1;}
         // 检查是否有被挂起的线程持有该锁（仅JDWP模式）
         if (IS_JDWP_ENABLED(runtime)) {
@@ -1093,7 +1094,7 @@ s32 jthread_wakeup(Runtime *runtime) {
 }
 
 s32 jthread_sleep(Runtime *runtime, s64 ms) {
-    static const s64 PERIOD = 500;
+    static const s64 PERIOD = 20;
     jthread_block_enter(runtime);
     u8 thread_status = runtime->thrd_info->thread_status;
     runtime->thrd_info->thread_status = THREAD_STATUS_SLEEPING;
@@ -1692,6 +1693,9 @@ s32 jstring_2_utf8(Instance *jstr, Utf8String *utf8, Runtime *runtime) {
 //===============================    例外  ==================================
 
 Instance *exception_create(s32 exception_type, Runtime *runtime) {
+#ifndef __3DS__
+    if(getenv("JAVA_TRACE_EXCEPTIONS")){jvm_printf("EXCEPTION_CREATE %s\n",STRS_CLASS_EXCEPTION[exception_type]);print_runtime_stack(runtime);}
+#endif
 #if _JVM_DEBUG_LOG_LEVEL > 5
     jvm_printf("create exception : %s\n", STRS_CLASS_EXCEPTION[exception_type]);
 #endif
@@ -1707,6 +1711,9 @@ Instance *exception_create(s32 exception_type, Runtime *runtime) {
 }
 
 Instance *exception_create_str(s32 exception_type, Runtime *runtime, c8 const *errmsg) {
+#ifndef __3DS__
+    if(getenv("JAVA_TRACE_EXCEPTIONS")){jvm_printf("EXCEPTION_CREATE %s: %s\n",STRS_CLASS_EXCEPTION[exception_type],errmsg?errmsg:"");print_runtime_stack(runtime);}
+#endif
 #if _JVM_DEBUG_LOG_LEVEL > 5
     jvm_printf("create exception : %s\n", STRS_CLASS_EXCEPTION[exception_type]);
 #endif

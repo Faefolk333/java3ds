@@ -95,6 +95,7 @@ static s32 stereoRegion(Runtime*r,JClass*c){
 
 static s32 stereoLayer(Runtime*r,JClass*c){(void)c;if(!arr(r,0))crimson_stereo_set_layer(arg(r,1),arg(r,2));return 0;}
 static s32 stereoM3G(Runtime*r,JClass*c){(void)c;int w=arg(r,1),h=arg(r,2);uint32_t*d=target(r,w,h);Instance*depth=arr(r,3);Instance*shadow=arr(r,4);float*z=crimson_stereo_target(d);if(crimson_stereo_mode()&&shadow&&shadow->arr_length>=w*h)z=(float*)shadow->arr_body;if(z&&depth&&depth->arr_length>=w*h){int16_t*src=(int16_t*)depth->arr_body;for(int i=0;i<w*h;i++)z[i]=src[i]>=0&&src[i]<32767?1.f+(32767-src[i])/32767.f:0;crimson_stereo_models_drawn();}return 0;}
+static s32 stereoColumns(Runtime*r,JClass*c){(void)c;Instance*dst=arr(r,0),*src=arr(r,3);int w=arg(r,1),h=arg(r,2);if(!(crimson_stereo_mode()&1)||!dst||!src||w<1||h<1||w>512||h>512||(int64_t)w*h>dst->arr_length||w>src->arr_length)return 0;float*z=(float*)dst->arr_body;int32_t*d=(int32_t*)src->arr_body;for(int x=0;x<w;x++){float depth=d[x]>0&&d[x]<INT32_MAX?1.f/d[x]:0;for(int y=0;y<h;y++)z[y*w+x]=depth;}return 0;}
 
 #include "arc.h"
 #include "software3d.h"
@@ -141,6 +142,7 @@ static java_native_method methods[]={
  {"crimson/Native","stereoRegion","([III[IIIIIIIIIIIIII[F[F)V",stereoRegion},
  {"crimson/Native","stereoLayer","([III)V",stereoLayer},
  {"crimson/Native","stereoM3G","([III[S[F)V",stereoM3G},
+ {"crimson/Native","stereoColumns","([FII[I)V",stereoColumns},
  {"crimson/Native","microTriangle","([III[F[F[IIIIIIIII)V",microTriangle},
  {"crimson/Native","microMeshDepth","([III[F[F[I[[I[IIIIII[F)V",microMesh},
  {"crimson/Native","rgb","([III[IIIIIIIZIIII[F[F)V",rgb},
@@ -163,8 +165,10 @@ static unsigned pop_sample_lock,pop_sample_disabled;
 extern const char* crimson_launch_config(void);
 static void*oom_reserve;
 void crimson_release_oom_reserve(void){free(oom_reserve);oom_reserve=NULL;}
-static MiniJVM*active_vm;static unsigned vm_lock;static int pause_requested;
-void crimson_request_stop(void){while(__atomic_exchange_n(&vm_lock,1,__ATOMIC_ACQUIRE)){}if(active_vm)__atomic_store_n(&active_vm->crimson_stop,1,__ATOMIC_RELEASE);__atomic_store_n(&vm_lock,0,__ATOMIC_RELEASE);}
+static MiniJVM*active_vm;static unsigned vm_lock;static int pause_requested,cancel_requested;
+int crimson_cancelled(void){return __atomic_load_n(&cancel_requested,__ATOMIC_ACQUIRE);}
+void crimson_reset_stop(void){__atomic_store_n(&cancel_requested,0,__ATOMIC_RELEASE);}
+void crimson_request_stop(void){__atomic_store_n(&cancel_requested,1,__ATOMIC_RELEASE);while(__atomic_exchange_n(&vm_lock,1,__ATOMIC_ACQUIRE)){}if(active_vm){__atomic_store_n(&active_vm->crimson_paused,0,__ATOMIC_RELEASE);__atomic_store_n(&active_vm->crimson_stop,1,__ATOMIC_RELEASE);}__atomic_store_n(&vm_lock,0,__ATOMIC_RELEASE);}
 void crimson_pause_game(int paused){while(__atomic_exchange_n(&vm_lock,1,__ATOMIC_ACQUIRE)){}__atomic_store_n(&pause_requested,paused,__ATOMIC_RELEASE);if(active_vm)__atomic_store_n(&active_vm->crimson_paused,paused,__ATOMIC_RELEASE);__atomic_store_n(&vm_lock,0,__ATOMIC_RELEASE);}
 static void active_set(MiniJVM*j){while(__atomic_exchange_n(&vm_lock,1,__ATOMIC_ACQUIRE)){}active_vm=j;if(j)__atomic_store_n(&j->crimson_paused,__atomic_load_n(&pause_requested,__ATOMIC_RELAXED),__ATOMIC_RELEASE);__atomic_store_n(&vm_lock,0,__ATOMIC_RELEASE);}
 int crimson_run_game(const char*boot,const char*cp,const char*mainclass){
@@ -197,6 +201,7 @@ int crimson_run_game(const char*boot,const char*cp,const char*mainclass){
  sys_properties_set_c(j,"pop.saves",saveDir?saveDir:"work/vm-saves");
 #endif
  active_set(j);
+ if(crimson_cancelled())__atomic_store_n(&j->crimson_stop,1,__ATOMIC_RELEASE);
  if(!result){native_reg_lib(j,methods,sizeof(methods)/sizeof(methods[0]));ArrayList*a=arraylist_create(0);result=call_main(j,(char*)mainclass,a);crimson_stage(70,result);arraylist_destroy(a);}
  while(__atomic_exchange_n(&pop_sample_lock,1,__ATOMIC_ACQUIRE)){}
  __atomic_store_n(&pop_sample_disabled,1,__ATOMIC_RELAXED);

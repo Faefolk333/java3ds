@@ -1,4 +1,4 @@
-# Java3DS — private alpha 0.3.8
+# Java3DS — private alpha 0.3.9
 
 Java ME / JAR / JAD launcher for Nintendo 3DS, with a shared MIDI synthesizer.
 Extract the installation ZIP to the root of the SD card, replacing
@@ -7,32 +7,58 @@ with Java Pocket 3DS. Games, settings and saves are retained. Start **Java3DS**
 from Homebrew Launcher; add your JAR/JAD files under `/3ds/java-3ds/games/`.
 A JAD also needs its matching local JAR. Original game JARs are not bundled.
 
-## Changes in 0.3.8
+## Changes in 0.3.9
 
-Four stronger CRT profiles join the two soft filters: Scanlines, RGB grille,
-Shadow mask and Color TV. A phosphor brightness curve lifts dark colors before
-applying the beam/color mask, while keeping black black. Masks remain fixed to
-physical pixels and match between eyes. Lookup tables avoid per-pixel filter
-arithmetic during presentation. Settings retain all seven choices including Off.
+Cancellation requests now reach the VM immediately, including requests during
+launch preparation. Interrupted native calls no longer treat an error status
+as a Java exception reference. Forced exits skip user shutdown hooks and poll
+sleep/monitor waits more frequently. MIDI seeks and AMR decoding also poll an
+optional stop callback. Four real games each survived three cancelled VM starts
+in one host process; seven one-shot cancellation probes returned about 0.15–0.30
+seconds after the request. Console cancellation timing still needs verification.
+Unchanged ZIP resources are copied in compressed form during preparation.
 
-GameCanvas publishes opaque buffer rows and depth directly, avoiding alpha
-blending followed by another metadata pass. A host benchmark of 1,000 flushes
-has medians 147 -> 29 ms with stereo off and 845 -> 280 ms with Auto test
-instrumentation. This measures buffer transfer, not whole-game or device FPS.
-On New 3DS, the mixer first tries application core 2, with the required CIA
-permission enabled. Unsupported loaders and Old 3DS fall back to the original
-core. Actual device speed and audio headroom still need testing.
+Display offers **Scale to fit**, **Fill screen** and **Native pixels**. Fit can
+shrink portrait games to the display height without distorting proportions.
+Phone screen orientation is separately Auto / Portrait / Landscape before launch.
+The supplied LOTR Middle-earth Defence JAR requires portrait despite its filename.
+The supplied Harem Adventures is a Siemens 120×160 build; its legacy key codes
+are translated, and the host probe now reaches the first level.
 
-**Banner remains a hardware-test candidate.** The 0.3.7 billboard was on a
-parent without a mesh; rigid mesh draw billboarding does not inherit that flag.
-A new ordinary root channel counters the observed approximately eight-second
-HOME orbit while the four original five-second motion tracks repeat unchanged.
-The combined cycle is 40 seconds, with no duplicated source keys. Serialized
-TRS evaluation cancels an assumed eight-second orbit and matches GLB source
-matrices within 0.000043 over 640 samples. It does not prove the console orbit
-has exactly this timing. Microphone/motion-driven changes can cause drift;
-this is not a universal orbit-disable switch. No badge or new artistic motion
-was added. Console playback remains necessary before calling the banner fixed.
+TextField, ChoiceGroup, Spacer, ImageItem and basic Siemens UI adapters extend
+compatibility. High-level forms/lists dispatch softkey commands and show their
+labels. These are partial MIDP/vendor adapters, not the complete phone platform.
+Elder Scrolls Travels completes dungeon loading and DawnStar passes its former
+UI-allocation failure in host startup tests; complete gameplay is not certified.
+
+The game menu has Original / Soft / Warm audio tone. Soft is the default and
+reduces high-frequency output. It currently filters the final mono mix, including
+effects. Original bypasses it. MIDI/PCM mixing remains independent.
+
+Micro3D shares perspective reciprocals across the pixel loop. A 10,000-triangle
+comparison found identical output over 40,960,000 pixels, 121 -> 106 ms host CPU
+time. This is the renderer loop, not whole-game/device FPS. The supplied Orcs &
+Elves 2 and Doom II RPG have opt-in wall-column stereo adapters. Both real JARs
+produce depth in host scene probes. Floor/object depth remains approximate;
+other JAR variants are not automatically assigned these profiles.
+
+The banner follows the working **Faedrops 0.27** mesh-facing layout: initial
+poses are baked into geometry, each actual mesh has YAxial facing, and relative
+authored TRS channels keep the five-second loop. The failed timed eight-second
+counter-rotation has been removed. There is no version badge. Binary dictionaries,
+mesh bindings and serialized authored vertex motion pass; physical HOME Menu
+playback and its handling of authored rotation remain unverified.
+
+Known gaps remain: Spore Creatures only has a JAD on this PC, the supplied NFS
+The Run depends on unavailable Reg/Util natives, and several slow/black-world
+3D titles still need further work. See COMPATIBILITY.md and VALIDATION.md.
+
+## Changes in 0.3.8 (historical)
+
+Added stronger CRT Scanlines, RGB grille, Shadow mask and Color TV alongside
+Soft lines / Soft grid. Improved opaque GameCanvas transfer and used New 3DS
+application core 2 for audio with an Old/loader fallback. The timed banner
+compensation attempted in that version failed the console test and is replaced.
 
 ## Changes in 0.3.7 (historical)
 

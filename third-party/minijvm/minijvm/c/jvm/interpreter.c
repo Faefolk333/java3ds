@@ -4148,10 +4148,14 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime) {
             if (method->is_sync)_synchronized_lock_method(method, r);
             ret = r->thrd_info->is_stop ? RUNTIME_STATUS_ERROR : method->native_func(r, clazz);
             if (method->is_sync)_synchronized_unlock_method(method, r);
-            if (ret) {
+            if (ret == RUNTIME_STATUS_EXCEPTION) {
                 r->ins = pop_ref(stack);
                 localvar_dispose(r);
                 push_ref(stack, r->ins);
+            } else if (ret) {
+                // Cancellation/error has no exception object on the operand
+                // stack. Never reinterpret an argument as a managed reference.
+                localvar_dispose(r);
             } else {
                 switch (method->return_slots) {
                     case 0: {

@@ -1041,7 +1041,7 @@ s32 jvm_init(MiniJVM *jvm, c8 *p_bootclasspath, c8 *p_classpath) {
 void jvm_destroy(MiniJVM *jvm) {
     Runtime *parent = runtime_create(jvm);
 
-    while (parent && jvm->shutdown_hook->length) {
+    while (parent && jvm->shutdown_hook->length && !__atomic_load_n(&jvm->crimson_stop,__ATOMIC_ACQUIRE)) {
         Instance *inst = arraylist_get_value(jvm->shutdown_hook, 0);
         arraylist_remove_at(jvm->shutdown_hook, 0);
 

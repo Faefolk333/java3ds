@@ -1,0 +1,25 @@
+STAGE 40 0
+RAM cache ready: 3 JARs, 2541907 bytes
+STAGE 41 3
+Java3DS: Gladiator 320x240
+VM_AUDIO_LOAD handle=0 bytes=358
+VM_AUDIO_LOAD handle=1 bytes=870
+VM_AUDIO_LOAD handle=2 bytes=582
+VM_AUDIO_LOAD handle=3 bytes=710
+VM_AUDIO_LOAD handle=4 bytes=5158
+VM_AUDIO_LOAD handle=5 bytes=1382
+VM_AUDIO_LOAD handle=6 bytes=646
+VM_AUDIO_LOAD handle=7 bytes=934
+VM_AUDIO_LOAD handle=8 bytes=742
+VM_AUDIO_LOAD handle=9 bytes=678
+VM_AUDIO_LOAD handle=10 bytes=582
+VM_AUDIO_LOAD handle=11 bytes=998
+VM_AUDIO_LOAD handle=12 bytes=230
+VM_AUDIO_LOAD handle=13 bytes=230
+VM_AUDIO_LOAD handle=14 bytes=5542
+VM_AUDIO_LOAD handle=15 bytes=2790
+STAGE 70 2
+STAGE 71 2
+STAGE 72 2
+RAM cache hits: 1030
+VM_EXIT run=0 result=2 frames=41 peak=0

@@ -1,0 +1,11 @@
+RAM cache ready: 3 JARs, 2091232 bytes
+method not exist :Reg/SMS.send(Ljava/lang/String;Ljava/lang/String;)Z
+method not exist :Reg/Util.decrypt(Ljava/lang/String;I)Ljava/lang/String;
+method not exist :Reg/Util.generateKeyOfType(ILjava/lang/String;J)Ljava/lang/String;
+method not exist :Reg/Util.generateRandomKey(I)J
+[SIGNAL]jvm sig:11  errno: 0 , No error
+[SIGNAL]dump all threads runtime stacks:
+[Thread #0 status=1 suspend=0 blocking=0] java/io/PrintStream.write:176 | java/io/Writer.write:134 | java/io/PrintStream.write:228 | java/io/PrintStream.print:358 | java/lang/Throwable.printStackTrace:306 | Reg/Registrator.CheckMidletsSecutiry:-1 | RegStarter.start:-1 | com/ea/nfs10/MonkeyApp.<init>:-1 | java/lang/Class.newInstance:-1 | crimson/GameMain.main:24 |
+STAGE 40 0
+STAGE 41 3
+Java3DS: Need for Speed The Run 320x240

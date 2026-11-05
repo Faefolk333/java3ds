@@ -1,0 +1,37 @@
+[
+  {
+    "game": "spore",
+    "exit": 2,
+    "wall_ms": 1172
+  },
+  {
+    "game": "snowboard",
+    "exit": 2,
+    "wall_ms": 1186
+  },
+  {
+    "game": "harem",
+    "exit": 2,
+    "wall_ms": 1152
+  },
+  {
+    "game": "gladiator",
+    "exit": 2,
+    "wall_ms": 1295
+  },
+  {
+    "game": "treasure",
+    "exit": 2,
+    "wall_ms": 1223
+  },
+  {
+    "game": "lotr",
+    "exit": 2,
+    "wall_ms": 1207
+  },
+  {
+    "game": "dawnstar",
+    "exit": 2,
+    "wall_ms": 1180
+  }
+]

@@ -1,0 +1,53 @@
+RAM cache ready: 3 JARs, 1714761 bytes
+method not exist :com/siemens/mp/game/Light.setLightOn()V
+method not exist :com/siemens/mp/game/Light.setLightOff()V
+method not exist :com/siemens/mp/lcdui/Form.<init>(Ljava/lang/String;)V
+method not exist :javax/microedition/lcdui/TextField.<init>(Ljava/lang/String;Ljava/lang/String;II)V
+method not exist :com/siemens/mp/resource/Resource.getCenterKeyIcon(I)C
+method not exist :com/siemens/mp/lcdui/Command.<init>(Ljava/lang/String;Ljava/lang/String;IIC)V
+method not exist :com/siemens/mp/lcdui/Image.createImageFromFile(Ljava/lang/String;Z)Ljavax/microedition/lcdui/Image;
+method not exist :javax/microedition/lcdui/ImageItem.<init>(Ljava/lang/String;Ljavax/microedition/lcdui/Image;ILjava/lang/String;)V
+method not exist :javax/microedition/lcdui/Spacer.<init>(II)V
+method not exist :com/siemens/mp/io/file/FileConnection.exists()Z
+method not exist :com/siemens/mp/io/file/FileConnection.list(Ljava/lang/String;Z)Ljava/util/Enumeration;
+method not exist :com/siemens/mp/io/file/FileConnection.openInputStream()Ljava/io/InputStream;
+method not exist :com/siemens/mp/lcdui/Form.setKeyDispatcher(Lcom/siemens/mp/lcdui/KeyDispatcher;)V
+method not exist :com/siemens/mp/lcdui/Displayable.setHeadlineIcon(Ljavax/microedition/lcdui/Displayable;Ljavax/microedition/lcdui/Image;)V
+method not exist :javax/microedition/lcdui/TextField.getString()Ljava/lang/String;
+method not exist :com/siemens/mp/io/file/FileConnection.delete()V
+method not exist :com/siemens/mp/io/File.buildPath(Ljava/lang/String;)Ljava/lang/String;
+method not exist :com/siemens/mp/io/file/FileConnection.mkdir()V
+method not exist :com/siemens/mp/io/file/FileConnection.create()V
+method not exist :com/siemens/mp/io/file/FileConnection.openOutputStream()Ljava/io/OutputStream;
+method not exist :com/siemens/mp/lcdui/Image.writeImageToFile(Ljavax/microedition/lcdui/Image;Ljava/lang/String;I)V
+method not exist :com/siemens/mp/wireless/messaging/MultipartMessage.setSubject(Ljava/lang/String;)V
+method not exist :com/siemens/mp/wireless/messaging/MultipartMessage.getSubject()Ljava/lang/String;
+method not exist :com/siemens/mp/wireless/messaging/MultipartMessage.addAddress(Ljava/lang/String;Ljava/lang/String;)Z
+method not exist :com/siemens/mp/wireless/messaging/MessagePart.<init>([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+method not exist :com/siemens/mp/io/file/FileConnection.exists()Z
+method not exist :com/siemens/mp/io/file/FileConnection.openInputStream()Ljava/io/InputStream;
+method not exist :com/siemens/mp/wireless/messaging/MessagePart.<init>(Ljava/io/InputStream;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+method not exist :com/siemens/mp/wireless/messaging/MultipartMessage.addMessagePart(Lcom/siemens/mp/wireless/messaging/MessagePart;)V
+method not exist :com/siemens/ct/wma/util/PermissionManager.getInstance()Lcom/siemens/ct/wma/util/PermissionManager;
+method not exist :com/siemens/ct/wma/util/PermissionManager.initialize(Ljavax/microedition/midlet/MIDlet;)V
+Exception threw: java/lang/NoSuchMethodException: setLightOn
+    at StackAttackIso.<init>(StackAttackIso.java:-1)
+
+RAM cache hits: 686
+STAGE 40 0
+STAGE 41 3
+Java3DS: StackAttackAdvanced 320x240
+java.lang.NullPointerException:
+    at StackAttackIso.D(StackAttackIso:-1)
+    at StackAttackIso.E(StackAttackIso:-1)
+    at StackAttackIso.startApp(StackAttackIso:-1)
+    at javax.microedition.midlet.MIDlet.launch(MIDlet.java:4)
+    at crimson.GameMain$1.run(GameMain.java:25)
+    at java.lang.Thread.run(Thread.java:322)
+STAGE 90 1
+STAGE 80 0
+STAGE 80 0
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+VM_EXIT run=0 result=0 frames=0 peak=0

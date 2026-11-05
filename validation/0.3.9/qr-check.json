@@ -1,0 +1,9 @@
+{
+  "QR_decodes_to_expected_local_URL": true,
+  "GET_sha256": "1b1559d9918a5a4528c1d5867545d9597067d3aed69ec345d1676d38a45638b6",
+  "bytes": 19616704,
+  "HEAD": true,
+  "Range": true,
+  "unknown_path_404": true,
+  "server_port": 8772
+}

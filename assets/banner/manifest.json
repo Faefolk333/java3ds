@@ -1,7 +1,7 @@
 {
-  "cgfx_bytes": 264216,
+  "cgfx_bytes": 276536,
   "binary_checks": {
-    "cgfx_bytes": 264216,
+    "cgfx_bytes": 276536,
     "dictionaries": [
       {
         "offset": 148,
@@ -17,46 +17,46 @@
       },
       {
         "offset": 900,
-        "entries": 6
+        "entries": 7
       },
       {
-        "offset": 1352,
+        "offset": 1416,
         "entries": 48
       },
       {
-        "offset": 4948,
+        "offset": 5012,
         "entries": 4
       },
       {
-        "offset": 11012,
-        "entries": 6
+        "offset": 11076,
+        "entries": 7
       },
       {
-        "offset": 12480,
+        "offset": 12784,
         "entries": 1
       },
       {
-        "offset": 12556,
+        "offset": 12860,
         "entries": 4
       },
       {
-        "offset": 12728,
+        "offset": 13032,
         "entries": 1
       },
       {
-        "offset": 13080,
+        "offset": 13384,
         "entries": 1
       },
       {
-        "offset": 13204,
+        "offset": 13508,
         "entries": 1
       },
       {
-        "offset": 13288,
-        "entries": 5
+        "offset": 13592,
+        "entries": 4
       }
     ],
-    "lookups_passed": 86
+    "lookups_passed": 87
   },
   "audio": {
     "channels": 2,
@@ -68,20 +68,42 @@
   "animations": [
     {
       "name": "COMMON",
-      "frames_at_60_hz": 2400,
+      "frames_at_60_hz": 300.0,
       "looping": true,
-      "members": 5
+      "members": 4
     }
   ],
-  "orbit_compensation": {
-    "seconds_per_turn": 8,
-    "source_seconds": 5,
-    "combined_seconds": 40.0,
-    "axis": "Y",
-    "radians": -31.41592653589793,
-    "billboard": false,
-    "hardware_verified": false
+  "facing_preparation": {
+    "method": "Faedrops 0.27 mesh-bound YAxial; baked base TRS; relative authored TRS",
+    "meshes": [
+      {
+        "authored": "GreasePencil.001",
+        "facing": "name_GreasePencil_001",
+        "samples": 121
+      },
+      {
+        "authored": "GreasePencil.002",
+        "facing": "name_GreasePencil_002",
+        "samples": 121
+      },
+      {
+        "authored": "Text",
+        "facing": "name_Text",
+        "samples": 121
+      },
+      {
+        "authored": "Text.001",
+        "facing": "name_Text_001",
+        "samples": 121
+      }
+    ],
+    "max_relative_TRS_error": 0.0036129301954450632,
+    "rotation_channels_retained": 4,
+    "timed_counter_rotation": false
   },
+  "root_billboard": 0,
+  "mesh_billboard": 5,
+  "hardware_verified": false,
   "geometry": {
     "fps": 24.0,
     "frames": 120,
@@ -119,6 +141,6 @@
     "source_camera_max_delta": 0,
     "camera_motion_detected": false,
     "camera_space_baked": true,
-    "facing_anchor": "ordinary unanimated source parent; CGFX adds orbit compensation"
+    "facing_anchor": "Faedrops 0.27 mesh-bound YAxial; initial pose baked into vertices; relative authored motion"
   }
 }

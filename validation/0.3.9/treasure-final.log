@@ -1,0 +1,11 @@
+STAGE 40 0
+RAM cache ready: 3 JARs, 1940076 bytes
+STAGE 41 3
+Java3DS: TreasureTrove3D 320x240
+M3G_PROFILE native_spans=3638022 native_pixels=56290234 fallback_pixels=0
+STAGE 80 0
+STAGE 70 0
+STAGE 71 0
+STAGE 72 0
+RAM cache hits: 845
+VM_EXIT run=0 result=0 frames=819 peak=0
