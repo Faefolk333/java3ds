@@ -1,0 +1,10 @@
+{
+  "new_loader_hardware_test": "pending",
+  "baseline_cpu_hardware": "0.3.11 owner New 3DS PASS",
+  "host_negative_E32_cases": 418,
+  "shadowkey_imports_linked": 324,
+  "shadowkey_imports_total": 415,
+  "first_missing_kernel_svc": "0x6c Heap",
+  "symbian_gameplay": false,
+  "private_SD_payload_excluded_from_release": true
+}

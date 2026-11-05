@@ -1,4 +1,12 @@
-# Compatibility work — 0.3.11
+# Compatibility work — 0.3.12
+
+This update extends the separate Symbian diagnostic; no new Java game
+compatibility claim is made. It also fixes probe extraction in the main app.
+Uncompressed EKA1 programs/ROMs can be loaded and probed, but there is no phone
+OS, SIS installation or gameplay. The supplied Shadowkey reaches its first
+missing kernel Heap service on PC; see SYMBIAN.md and validation/0.3.12.
+
+## Earlier 0.3.11 work
 
 The console-only Unix/1900 epoch mismatch in VM mutex/condition deadlines is
 fixed. A Nintendo-clock host build reaches Gladiator combat, LOTR gameplay,

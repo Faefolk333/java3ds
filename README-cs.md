@@ -1,4 +1,22 @@
-# Java3DS 0.3.11 — testovací sestavení
+# Java3DS 0.3.12 — testovací sestavení
+
+Verze 0.3.12 rozšiřuje samostatný Symbian Probe o načítání nativních EKA1
+programů a ROM pro N-Gage. Kontroluje adresy, importy, relokace a oddělení paměti
+kódu, dat a zásobníku. Na PC načte Shadowkey a připojí 324 ze 415 importů k
+opravdovému kódu dodaného ROMu. Běh se zastaví na dosud chybějící službě Heap
+jádra Symbianu. **Hru ani telefonní systém zatím na 3DS nespouští.**
+
+Po aktualizaci otevřete jednou hlavní Java3DS; opravena je chyba, kvůli které
+0.3.11 vytvořila jen prázdnou složku testu. Potom spusťte Java3DS Symbian CPU
+Probe v Homebrew Launcheru. Vlastní testy zapisuje do symbian-probe.log.
+Tlačítko Y navíc ověří data v /3ds/java-3ds/symbian (test.app, SYM.ROM,
+rom-libs/*.DLL) a zapíše /3ds/java-3ds/symbian-loader.log. Soukromý testovací
+ZIP z vašich souborů patří pouze na vaši SD; není součástí veřejného vydání.
+Nové načítání potřebuje ověřit na konzoli. Samotný CPU test 0.3.11 už na vašem
+New 3DS prošel bez chyby.
+
+Předchozí opravy verze 0.3.11:
+
 
 Opraven čas VM na konzoli: osGetTime počítá od roku 1900, systémové časové
 limity vláken a Java od roku 1970. Dříve se tak krátká čekání mohla změnit v
@@ -12,7 +30,7 @@ V instalačním ZIPu je navíc samostatný Java3DS Symbian CPU Probe pro Homebre
 Launcher. Portuje CPU interpret EKA2L1 na ARM11, kontroluje instrukce a měří
 rychlost. Spodní displej předvádí páčku/směry jako dotykový joystick a A/B jako
 dotyková akční tlačítka. Výsledky ukládá do /3ds/java-3ds/symbian-probe.log.
-Hlavní aplikace tento test také rozbalí na SD při startu po aktualizaci CIA.
+Od 0.3.12 hlavní aplikace tento test rozbalí na SD při startu po aktualizaci CIA.
 **Tento první test ještě nespouští Symbian ani SIS hry.** Zbývá port systému,
 načítání aplikací, grafiky, zvuku a propojení s hlavní aplikací. Viz SYMBIAN.md.
 

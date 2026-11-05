@@ -1,0 +1,4 @@
+E32_PROBE parsed=1 relocated=1 returned=1 imports=1 svc=1 protected_memory=1 bounded=1 cancelled=1
+EKA1_ROM_PASS original_fixture direct_ordinal_link real_guest_call exact_ROM_pairing bounds budget mismatch readonly unsupported_EKA2
+E32_LOADER_PASS negative_cases=418 bounds UID imports relocations memory_budget rollback RX_RW NX cancel no_fabricated_system_services
+SYMBIAN_CPU error: Failure writing 32bit value at 0x{:X}

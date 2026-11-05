@@ -1,3 +1,33 @@
+# Java3DS 0.3.12 validation — 2026-11-05
+
+New EKA1 loader/ROM execution on physical hardware is not yet verified. The
+owner's New 3DS CPU-only 0.3.11 pass remains evidence for its small fixtures only.
+Java timing/lifecycle hardware retests remain outstanding.
+
+* Original E32 fixture executes through the real EKA2L1 CPU: checked UID,
+  non-default load bases, text/data/inferred relocations, BSS zeroing, return
+  value and data write; exact missing import and SVC stops; RX/NX protection,
+  instruction limit and cancellation. 418 malformed/truncated variants reject.
+* Original ROM fixture links an ordinal to real guest code and returns 77.
+  Tests cover memory limits, wrong/truncated/unsupported device images, exact
+  descriptor pairing, UID mismatch, read-only ROM and cancelled I/O rollback.
+* Supplied Shadowkey links 324/415 imports from its matching RH-29 ROM. Its
+  DLL entry returns; first export enters EUSER then stops at SVC 0x6c (Heap).
+  Other supplied EKA1 image results are retained; tr.app rejects because its
+  declared code range exceeds the file size.
+  These calls are diagnostics, not an application launch or playability claim.
+* The optional SD report uses the same image_probe.cpp on host and ARM.
+  The owner's private data ZIP was unpacked locally and exercised through that
+  path. It contains their firmware/game and is never a public release asset.
+* JAR/3DSX/SMDH installer regression covers actual embedded files, replacement,
+  identical copies and rejection preserving previous destination data.
+* devkitARM builds both the separate probe and main CIA/3DSX. Final CIA is title
+  000400000F3A3D00, version 60 / 0.3.12. CTRTool content hashes and extracted
+  RomFS/banner/icon/audio PCM comparisons pass; the three expected unsigned
+  signature failures remain. Embedded-asset and banner-format checks pass.
+
+## Previous validation history
+
 # Java3DS 0.3.11 validation — 2026-11-05
 
 Physical Java game/lifecycle validation remains required. Current evidence is in

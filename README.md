@@ -1,4 +1,4 @@
-# Java3DS — test build 0.3.11
+# Java3DS — test build 0.3.12
 
 Java ME / JAR / JAD launcher for Nintendo 3DS, with a shared MIDI synthesizer.
 Extract the installation ZIP to the root of the SD card, replacing
@@ -7,7 +7,32 @@ with Java Pocket 3DS. Games, settings and saves are retained. Start **Java3DS**
 from Homebrew Launcher; add your JAR/JAD files under `/3ds/java-3ds/games/`.
 A JAD also needs its matching local JAR. Original game JARs are not bundled.
 
-## Changes in 0.3.11
+## Changes in 0.3.12
+
+Fix automatic standalone-probe extraction: validate 3DSX and SMDH assets using
+their own formats instead of rejecting them as non-JAR files. Opening the
+updated main app installs the probe into Homebrew Launcher.
+
+Extend the separate Symbian probe with a bounded ARM EKA1 E32 loader: checked
+UIDs, code/data/BSS, relative exports, imports, relocations, sparse 24 MiB guest
+memory, RX code and RW/non-executable data/stack. Add an uncompressed EKA1 ROM
+mount with exact matching DLL descriptors and direct ordinal linking. Missing
+imports, SVCs, bad accesses, cancellation and instruction budgets stop with a
+specific result. They do not return fabricated system-service success.
+
+The CPU foundation passed its small hardware checks on the owner's New 3DS in
+0.3.11. New E32/ROM integration is host-tested and needs a console test. With the
+owner's Shadowkey/QD image, 324/415 imports link to real ROM code; the application
+factory reaches EKA1 SVC 0x6c (Heap), which is not implemented yet. **This is
+not phone OS boot, playable Symbian support or SIS installation.**
+
+In the probe, **Y** diagnoses optional owner-supplied files under
+`/3ds/java-3ds/symbian/`: `test.app`, `SYM.ROM` and matching `rom-libs/*.DLL`
+headers. It saves `/3ds/java-3ds/symbian-loader.log`. No ROM/game is bundled or
+downloaded. Local `tools/prepare_symbian_test.py` can prepare a private SD ZIP
+from the owner's files; never upload that ZIP. Details: SYMBIAN.md.
+
+## Earlier changes in 0.3.11
 
 Fix the console VM clock epoch. libctru osGetTime starts in 1900; Java and
 pthread CLOCK_REALTIME deadlines start in 1970. Passing the raw console time
@@ -26,8 +51,8 @@ preserved. This is a timing fix, not certification of every game/save state.
 
 Initial Symbian implementation is a **separate CPU/input probe**, included in
 the SD installation ZIP. Run Java3DS Symbian CPU Probe from Homebrew Launcher;
-the CIA/3DSX launcher also copies this tool to SD during startup, so a CIA
-Wi-Fi update provides it without a separate SD copy.
+the published 0.3.11 needs a manual standalone 3DSX copy because of its installer
+format bug. Automatic extraction is fixed in 0.3.12.
 The probe saves `/3ds/java-3ds/symbian-probe.log`. It ports EKA2L1 dyncom to ARM11,
 uses an 8 MiB cache, checks ARM/Thumb/VFP/context/exclusives and previews physical
 controls mapped to a virtual touchscreen. **It does not boot a phone OS or run

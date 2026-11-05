@@ -1,7 +1,45 @@
-# Symbian implementation — CPU/input foundation, no game runtime yet
+# Symbian implementation — CPU/EKA1 loader foundation, no game runtime yet
 
 The main Java3DS app executes Java ME bytecode. It does not yet execute Symbian
 SIS/SISX/APP programs. The inventory in validation/0.3.10 was metadata-only.
+
+## EKA1 E32/ROM stage (0.3.12)
+
+The standalone probe now loads uncompressed ARM EKA1 E32 images, validates
+checked UIDs and all parsed ranges/counts, maps code RX and data/BSS RW, applies
+text/data/inferred relocations and handles EKA1 code-relative exports. Guest
+addresses use checked region lookups with a 24 MiB budget, not host pointers.
+The initial loader limits files to 8 MiB, imports/exports to 8192 each and
+relocations to 131072, bounding metadata as well as mapped memory.
+Calls have bounded instruction slices and cooperative cancellation. Unsupported
+imports/SVCs report their exact identity; memory violations stop inside the guest.
+
+An uncompressed EKA1 SYM.ROM (up to 20 MiB, base 0x50000000) can be streamed into
+guest RX memory. A ROM DLL's first 100 bytes must match the corresponding bytes
+in the mounted ROM, including its UID. Its requested exports are checked before
+IAT changes. This avoids combining mismatched device dumps. ROM reads pump the
+platform callback every 64 KiB. EKA2, compressed E32/ROM and SIS installation are
+not supported in this stage.
+
+Host evidence: supplied Shadowkey has 1,051,076 bytes of code, 415 imports and
+10,104 relocations. Its 18,284,544-byte RH-29 ROM resolves 324 imports from 18
+libraries; GAMECOMMS and SIMKIN remain unresolved. DLL entry returns, while its
+first export enters real EUSER code and stops on EKA1 SVC 0x6c (Heap). Upstream
+svc.cpp maps that SVC to the current thread's heap allocator. No allocator,
+thread/kernel services or gameplay is provided yet. The new loader/ROM path
+needs a hardware test; 0.3.11's hardware pass covered only the small CPU fixture.
+
+For the optional SD diagnostic, put test.app, SYM.ROM and matching 100-byte ROM
+DLL descriptors under /3ds/java-3ds/symbian/rom-libs. The two main files belong
+in /3ds/java-3ds/symbian itself. Press Y in the separate probe; collect
+/3ds/java-3ds/symbian-loader.log. tools/prepare_symbian_test.py prepares this
+private SD ZIP from owner-supplied paths. Firmware/game inputs are never staged,
+packaged with Java3DS, or uploaded. Test fixtures in source are original code.
+
+Host reproduction: py tools/build_symbian_loader.py. ARM build:
+py tools/build_symbian_probe.py. The CPU library remains separate from the Java
+process. Remaining work is the actual EKA1 kernel/thread/heap environment,
+recursive game DLL loading, services/graphics/audio and later EKA2/SIS support.
 
 ## First implemented component (0.3.11)
 
@@ -35,7 +73,7 @@ implemented or certified. The mapper is not connected to a running Symbian game.
 
 The probe runs only original small instruction fixtures; no phone OS, game or
 firmware is embedded. There is no SIS launcher pretending to execute games.
-Remaining work includes EKA1/EKA2 kernel and services, memory model and ROM/E32
+Remaining work includes EKA1/EKA2 kernel and services, completion of the memory/ROM/E32
 loaders, package installation, filesystem, fonts, graphics/audio and main-app
 integration. First measure the CPU component on Old/New hardware before choosing
 the system memory/cache budgets. Source/licensing: third-party/eka2l1-cpu/README.md.

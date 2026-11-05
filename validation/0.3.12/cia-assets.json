@@ -1,0 +1,80 @@
+{
+  "romfs_files_equal": [
+    "audio/gm.sf2",
+    "audio/pop-theme.mid",
+    "certs/github-roots.pem",
+    "demo/LauncherCheck.jar",
+    "java/midp.jar",
+    "java/minijvm_rt.jar",
+    "probe/java3ds-symbian-probe.3dsx",
+    "probe/java3ds-symbian-probe.smdh",
+    "profiles/pop-classic.zip",
+    "ui/achievement.wav",
+    "ui/confirm.wav",
+    "ui/navigation.wav"
+  ],
+  "smdh_equal": true,
+  "banner_equal": true,
+  "packed_cgfx": {
+    "cgfx_bytes": 276536,
+    "dictionaries": [
+      {
+        "offset": 148,
+        "entries": 1
+      },
+      {
+        "offset": 420,
+        "entries": 3
+      },
+      {
+        "offset": 532,
+        "entries": 5
+      },
+      {
+        "offset": 900,
+        "entries": 7
+      },
+      {
+        "offset": 1416,
+        "entries": 48
+      },
+      {
+        "offset": 5012,
+        "entries": 4
+      },
+      {
+        "offset": 11076,
+        "entries": 7
+      },
+      {
+        "offset": 12784,
+        "entries": 1
+      },
+      {
+        "offset": 12860,
+        "entries": 4
+      },
+      {
+        "offset": 13032,
+        "entries": 1
+      },
+      {
+        "offset": 13384,
+        "entries": 1
+      },
+      {
+        "offset": 13508,
+        "entries": 1
+      },
+      {
+        "offset": 13592,
+        "entries": 4
+      }
+    ],
+    "lookups_passed": 87
+  },
+  "cwav_original_pcm_equal": true,
+  "cwav_sample_rate": 32000,
+  "cwav_frames": 59077,
+  "cia_sha256": "c3d167499d248b9bf3900804cf911b925aa0acbd2cece0c11dea3c4758418343"
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "file": "Elder Scrolls Travels, The - Shadowkey (USA, Europe) (En,Fr,De,Es,It) (26.10.2004)/system/apps/6r51/6r51.app",
+    "exit": 0,
+    "output": "E32_VALID uid3=101fd3f6 code=1051076 data=0 bss=0 stack=8192 heap_min=4096 heap_max=1048576 imports=415 relocations=10104\nE32_MAPPED code=12000000 data=02000000 entry=12000000 bytes=1062596 exports=1\nE32_CALL entry=12000000 result=returned r0=00000000 pc=6fff0004 instructions=4 import=#0 svc=007fffff fault=00000000 access=0\nE32_CALL entry=1202841c result=unimplemented import r0=0000022c pc=6f00095c instructions=7 import=EUSER[100039e5].DLL#1582 svc=0070012b fault=00000000 access=0\n",
+    "stderr": ""
+  },
+  {
+    "file": "Tomb Raider Starring Lara Croft (USA, Europe) (En,Fr,De,Es,It) (v1.0)/system/apps/tombraider/gsbapp.app",
+    "exit": 0,
+    "output": "E32_VALID uid3=101fbf94 code=728 data=0 bss=0 stack=32768 heap_min=4096 heap_max=1048576 imports=9 relocations=12\nE32_MAPPED code=12000000 data=02000000 entry=12000000 bytes=33576 exports=1\nE32_CALL entry=12000000 result=returned r0=00000000 pc=6fff0004 instructions=4 import=#0 svc=007fffff fault=00000000 access=0\nE32_CALL entry=1200000c result=unimplemented import r0=70007de8 pc=6f000044 instructions=9 import=EUSER[100039e5].DLL#1283 svc=00700008 fault=00000000 access=0\n",
+    "stderr": ""
+  },
+  {
+    "file": "Tomb Raider Starring Lara Croft (USA, Europe) (En,Fr,De,Es,It) (v1.0)/system/apps/tombraider/tombraider.app",
+    "exit": 0,
+    "output": "E32_VALID uid3=101fbf9d code=728 data=0 bss=0 stack=32768 heap_min=4096 heap_max=1048576 imports=9 relocations=12\nE32_MAPPED code=12000000 data=02000000 entry=12000000 bytes=33576 exports=1\nE32_CALL entry=12000000 result=returned r0=00000000 pc=6fff0004 instructions=4 import=#0 svc=007fffff fault=00000000 access=0\nE32_CALL entry=1200000c result=unimplemented import r0=70007de8 pc=6f000044 instructions=9 import=EUSER[100039e5].DLL#1283 svc=00700008 fault=00000000 access=0\n",
+    "stderr": ""
+  },
+  {
+    "file": "Tomb Raider Starring Lara Croft (USA, Europe) (En,Fr,De,Es,It) (v1.0)/system/programs/airplayserver.exe",
+    "exit": 0,
+    "output": "E32_VALID uid3=10005b7c code=712 data=0 bss=0 stack=32768 heap_min=4096 heap_max=1048576 imports=6 relocations=11\nE32_MAPPED code=12000000 data=02000000 entry=12000000 bytes=33536 exports=0\nE32_CALL entry=12000000 result=unimplemented import r0=70007dd8 pc=6f00002c instructions=19 import=EUSER[100039e5].DLL#1283 svc=00700005 fault=00000000 access=0\n",
+    "stderr": ""
+  },
+  {
+    "file": "Tomb Raider Starring Lara Croft (USA, Europe) (En,Fr,De,Es,It) (v1.0)/system/programs/relauncher.exe",
+    "exit": 0,
+    "output": "E32_VALID uid3=00000000 code=1016 data=0 bss=0 stack=8192 heap_min=4096 heap_max=1048576 imports=18 relocations=23\nE32_MAPPED code=12000000 data=02000000 entry=12000000 bytes=9360 exports=0\nE32_CALL entry=12000000 result=unimplemented import r0=00000000 pc=6f00005c instructions=16 import=EUSER[100039e5].DLL#746 svc=0070000b fault=00000000 access=0\n",
+    "stderr": ""
+  },
+  {
+    "file": "Tomb Raider Starring Lara Croft (USA, Europe) (En,Fr,De,Es,It) (v1.0)/system/apps/tr/tr.app",
+    "exit": 2,
+    "output": "E32_REJECT E32 code/text range is invalid\n",
+    "stderr": ""
+  }
+]
