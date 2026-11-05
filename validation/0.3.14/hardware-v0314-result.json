@@ -1,0 +1,19 @@
+{
+  "version": "0.3.14",
+  "device": "owner New 3DS",
+  "CPU_and_original_E32_fixture": "all pass",
+  "complete_ROM_read_and_link": "pass",
+  "guest_bytes": 19347140,
+  "imports_resolved": 324,
+  "imports_total": 415,
+  "unresolved_libraries": [
+    "GAMECOMMS",
+    "SIMKIN"
+  ],
+  "DLL_entry": "returned",
+  "application_factory": "stopped at missing EKA1 Heap SVC 0x6c",
+  "whole_diagnostic_ms": 3542,
+  "gameplay": false,
+  "probe_log_sha256": "c68972157c2d89edd71fb3976aed8c103f72dce2965cf004e53c366cedb05692",
+  "loader_log_sha256": "b89efd3b569bad9009659bba5f34a7ec6d15249b78f509ea9ba56401868a157b"
+}

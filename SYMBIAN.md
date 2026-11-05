@@ -3,6 +3,26 @@
 The main Java3DS app executes Java ME bytecode. It does not yet execute Symbian
 SIS/SISX/APP programs. The inventory in validation/0.3.10 was metadata-only.
 
+## Full ROM/link path confirmed on New 3DS — 2026-11-05
+
+The owner supplied complete 0.3.14 logs. All CPU/E32 fixture flags pass, and
+the real Shadowkey test validates its image, maps the full RH-29 ROM and links
+324/415 imports. Guest mappings total 19,347,140 bytes. The DLL entry returns;
+the application factory reaches EUSER and stops at EKA1 SVC 0x6c (Heap), with
+no recorded guest memory fault. The whole diagnostic completes in 3542 ms;
+that is not a game FPS benchmark or the isolated ROM-read duration.
+Evidence: validation/0.3.14/device-v0314-*.log and hardware-v0314-result.json.
+GAMECOMMS and SIMKIN remain unresolved; they are not supplied ROM descriptors.
+This confirms the loader/ROM/CPU path, not a phone OS or playable game.
+
+Next kernel work must initialize the EKA1 thread allocator before application
+creation. Pinned upstream kernel/libmanager.cpp::build_eka1_thread_bootstrap_code
+calls EUSER ordinal 166 (ChunkHeap) with min/max/grow parameters, then ordinal
+1127 (HeapSwitch) before DLL thread-attach entry points. kernel/svc.cpp::heap
+returns the current thread-local allocator pointer. This requires the matching
+thread/chunk/handle environment and EKA1 SVC return convention, plus subsequent
+game-DLL loading and services. No implementation of those is claimed here.
+
 ## Confirmed startup/E32 checks and loading progress (0.3.14)
 
 The owner supplied 0.3.13 New 3DS logs: startup and every CPU/E32 fixture check

@@ -1,5 +1,12 @@
 # Java3DS 0.3.14 validation — 2026-11-05
 
+Subsequent hardware result: complete 0.3.14 logs from the owner's New 3DS pass
+all CPU/E32 fixture checks and the full Shadowkey/RH-29 ROM/link diagnostic.
+324/415 imports resolve, 19,347,140 guest bytes are mapped, DLL entry returns,
+and the factory stops at missing EKA1 Heap SVC 0x6c without a guest memory fault.
+The whole diagnostic takes 3542 ms. GAMECOMMS/SIMKIN, kernel initialization and
+gameplay remain incomplete. Evidence: device-v0314 logs and result JSON below.
+
 The owner's 0.3.13 New 3DS result confirms startup plus all CPU and E32 fixture
 checks. Shadowkey validation/mapping passed; the owner cancelled its ROM read
 using START. Full ROM/linking/gameplay is not a hardware pass.
