@@ -1,4 +1,11 @@
-# Compatibility work — 0.3.14
+# Compatibility work — 0.3.15
+
+The separate Symbian runtime has an initial single-thread EPOC6 executive.
+On PC the supplied Shadowkey now creates its application object using native
+RHeap code. New kernel/heap behavior needs a device test. No phone GUI, playable
+game, EKA2/SIS or Java compatibility change is claimed; see SYMBIAN.md.
+
+## Earlier 0.3.14 work
 
 Hardware 0.3.13 startup and CPU/E32 fixture checks pass. Real Shadowkey E32
 validation/mapping pass; the owner cancelled ROM loading with START, so full

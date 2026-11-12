@@ -1,3 +1,30 @@
+# Java3DS 0.3.15 validation — 2026-11-12
+
+New EPOC6 executive/native heap bootstrap requires console validation. Previous
+0.3.14 hardware logs prove the loader/ROM path, not these new services.
+
+* Original kernel fixture passes chunk commit/grow/shrink/zeroing, close/stale
+  handles and address reuse, recursive mutex/semaphore/request semantics, heap
+  context, real ARM/Thumb SVC-to-LR return and explicit scheduler-required stop.
+* Negative checks cover descriptor capacity, invalid addresses/status outputs,
+  exhausted handle table, memory budget failure, unsupported calls and atomic
+  wrap. Previous 418 malformed/truncated E32 cases and cancellation checks pass.
+* With the owner's full private RH-29 dataset, native ChunkHeap/HeapSwitch create
+  and select RHeap. Shadowkey's factory returns 0x20000080, mapped vtable
+  0x120fd9bc, rather than stopping at SVC 0x6c. No phone OS or gameplay is run.
+  A further 512 native factory calls allocate distinct, non-overlapping objects
+  with the same mapped vtable and exercise native RHeap growth beyond initial
+  committed pages. Guest reservations total 20,395,716 bytes.
+* Firmware/game inputs remain outside Git/public packages. All added instruction
+  fixtures in source are original project code.
+* devkitARM builds the new kernel/probe and main CIA/3DSX. All new probe objects
+  target ARMv6K; no DMB/DSB/ISB instructions remain in the linked probe. Startup
+  heap-wrapper linkage passes for all three ELFs. Final CIA version 63 / 0.3.15
+  has verified content hashes with three expected unsigned signature failures;
+  extracted RomFS/banner/icon/audio PCM match their inputs.
+
+## Previous validation history
+
 # Java3DS 0.3.14 validation — 2026-11-05
 
 Subsequent hardware result: complete 0.3.14 logs from the owner's New 3DS pass

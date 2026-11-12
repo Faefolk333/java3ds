@@ -1,0 +1,7 @@
+E32_PROBE parsed=1 relocated=1 returned=1 imports=1 svc=1 protected_memory=1 bounded=1 cancelled=1
+KERNEL_PROBE chunks=1 handles=1 sync=1 heap=1 abi=1 thumb=1
+KERNEL_NEGATIVE_PASS descriptor_capacity invalid_memory stale_handles table_exhaustion no_memory unsupported_calls atomic_wrap
+IMAGE_CANCEL_PASS transient_cancel_latched ROM_rollback no_guest_call_after_cancel monotonic_progress
+EKA1_ROM_PASS original_fixture direct_ordinal_link real_guest_call exact_ROM_pairing bounds budget mismatch readonly unsupported_EKA2
+E32_LOADER_PASS negative_cases=418 bounds UID imports relocations memory_budget rollback RX_RW NX cancel no_fabricated_system_services
+SYMBIAN_CPU error: Failure writing 32bit value at 0x{:X}

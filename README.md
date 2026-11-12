@@ -1,4 +1,4 @@
-# Java3DS — test build 0.3.14
+# Java3DS — test build 0.3.15
 
 Java ME / JAR / JAD launcher for Nintendo 3DS, with a shared MIDI synthesizer.
 Extract the installation ZIP to the root of the SD card, replacing
@@ -7,7 +7,29 @@ with Java Pocket 3DS. Games, settings and saves are retained. Start **Java3DS**
 from Homebrew Launcher; add your JAR/JAD files under `/3ds/java-3ds/games/`.
 A JAD also needs its matching local JAR. Original game JARs are not bundled.
 
-## Changes in 0.3.14
+## Changes in 0.3.15
+
+Add the first single-thread EPOC6 executive model to the separate Symbian probe:
+HAL page size, anonymous normal chunks with committed-page checks, per-thread
+heap selection, bounded handles, request completions, recursive mutexes,
+semaphores and serial locked increment/decrement. Blocking calls stop with a
+scheduler-required result. Unsupported functions remain explicit stops/errors.
+
+Use EUSER's real ChunkHeap/HeapSwitch code from the supplied matching ROM to
+create/select RHeap before calling the application's factory. On the PC,
+Shadowkey now returns an application object with a mapped virtual table instead
+of stopping on Heap SVC 0x6c. The new kernel and bootstrap need console validation.
+Original CPU tests cover ARM/Thumb SVC return via LR, chunks, stale handles,
+synchronization and heap context. No firmware or game is bundled.
+
+Update the main app, reopen it once, then run Symbian Probe 0.3.15 -> Y with the
+same private SD data. Kernel check results go into symbian-probe.log; the heap
+bootstrap and application-object result go into symbian-loader.log.
+**There is still no phone OS boot, game window, SIS installation, graphics/audio
+services, full scheduler or complete Symbian game support.** Java behavior is
+unchanged. Details: SYMBIAN.md.
+
+## Earlier changes in 0.3.14
 
 The owner's New 3DS logs confirm the 0.3.13 startup fix and all CPU/E32 fixture
 checks, including relocation, guarded memory, instruction limits and cancellation.

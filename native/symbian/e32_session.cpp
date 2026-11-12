@@ -1,5 +1,6 @@
 #include "e32_session.h"
 #include "rom_image.h"
+#include "eka1_kernel.h"
 #include <cpu/dyncom/arm_dyncom.h>
 #include <cpu/12l1r/exclusive_monitor.h>
 #include <algorithm>
@@ -10,6 +11,7 @@ constexpr std::uint32_t returnSvc=0x7fffff,importSvc=0x700000;
 }
 struct E32Session::Impl {
  AddressSpace memory;
+ Eka1Kernel kernel{memory};bool kernelEnabled=false;
  eka2l1::arm::r12l1::exclusive_monitor monitor{1};
  eka2l1::arm::dyncom_core cpu{&monitor,12};
  LoadedE32 image;
@@ -17,6 +19,7 @@ struct E32Session::Impl {
  ExecutionResult result;
  std::uint32_t stackSize=0;
  bool loaded=false;
+ bool heapAttempted=false;std::uint32_t heapMin=0,heapMax=0;
  void fault(std::uint32_t address,unsigned access){
   if(result.reason==StopReason::Running){result.reason=StopReason::MemoryFault;result.address=address;result.access=access;}
   cpu.stop();
@@ -35,11 +38,22 @@ struct E32Session::Impl {
   cpu.system_call_handler=[this](std::uint32_t svc){
    if(result.reason!=StopReason::Running){cpu.stop();return;}
    auto pc=cpu.get_pc();result.systemCall=svc;
+   for(unsigned n=0;n<4;n++)result.arguments[n]=cpu.get_reg(n);
    if(pc==returnBase+4&&svc==returnSvc)result.reason=StopReason::Returned;
    else if(pc>=importBase+4&&pc<importBase+image.imports.size()*8&&
     (pc-importBase-4)%8==0&&svc==importSvc+(pc-importBase-4)/8){
     const auto&i=image.imports[(pc-importBase-4)/8];result.reason=StopReason::ImportRequired;result.library=i.library;result.ordinal=i.ordinal;
-   }else result.reason=StopReason::SystemCallRequired;
+   }else{
+    if(kernelEnabled){
+     auto handled=kernel.dispatch(svc,result.arguments);
+     if(handled.kind==KernelResult::Kind::Returned){
+      cpu.set_reg(0,handled.value);auto lr=cpu.get_lr();cpu.set_cpsr((cpu.get_cpsr()&~0x20u)|(lr&1?0x20:0));cpu.set_pc(lr&~1u);return;
+     }
+     if(handled.kind==KernelResult::Kind::Fault){fault(handled.address,handled.access);return;}
+     if(handled.kind==KernelResult::Kind::Blocked){result.reason=StopReason::ThreadBlocked;cpu.stop();return;}
+    }
+    result.reason=StopReason::SystemCallRequired;
+   }
    cpu.stop();
   };
  }
@@ -49,6 +63,7 @@ const char*stopName(StopReason r){switch(r){
  case StopReason::ImportRequired:return "unimplemented import";case StopReason::SystemCallRequired:return "unimplemented system call";
  case StopReason::MemoryFault:return "guest memory fault";case StopReason::BudgetExhausted:return "instruction budget reached";
  case StopReason::Cancelled:return "cancelled";default:return "invalid entry point";
+ case StopReason::ThreadBlocked:return "thread blocked (scheduler required)";
 }}
 E32Session::E32Session():impl(new Impl){}
 E32Session::~E32Session()=default;
@@ -57,6 +72,7 @@ bool E32Session::load(const E32Image&image,std::uint32_t codeBase,std::uint32_t 
  if(impl->loaded||impl->memory.used()){error="Use a fresh session for each E32 image";return false;}
  auto&p=*impl;
  if(!image.load(p.memory,codeBase,dataBase,p.image,error))return false;
+ p.heapMin=image.header().heapMin;p.heapMax=image.header().heapMax;
  p.stackSize=std::max<std::uint32_t>(8192,image.header().stack);
  if(!p.memory.map(stackBase,p.stackSize,Read|Write)||!p.memory.map(returnBase,8,Read|Execute)||
   (!p.image.imports.empty()&&!p.memory.map(importBase,p.image.imports.size()*8,Read|Execute))){error="Guest stack/import region mapping failed";return false;}
@@ -69,6 +85,21 @@ bool E32Session::load(const E32Image&image,std::uint32_t codeBase,std::uint32_t 
 }
 const LoadedE32&E32Session::module()const{return impl->image;}
 AddressSpace&E32Session::memory(){return impl->memory;}
+void E32Session::enableEka1Kernel(){impl->kernelEnabled=true;}
+HeapStartResult E32Session::initializeHeap(const char*descriptor,TaskControl*control){
+ auto&p=*impl;HeapStartResult result;result.create.reason=StopReason::InvalidEntry;result.switchHeap.reason=StopReason::InvalidEntry;
+ if(!p.loaded||p.heapAttempted){result.error="Heap bootstrap requires a fresh loaded session";return result;}
+ p.heapAttempted=true;std::uint32_t create=0,switchHeap=0;
+ if(!romExport(descriptor,0x100039e5,166,create,result.error)||!romExport(descriptor,0x100039e5,1127,switchHeap,result.error))return result;
+ p.kernelEnabled=true;if(control)control->report("Creating EKA1 heap");
+ result.create=callArgs(create,{0,p.heapMin,p.heapMax,4096},100000,control);
+ if(result.create.reason!=StopReason::Returned||!result.create.r0){result.error="Native ChunkHeap did not return an allocator";return result;}
+ result.address=result.create.r0;
+ if(!p.memory.permits(result.address,64,Read|Write)){result.error="Native heap allocator is outside committed guest RAM";return result;}
+ result.switchHeap=call(switchHeap,result.address,100000,control);
+ if(result.switchHeap.reason!=StopReason::Returned||p.kernel.heap()!=result.address){result.error="Native HeapSwitch did not select the allocator";return result;}
+ result.ready=true;return result;
+}
 bool E32Session::mountRom(const char*path,std::string&error,TaskControl*control){return impl->rom.mount(impl->memory,path,error,control);}
 bool E32Session::linkRomLibrary(const std::string&importName,const char*descriptor,std::size_t&resolved,std::string&error){
  resolved=0;std::string filename;std::uint32_t uid=0;
@@ -87,11 +118,20 @@ bool E32Session::linkRomLibrary(const std::string&importName,const char*descript
  impl->cpu.clear_instruction_cache();impl->cpu.flush_tlb();return true;
 }
 ExecutionResult E32Session::call(std::uint32_t entry,std::uint32_t argument,std::uint64_t budget,TaskControl*control){
+ return callArgs(entry,{argument,0,0,0},budget,control);
+}
+bool E32Session::romExport(const char*descriptor,std::uint32_t uid,std::uint32_t ordinal,std::uint32_t&target,std::string&error){
+ RomLibrary library;if(!impl->rom.library(impl->memory,descriptor,library,error))return false;
+ if(library.uid3!=uid||!ordinal||ordinal>library.exports.size()){error="ROM export UID/ordinal mismatch";return false;}
+ auto address=library.exports[ordinal-1];if(!impl->memory.permits(address&~1u,address&1?2:4,Read|Execute)){error="ROM export is not executable";return false;}
+ target=address;return true;
+}
+ExecutionResult E32Session::callArgs(std::uint32_t entry,const std::array<std::uint32_t,4>&arguments,std::uint64_t budget,TaskControl*control){
  auto&p=*impl;p.result={};
  if(!p.loaded||!p.memory.permits(entry&~1u,entry&1?2:4,Read|Execute)||(!(entry&1)&&(entry&3))){p.result.reason=StopReason::InvalidEntry;return p.result;}
  p.cpu.clear_instruction_cache();p.cpu.flush_tlb();p.monitor.clear_exclusive();
  for(unsigned r=0;r<16;r++)p.cpu.set_reg(r,0);
- p.cpu.set_reg(0,argument);p.cpu.set_sp((stackBase+p.stackSize)&~7u);p.cpu.set_lr(returnBase);
+ for(unsigned r=0;r<4;r++)p.cpu.set_reg(r,arguments[r]);p.cpu.set_sp((stackBase+p.stackSize)&~7u);p.cpu.set_lr(returnBase);
  p.cpu.set_cpsr(entry&1?0x30:0x10);p.cpu.set_pc(entry&~1u);
  while(p.result.reason==StopReason::Running&&p.result.instructions<budget){
   if(control&&!control->checkpoint()){p.result.reason=StopReason::Cancelled;break;}

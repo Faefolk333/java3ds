@@ -7,6 +7,7 @@
 #include "loader_probe.h"
 #include "image_probe.h"
 #include "version.h"
+#include "kernel_probe.h"
 #include "../font8x8.h"
 u32 __stacksize__=256*1024;
 u32 __ctru_linear_heap_size=2*1024*1024;
@@ -35,13 +36,17 @@ int main(){
  gfxFlushBuffers();
  auto r=symbianCpuProbe(poll);if(!alive){gfxExit();return 0;}
  printf("\nTesting EKA1 loader and guarded memory...\n");auto loader=symbianLoaderProbe();
+ printf("Testing EPOC6 executive...\n");auto kernel=symbianKernelProbe();
  if(!poll()){gfxExit();return 0;}bool newModel=false;APT_CheckNew3DS(&newModel);consoleClear();
  printf("JAVA3DS // SYMBIAN PROBE " SYMBIAN_PROBE_VERSION "\n\n%s\nARM: %s  Thumb: %s\nExclusive: %s  VFP: %s\nContext: %s  Budget: %s\nFaults: %u  Cache: 8 MiB\n\n%llu instructions / %llu us\nCPU-only: %.2f M instr/s\n\nEKA1 loader: %s  Relocations: %s\nE32 call: %s  Import stop: %s\nSVC stop: %s  Memory guards: %s\nBudget: %s  Cancel: %s\n\nNo phone OS or SIS games yet.\nY: test supplied EKA1 image on SD\nPad / Circle: virtual joystick\nA / B: virtual action buttons\nTouch: direct pointer\nX: portrait / landscape\nSTART: exit\n",newModel?"New 3DS":"Old 3DS",status(r.arm),status(r.thumb),status(r.exclusive),status(r.vfp),status(r.context),status(r.budget),r.faults,(unsigned long long)r.benchmarkInstructions,(unsigned long long)r.benchmarkMicros,r.benchmarkMicros?double(r.benchmarkInstructions)/r.benchmarkMicros:0,status(loader.parsed),status(loader.relocated),status(loader.returned),status(loader.imports),status(loader.systemCall),status(loader.protectedMemory),status(loader.bounded),status(loader.cancelled));
  mkdir("/3ds",0777);mkdir("/3ds/java-3ds",0777);FILE*log=fopen("/3ds/java-3ds/symbian-probe.log","w");if(log){fprintf(log,"Symbian CPU probe " SYMBIAN_PROBE_VERSION "; no OS/game execution\nnew_model=%d arm=%d thumb=%d exclusive=%d vfp=%d context=%d bounded_slice=%d faults=%u cache_bytes=8388608 instructions=%llu cpu_us=%llu\n",newModel,r.arm,r.thumb,r.exclusive,r.vfp,r.context,r.budget,r.faults,(unsigned long long)r.benchmarkInstructions,(unsigned long long)r.benchmarkMicros);fprintf(log,"loader_parsed=%d relocated=%d returned=%d import_stop=%d svc_stop=%d memory_guards=%d bounded=%d cancelled=%d\n",loader.parsed,loader.relocated,loader.returned,loader.imports,loader.systemCall,loader.protectedMemory,loader.bounded,loader.cancelled);fclose(log);}
  symbian::TouchProfile profile;symbian::TouchMapper mapper(profile);int pointerX=0,pointerY=0;bool pointer=false;unsigned events=0;
+ printf("Kernel chunks/handles: %s / %s\nSync/heap/ABI/Thumb: %s / %s / %s / %s\n",status(kernel.chunks),status(kernel.handles),status(kernel.sync),status(kernel.heap),status(kernel.abi),status(kernel.thumb));
+ log=fopen("/3ds/java-3ds/symbian-probe.log","a");if(log){fprintf(log,"kernel_chunks=%d handles=%d sync=%d heap=%d abi=%d thumb_return=%d\n",kernel.chunks,kernel.handles,kernel.sync,kernel.heap,kernel.abi,kernel.thumb);fclose(log);}
  while(aptMainLoop()){
   hidScanInput();u32 held=hidKeysHeld(),down=hidKeysDown();if(down&KEY_START)break;
   if(down&KEY_Y){
+   if(!r.passed()||!loader.passed()||!kernel.passed()){printf("\nSelf-check failed; SD test unavailable.\n");gfxFlushBuffers();continue;}
    mapper.cancel();pointer=false;imageCancelled=false;cancelSource="none";diagnosticStarted=osGetTime();lastProgress=0;lastStage=nullptr;
    consoleClear();printf("SYMBIAN // EKA1 IMAGE DIAGNOSTIC\n\nLoading your test.app / SYM.ROM...\nB: cancel test    START: exit\nNo phone OS or gameplay yet.\n");
    gfxFlushBuffers();
@@ -65,5 +70,5 @@ int main(){
   if(pointer){int x=pointerX*319/(profile.width-1),y=pointerY*239/(profile.height-1);for(int i=-6;i<=6;i++){pixel(b,x+i,y,0xffffff);pixel(b,x,y+i,0xffffff);}}
   gfxFlushBuffers();gfxSwapBuffers();gspWaitForVBlank();
  }
- gfxExit();return r.passed()&&loader.passed()?0:1;
+ gfxExit();return r.passed()&&loader.passed()&&kernel.passed()?0:1;
 }

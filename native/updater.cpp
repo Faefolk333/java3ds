@@ -19,7 +19,7 @@ static const char*ASSET="java3ds.cia";
 static const char*ASSET="java3ds.3dsx";
 #endif
 #ifndef JAVA3DS_UPDATE_VERSION
-#define JAVA3DS_UPDATE_VERSION "0.3.14"
+#define JAVA3DS_UPDATE_VERSION "0.3.15"
 #endif
 #ifndef JAVA3DS_UPDATE_CA_FILE
 #define JAVA3DS_UPDATE_CA_FILE "romfs:/certs/github-roots.pem"
@@ -42,7 +42,7 @@ static bool fetch(std::string url,const std::string&token,bool binary,std::vecto
   CURL*c=curl_easy_init();if(!c){report(5,"Cannot initialize HTTPS");return false;}
   Download d{memory,out,limit,0,binary};curl_slist*headers=nullptr;headers=curl_slist_append(headers,binary?"Accept: application/octet-stream":"Accept: application/vnd.github+json");headers=curl_slist_append(headers,"X-GitHub-Api-Version: 2022-11-28");
   if(authentication==1&&!token.empty()&&url.compare(0,23,"https://api.github.com/")==0){std::string auth="Authorization: Bearer "+token;headers=curl_slist_append(headers,auth.c_str());}
-  curl_easy_setopt(c,CURLOPT_URL,url.c_str());curl_easy_setopt(c,CURLOPT_HTTPHEADER,headers);curl_easy_setopt(c,CURLOPT_USERAGENT,"Java3DS/0.3.14");curl_easy_setopt(c,CURLOPT_FOLLOWLOCATION,0L);curl_easy_setopt(c,CURLOPT_PROTOCOLS_STR,"https");
+  curl_easy_setopt(c,CURLOPT_URL,url.c_str());curl_easy_setopt(c,CURLOPT_HTTPHEADER,headers);curl_easy_setopt(c,CURLOPT_USERAGENT,"Java3DS/0.3.15");curl_easy_setopt(c,CURLOPT_FOLLOWLOCATION,0L);curl_easy_setopt(c,CURLOPT_PROTOCOLS_STR,"https");
   curl_easy_setopt(c,CURLOPT_CAINFO,JAVA3DS_UPDATE_CA_FILE);curl_easy_setopt(c,CURLOPT_SSL_VERIFYPEER,1L);curl_easy_setopt(c,CURLOPT_SSL_VERIFYHOST,2L);
   curl_easy_setopt(c,CURLOPT_CONNECTTIMEOUT,12L);curl_easy_setopt(c,CURLOPT_TIMEOUT,600L);curl_easy_setopt(c,CURLOPT_LOW_SPEED_LIMIT,128L);curl_easy_setopt(c,CURLOPT_LOW_SPEED_TIME,20L);curl_easy_setopt(c,CURLOPT_NOSIGNAL,1L);
   curl_easy_setopt(c,CURLOPT_HEADERFUNCTION,header);curl_easy_setopt(c,CURLOPT_HEADERDATA,&d);curl_easy_setopt(c,CURLOPT_WRITEFUNCTION,receive);curl_easy_setopt(c,CURLOPT_WRITEDATA,&d);curl_easy_setopt(c,CURLOPT_NOPROGRESS,0L);curl_easy_setopt(c,CURLOPT_XFERINFOFUNCTION,progress);

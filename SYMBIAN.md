@@ -3,6 +3,38 @@
 The main Java3DS app executes Java ME bytecode. It does not yet execute Symbian
 SIS/SISX/APP programs. The inventory in validation/0.3.10 was metadata-only.
 
+## Initial EPOC6 executive and native RHeap bootstrap (0.3.15)
+
+The separate runtime now has an opt-in, single-thread EPOC6 executive model.
+Supported services cover HAL page size (4096), anonymous normal RChunk creation,
+base/size/max queries, grow/shrink, handle close, Heap/HeapSwitch, synchronous
+executor request completion, request-count consumption, recursive mutexes,
+semaphores and serial locked increment/decrement. Handles are bounded to 64
+objects and never reused as live IDs. Chunk virtual holes are reused; the full
+reservation is charged to the 24 MiB guest budget, while accesses are restricted
+to committed bytes. Decommit/recommit clears contents. Each chunk is limited to
+4 MiB. Only one emulated execution thread exists; a would-block operation reports
+that scheduler support is required rather than continuing as a completed wait.
+
+EKA1 SVC return is implemented through LR with the Thumb bit restored. Unknown
+SVCs/executor operations stop; unsupported known HAL/device modes return errors.
+Original ARM/Thumb fixtures and negative tests cover these semantics without a
+phone ROM. Guest addresses/descriptors always go through checked memory access.
+
+initializeHeap uses UID-checked, matching EUSER exports 166 and 1127 to execute
+real ChunkHeap/HeapSwitch code with the E32 heap min/max and 4096-byte growth.
+It checks the returned allocator and gates application creation on success.
+On the host with the supplied RH-29 data, native RHeap is created at 0x20000000;
+Shadowkey's factory returns 0x20000080 with vtable 0x120fd9bc. This is execution
+of the supplied program/ROM, not a fabricated application object. The new
+executive/bootstrap path still needs a physical console test.
+
+The probe adds kernel checks to symbian-probe.log. Y uses the same private data
+and records THREAD_HEAP and APPLICATION_OBJECT in symbian-loader.log. No GUI,
+phone OS boot, full scheduling, filesystem/window/audio services, recursive game
+DLL initialization, EKA2 or SIS support is claimed. GAMECOMMS/SIMKIN are still
+unresolved and no playable Shadowkey scene is reached.
+
 ## Full ROM/link path confirmed on New 3DS — 2026-11-05
 
 The owner supplied complete 0.3.14 logs. All CPU/E32 fixture flags pass, and

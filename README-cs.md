@@ -1,4 +1,16 @@
-# Java3DS 0.3.14 — testovací sestavení
+# Java3DS 0.3.15 — testovací sestavení
+
+První část jádra EPOC6 nyní obsluhuje paměťové bloky, vybrané služby vláken,
+semafory, mutexy a výběr haldy. Samotný RHeap vytváří původní kód EUSER z vašeho
+ROMu. Na PC už Shadowkey vytvoří objekt aplikace a překročí zastavení na Heap.
+Nový kernel a inicializace potřebují ověřit na 3DS. Použijte stejná soukromá
+data: po aktualizaci otevřete Java3DS a spusťte Symbian Probe 0.3.15 -> Y.
+Logy přidávají kernelové kontroly, THREAD_HEAP a APPLICATION_OBJECT.
+Zatím nevzniká herní obrazovka; služby systému, plánovač, grafika/zvuk a SIS
+instalátor ještě zbývají. Změna je v samostatném testu, Java hry jsou beze změny.
+
+Předchozí změny 0.3.14:
+
 
 Ve vašem testu 0.3.13 prošel start, CPU i všechny kontroly E32 a paměti.
 Čtení ROMu bylo přerušeno tlačítkem START. Verze 0.3.14 ukazuje procenta,

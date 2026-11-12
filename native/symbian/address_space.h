@@ -1,5 +1,6 @@
 #pragma once
 #include <array>
+#include <algorithm>
 #include <cstdint>
 #include <cstring>
 #include <memory>
@@ -12,7 +13,7 @@ enum Access : unsigned { Read=1, Write=2, Execute=4 };
 // implementation deliberately uses checked callbacks, not direct CPU TLB pages.
 class AddressSpace {
  struct Region {
-  std::uint32_t base=0,size=0;
+  std::uint32_t base=0,size=0,committed=0;
   unsigned access=0;
   std::unique_ptr<std::uint8_t[]> bytes;
  };
@@ -21,7 +22,7 @@ class AddressSpace {
  Region* find(std::uint32_t address,std::size_t size,unsigned access) {
   if(!size||size>0x100000000ULL-address)return nullptr;
   for(auto&r:regions)if(r.bytes&&address>=r.base&&
-    std::uint64_t(address)-r.base+size<=r.size&&(r.access&access)==access)return &r;
+    std::uint64_t(address)-r.base+size<=(access?r.committed:r.size)&&(r.access&access)==access)return &r;
   return nullptr;
  }
 public:
@@ -38,7 +39,15 @@ public:
   if(!slot)return false;
   std::unique_ptr<std::uint8_t[]> bytes(new(std::nothrow) std::uint8_t[size]());
   if(!bytes)return false;
-  slot->base=base;slot->size=size;slot->access=access;slot->bytes=std::move(bytes);usedBytes+=size;return true;
+  slot->base=base;slot->size=size;slot->committed=size;slot->access=access;slot->bytes=std::move(bytes);usedBytes+=size;return true;
+ }
+ bool commit(std::uint32_t base,std::uint32_t size){
+  for(auto&r:regions)if(r.bytes&&r.base==base){
+   if(size>r.size)return false;
+   auto begin=std::min(size,r.committed),end=std::max(size,r.committed);
+   if(end>begin)std::memset(r.bytes.get()+begin,0,end-begin);
+   r.committed=size;return true;
+  }return false;
  }
  bool unmap(std::uint32_t base){for(auto&r:regions)if(r.bytes&&r.base==base){usedBytes-=r.size;r=Region{};return true;}return false;}
  bool permits(std::uint32_t address,std::size_t size,unsigned access){return find(address,size,access)!=nullptr;}

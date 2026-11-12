@@ -23,3 +23,9 @@ header='// Generated from tests/symbian_e32_guest.S and original E32 fixture met
 p=r/'native/symbian/e32_guest.h'
 if not p.exists() or p.read_text()!=header:p.write_text(header)
 print('ORIGINAL_E32_GUEST_BYTES',len(image))
+subprocess.run([str(b/'arm-none-eabi-as.exe'),'-o',str(out/'kernel.o'),'tests/symbian_kernel_guest.S'],check=True)
+subprocess.run([str(b/'arm-none-eabi-ld.exe'),'-Ttext=0x30000000','--entry=kernel_heap_stub','-o',str(out/'kernel.elf'),str(out/'kernel.o')],check=True)
+subprocess.run([str(b/'arm-none-eabi-objcopy.exe'),'-O','binary',str(out/'kernel.elf'),str(out/'kernel.bin')],check=True)
+data=(out/'kernel.bin').read_bytes();header='// Original tests/symbian_kernel_guest.S; generated instruction fixture only.\n#pragma once\nstatic const unsigned char symbian_kernel_guest[]={\n'+','.join('0x%02x'%n for n in data)+'\n};\n'
+p=r/'native/symbian/kernel_guest.h'
+if not p.exists() or p.read_text()!=header:p.write_text(header)
