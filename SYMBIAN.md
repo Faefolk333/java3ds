@@ -1,5 +1,43 @@
 # Symbian implementation — CPU/EKA1 loader foundation, no game runtime yet
 
+## Recursive EKA1 game DLL linking (0.4.0)
+
+Before heap/bootstrap calls, the diagnostic now resolves the complete main/game
+DLL graph. Matching ROM descriptors stay in rom-libs; owner-supplied, validated
+uncompressed E32 DLLs stay in game-libs with canonical uppercase basenames.
+UID-qualified and legacy basename-only imports are supported. DLL code/data/BSS
+receive distinct checked mappings and relocations. Dependencies are deduplicated,
+cycles terminate and exports are checked before main IAT patches commit.
+On error/cancellation every tentative DLL/import mapping is removed; an existing
+main image and its previous links remain intact. No guest code runs during linking.
+Limits: 32 game DLLs, 64 providers, 8192 total import slots, 131072 cached exports,
+24 MiB mapped guest memory. File buffers are freed before recursive descent.
+
+On PC the supplied Shadowkey/RH-29 data now resolves 415/415 main imports plus
+284 GAMECOMMS/SIMKIN imports. Following native heap creation, both game DLL
+thread-attach entry points return zero in dependency order. The application
+entry/factory return, and a checked EKA1 GCC2 primary CApaApplication vtable call
+returns AppDllUid 0x101fd3f6. This supports only the primary single-inheritance
+GCC2 layout (two-word prefix); it is not a generic EKA2 virtual-call adapter.
+The public API declaration order can be inspected at
+https://github.com/SymbianSource/oss.API_REF.Public_API/blob/Symbian3/epoc32/include/mw/apaapp.h
+and actual EKA1 instructions/return values are verified with the owner's input.
+
+The previous 0.3.15 heap/factory path passed on New 3DS. These new linking and
+UID steps still need physical testing. A new private local SD ZIP adds the two
+game DLLs and eight matching ROM headers; tools/prepare_symbian_test.py now walks
+dependencies rather than omitting game DLLs. None of those original inputs is
+tracked or included in the public release. Collect DEPENDENCY_GRAPH,
+DLL_THREAD_ATTACH and APPLICATION_UID records from symbian-loader.log.
+
+This does not complete the application startup sequence: ROM DLL thread
+initialization, framework/process environment and service servers remain missing.
+PreDocConstructL/document/UI construction must follow that environment setup;
+the probe does not skip those steps and claim a running game. Full scheduling,
+filesystem/window/audio services, EKA2 and SIS installation remain incomplete.
+
+## Earlier implementation
+
 The main Java3DS app executes Java ME bytecode. It does not yet execute Symbian
 SIS/SISX/APP programs. The inventory in validation/0.3.10 was metadata-only.
 

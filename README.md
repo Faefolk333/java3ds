@@ -1,3 +1,25 @@
+# Java3DS — test build 0.4.0
+
+The separate Symbian diagnostic now links owner-supplied EKA1 game DLLs and
+all their imports recursively, before running any application code. With the
+supplied RH-29/Shadowkey dataset, the host test resolves all 415 main imports
+and 284 imports from GAMECOMMS/SIMKIN; both game DLL thread-attach entries
+return successfully. A checked GCC2 primary application vtable call returns
+Shadowkey's actual application UID. These new steps need console validation.
+
+Update the main app, reopen it once, and unpack the new PRIVATE Shadowkey test
+ZIP locally onto SD, then run Symbian Probe 0.4.0 -> Y. The private ZIP adds
+game-libs/GAMECOMMS.DLL, game-libs/SIMKIN.DLL and eight matching ROM headers.
+No firmware/game data is uploaded or bundled with the public release.
+
+**This remains a diagnostic, not a playable Symbian launcher.** Complete ROM
+DLL initialization, application framework/process environment, scheduling,
+filesystem/window/audio services, EKA2 and SIS installation remain incomplete.
+The previous 0.3.15 heap/application factory path passed on the owner's New 3DS.
+Java ME behavior is unchanged. See SYMBIAN.md and VALIDATION.md.
+
+## Previous history
+
 # Java3DS — test build 0.3.15
 
 Java ME / JAR / JAD launcher for Nintendo 3DS, with a shared MIDI synthesizer.

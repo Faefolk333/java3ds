@@ -1,0 +1,33 @@
+Java3DS EKA1 loader diagnostic 0.4.0; no phone OS/gameplay
+E32_VALID uid3=101fd3f6 code=1051076 data=0 bss=0 imports=415 relocations=10104
+E32_MAPPED bytes=1062596
+ROM_LINK APPARC[10003a3d].DLL resolved=4 status=linked
+ROM_LINK AVKON[100056c6].DLL resolved=20 status=linked
+ROM_LINK BITGDI[10003b18].DLL resolved=5 status=linked
+ROM_LINK CONE[10003a41].DLL resolved=43 status=linked
+ROM_LINK EFSRV[100039e4].DLL resolved=19 status=linked
+ROM_LINK EIKCORE[10004892].DLL resolved=60 status=linked
+ROM_LINK ESOCK[10003d3f].DLL resolved=7 status=linked
+ROM_LINK ESTLIB[10003b0b].DLL resolved=29 status=linked
+ROM_LINK ETEL[10003d46].DLL resolved=16 status=linked
+ROM_LINK EUSER[100039e5].DLL resolved=101 status=linked
+ROM_LINK EZLIB[10005706].DLL resolved=1 status=linked
+ROM_LINK FBSCLI[10003a15].DLL resolved=6 status=linked
+ROM_LINK GAMECOMMS[101f5ee2].DLL resolved=0 status=ROM library descriptor not found
+ROM_LINK GDI[10003b15].DLL resolved=3 status=linked
+ROM_LINK HAL[100039e8].DLL resolved=1 status=linked
+ROM_LINK MEDIACLIENTAUDIOSTREAM[10003996].DLL resolved=1 status=linked
+ROM_LINK MSGS[10004e66].DLL resolved=3 status=linked
+ROM_LINK NOKIAFC[101f8a5b].DLL resolved=1 status=linked
+ROM_LINK SIMKIN[101fae0a].DLL resolved=0 status=ROM library descriptor not found
+ROM_LINK WS32[10003b21].DLL resolved=4 status=linked
+ROM_MAPPED guest_bytes=19347140 imports_resolved=324/415
+DEPENDENCY_GRAPH ready=1 game_libraries=2 main_imports_resolved=415/415 DLL_imports=284 guest_bytes=19532140 error=
+THREAD_HEAP ready=1 address=20000000 guest_bytes=20580716 create=returned switch=returned error=
+DLL_THREAD_ATTACH name=GAMECOMMS.DLL uid=101f5ee2 entry=13000000 result=returned r0=00000000 svc=007fffff fault=00000000
+DLL_THREAD_ATTACH name=SIMKIN.DLL uid=101fae0a entry=13008000 result=returned r0=00000000 svc=007fffff fault=00000000
+E32_CALL entry=12000000 result=returned r0=00000000 pc=6fff0004 instructions=4 import=#0 svc=007fffff fault=00000000 access=0
+E32_CALL entry=1202841c result=returned r0=20000080 pc=6fff0004 instructions=199 import=#0 svc=007fffff fault=00000000 access=0
+APPLICATION_OBJECT address=20000080 vtable=120fd9bc mapped_vtable=1
+APPLICATION_UID result=returned value=101fd3f6 expected=101fd3f6 matches=1 svc=007fffff fault=00000000
+DIAGNOSTIC_END elapsed_ms=18 partial_EPOC6_kernel_no_phone_OS_or_gameplay

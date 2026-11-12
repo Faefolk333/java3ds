@@ -52,6 +52,15 @@ bool RomImage::library(AddressSpace&memory,const char*path,RomLibrary&library,st
 }
 bool e32LibraryIdentity(const std::string&name,std::string&filename,std::uint32_t&uid){
  filename.clear();uid=0;auto bracket=name.find('[');
+ // Legacy EKA1 DLLs can import by basename without an embedded UID.
+ if(bracket==std::string::npos){
+  if(name.size()<5||name.size()>255)return false;
+  auto base=name.substr(0,name.size()-4),suffix=name.substr(name.size()-4);
+  for(char&c:suffix)if(c>='a'&&c<='z')c-=32;
+  if(suffix!=".DLL")return false;
+  for(char c:base)if(!((c>='A'&&c<='Z')||(c>='a'&&c<='z')||(c>='0'&&c<='9')||c=='_'))return false;
+  filename=base+suffix;return true;
+ }
  if(bracket==std::string::npos||bracket==0||bracket+14!=name.size()||name[bracket+9]!=']')return false;
  for(std::size_t i=0;i<bracket;i++){
   char c=name[i];if(!((c>='A'&&c<='Z')||(c>='a'&&c<='z')||(c>='0'&&c<='9')||c=='_'))return false;

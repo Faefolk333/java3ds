@@ -1,3 +1,14 @@
+# Compatibility work — 0.4.0
+
+The separate Symbian probe resolves the supplied Shadowkey's complete static
+import graph on PC: 415 main imports, 284 imports from two native game DLLs.
+Both game DLL thread-attach entries and the application UID check pass.
+Console validation of this new graph remains pending; the prior 0.3.15 native
+heap/application factory path passed on New 3DS. This is not a phone OS boot,
+playable game, complete framework initialization, EKA2/SIS or a Java change.
+
+## Previous history
+
 # Compatibility work — 0.3.15
 
 The separate Symbian runtime has an initial single-thread EPOC6 executive.

@@ -1,3 +1,23 @@
+# Java3DS 0.4.0 — testovací sestavení
+
+Samostatný Symbian test nyní načítá také herní EKA1 DLL včetně jejich závislostí.
+Na PC připojí všech 415 importů Shadowkey a dalších 284 importů knihoven
+GAMECOMMS/SIMKIN. Obě knihovny dokončí inicializaci vlákna a vytvořený objekt
+aplikace vrátí správné UID. Nový postup ještě potřebuje ověřit na konzoli.
+
+Po aktualizaci znovu otevřete Java3DS. Nový soukromý ZIP Shadowkey rozbalte do
+kořene SD; přidává game-libs/GAMECOMMS.DLL, SIMKIN.DLL a osm hlaviček ROM DLL.
+Potom v Homebrew Launcheru spusťte Symbian Probe 0.4.0 -> Y. Logy jsou nadále
+/3ds/java-3ds/symbian-probe.log a symbian-loader.log. Soukromý ZIP patří pouze
+na vaši SD, není na GitHubu ani ve veřejných instalačkách.
+
+Zatím jde o diagnostiku: nevzniká herní obrazovka. Zbývá dokončení inicializace
+ROM knihoven, aplikační prostředí, plánování a služby souborů, grafiky a zvuku;
+EKA2 a SIS instalátor rovněž nejsou hotové. Předchozí krok 0.3.15 s haldou a
+objektem aplikace už prošel na vašem New 3DS. Chování Java her se nemění.
+
+## Previous history
+
 # Java3DS 0.3.15 — testovací sestavení
 
 První část jádra EPOC6 nyní obsluhuje paměťové bloky, vybrané služby vláken,

@@ -16,6 +16,55 @@ static void put(std::vector<std::uint8_t>&b,unsigned at,std::uint32_t word){for(
 static std::uint32_t imageRead=0;static unsigned imageCancelSignals=0;
 static void imageProgress(const char*stage,std::uint32_t done,std::uint32_t){if(!std::strcmp(stage,"Reading ROM"))imageRead=done;}
 static bool cancelImageOnce(){if(imageRead>=65536&&!imageCancelSignals){imageCancelSignals++;return false;}return true;}
+static void dependencyChecks(const std::vector<std::uint8_t>&original){
+ namespace fs=std::filesystem;const fs::path root="work/symbian-dependency-check";
+ fs::create_directories(root/"rom-libs");fs::create_directories(root/"game-libs");
+ auto save=[&](const fs::path&name,const auto&bytes){std::ofstream f(root/name,std::ios::binary);f.write(reinterpret_cast<const char*>(bytes.data()),bytes.size());assert(f.good());};
+ auto uid=[&](std::vector<std::uint8_t>&b,std::uint32_t value){
+  put(b,8,value);std::uint16_t halves[2]={};
+  for(unsigned s=0;s<2;s++)for(unsigned n=s;n<12;n+=2){halves[s]^=std::uint16_t(b[n])<<8;for(unsigned k=0;k<8;k++)halves[s]=(halves[s]&0x8000)?(halves[s]<<1)^0x1021:halves[s]<<1;}
+  put(b,12,std::uint32_t(halves[1])<<16|halves[0]);
+ };
+ auto child=original;uid(child,0x10000001);put(child,92,7);put(child,124+0xa0+5*4,0);put(child,124+0xa0+6*4,0x40);
+ const char dependency[]="EUSER[100039e5].DLL";std::memcpy(child.data()+348,dependency,sizeof(dependency));
+ save("game-libs/PROBE.DLL",child);
+ std::vector<std::uint8_t> rom(8192);put(rom,0,0xea000000);put(rom,140,0x50000000);put(rom,144,rom.size());
+ constexpr unsigned descriptor=0x1000-100;put(rom,descriptor,0x10000079);put(rom,descriptor+8,0x100039e5);
+ put(rom,descriptor+20,0x50001000);put(rom,descriptor+28,0x100);put(rom,descriptor+60,7);put(rom,descriptor+64,0x50001080);
+ put(rom,0x1000,0xe3a0004d);put(rom,0x1004,0xe12fff1e);put(rom,0x1080+6*4,0x50001000);
+ save("SYM.ROM",rom);save("rom-libs/EUSER.DLL",std::vector<std::uint8_t>(rom.begin()+descriptor,rom.begin()+descriptor+100));
+ E32Image image;std::string error;assert(image.parse(original,error));
+ auto initialize=[&](E32Session&s){assert(s.load(image,0x12000000,0x02000000,error));assert(s.mountRom((root/"SYM.ROM").string().c_str(),error));};
+ E32Session linked;initialize(linked);assert(linked.linkDependencies(root.string().c_str(),error));assert(linked.libraries().size()==1);
+ assert(linked.libraries()[0].uid==0x10000001);auto r=linked.call(linked.module().exports[1]);assert(r.reason==StopReason::Returned&&r.r0==77);
+ assert(!linked.linkDependencies(root.string().c_str(),error));
+ auto invalid=child;uid(invalid,0x10000002);save("game-libs/PROBE.DLL",invalid);
+ E32Session wrong;initialize(wrong);auto used=wrong.memory().used();assert(!wrong.linkDependencies(root.string().c_str(),error));assert(wrong.memory().used()==used&&wrong.libraries().empty());
+ auto shortExports=child;put(shortExports,92,6);save("game-libs/PROBE.DLL",shortExports);
+ E32Session ordinal;initialize(ordinal);used=ordinal.memory().used();assert(!ordinal.linkDependencies(root.string().c_str(),error)&&ordinal.memory().used()==used);
+ save("game-libs/PROBE.DLL",child);fs::remove(root/"rom-libs/EUSER.DLL");
+ E32Session missing;initialize(missing);used=missing.memory().used();assert(!missing.linkDependencies(root.string().c_str(),error)&&missing.memory().used()==used);
+ r=missing.call(missing.module().exports[1]);assert(r.reason==StopReason::ImportRequired&&r.library=="PROBE[10000001].DLL");
+ // A cyclic graph links only one copy and remains guarded by bounded calls.
+ auto cyclic=child;const char self[]="PROBE[10000001].DLL";std::memcpy(cyclic.data()+348,self,sizeof(self));save("game-libs/PROBE.DLL",cyclic);
+ E32Session cycle;initialize(cycle);assert(cycle.linkDependencies(root.string().c_str(),error)&&cycle.libraries().size()==1);
+ // Every node imports the next. Reject the 33rd DLL and roll back all 32
+ // existing code/data/import mappings, leaving the main IAT untouched.
+ for(unsigned n=0;n<33;n++){
+  auto node=child;char next[32];std::snprintf(next,sizeof(next),"P%04u[10000001].DLL",n+1);std::memcpy(node.data()+348,next,std::strlen(next)+1);
+  char file[32];std::snprintf(file,sizeof(file),"game-libs/P%04u.DLL",n);save(file,node);
+ }
+ auto chain=child;const char next[]="P0000[10000001].DLL";std::memcpy(chain.data()+348,next,sizeof(next));save("game-libs/PROBE.DLL",chain);
+ E32Session limited;initialize(limited);used=limited.memory().used();assert(!limited.linkDependencies(root.string().c_str(),error)&&limited.memory().used()==used&&limited.libraries().empty());assert(error.find("limit (32)")!=std::string::npos);
+ unsigned mappings=0;TaskControl midCancel([&](){return mappings<2;},[&](const char*stage,std::uint32_t,std::uint32_t){if(!std::strcmp(stage,"Mapping game DLL"))mappings++;});
+ E32Session partial;initialize(partial);used=partial.memory().used();assert(!partial.linkDependencies(root.string().c_str(),error,&midCancel)&&midCancel.cancelled()&&partial.memory().used()==used&&partial.libraries().empty());
+ bool mapped=false;TaskControl cancel([&](){return !mapped;},[&](const char*stage,std::uint32_t,std::uint32_t){if(!std::strcmp(stage,"Mapping game DLL"))mapped=true;});
+ E32Session cancelled;initialize(cancelled);used=cancelled.memory().used();assert(!cancelled.linkDependencies(root.string().c_str(),error,&cancel)&&cancel.cancelled()&&cancelled.memory().used()==used);
+ std::string file;std::uint32_t expected;
+ assert(e32LibraryIdentity("BLUETOOTH.DLL",file,expected)&&file=="BLUETOOTH.DLL"&&expected==0);
+ for(const char*name:{"../PROBE.DLL","C:PROBE.DLL","foo/bar.DLL",".DLL","PROBE[garbage].DLL"})assert(!e32LibraryIdentity(name,file,expected));
+ puts("DEPENDENCY_GRAPH_PASS nested_native_call UID_identity ordinal cycle 32_DLL_limit rollback mid_graph_cancel path_guards repeat_rejected");
+}
 static void kernelNegativeChecks(){
  AddressSpace memory(16384);assert(memory.map(0x10000,4096,Read|Write));Eka1Kernel kernel(memory);
  std::uint32_t out[]={0x20000000,4,0x10100},desc[]={0x3000000c,12,4096,65536,0},args[]={0x10000,0xffff0000,0x10020,0};
@@ -139,6 +188,7 @@ int main(int argc,char**argv){
  assert(!memory.permits(0x1000,4,Execute));assert(memory.unmap(0x1000)&&memory.used()==0);
  E32Image image;std::string error;
  const std::vector<std::uint8_t> original(std::begin(symbian_e32_guest),std::end(symbian_e32_guest));
+ dependencyChecks(original);
  romChecks(original);
  unsigned rejected=0;
  for(auto change:{0u,12u,16u,20u,48u,52u,64u,68u,72u,84u,88u,92u,96u,100u,104u,108u,112u,116u}){

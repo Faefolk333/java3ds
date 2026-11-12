@@ -1,3 +1,34 @@
+# Java3DS 0.4.0 validation — 2026-11-12
+
+New dependency linking/thread-attach/application-UID steps are host-tested;
+physical console validation remains pending. The previous 0.3.15 native heap
+and application factory pass is recorded under validation/0.3.15.
+
+* Original nested E32 -> E32 -> ROM functions return the real fixture value.
+  UID/ordinal errors, cyclic dependencies, the 32-game-DLL limit, complete
+  rollback after partial mapping, mid-graph cancellation, path rejection and
+  repeated-link rejection pass. All prior kernel and 418 E32 negatives pass.
+* The supplied private Shadowkey/RH-29 dataset resolves 415/415 main imports
+  plus 284 game DLL imports. GAMECOMMS and SIMKIN thread-attach entries return
+  zero. Native heap/application creation still return; the checked GCC2 primary
+  vtable AppDllUid call returns 0x101fd3f6, matching the E32 UID.
+  Guest reservations total 20,580,716 bytes. No game frame is run.
+* Linking is transactional: main IAT patches commit only when the whole graph
+  validates. Up to 32 game DLLs, 64 providers, 8192 total imported slots and
+  131072 cached exports are allowed. File buffers are released before descending
+  recursively; mapped guest RAM remains bounded to 24 MiB. Unsupported inputs
+  stop instead of fabricating a linked or initialized library.
+* Private owner game/ROM data remains outside tracked source/public artifacts.
+
+* Final devkitARM CIA/3DSX/probe builds pass; modified probe objects target
+  ARMv6K and the linked probe contains no ARMv7 DMB/DSB/ISB instructions.
+  All three startup heap-wrapper links pass. CIA title version 64 / 0.4.0 has
+  verified content hashes (three expected unsigned signature failures).
+  Extracted RomFS/banner/icon/audio PCM match inputs; embedded assets pass.
+  Anonymous in-app updater/public release checks are run after publication.
+
+## Previous history
+
 # Java3DS 0.3.15 validation — 2026-11-12
 
 The owner's New 3DS logs now confirm the 0.3.15 EPOC6 executive/native heap

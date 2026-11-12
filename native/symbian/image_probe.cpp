@@ -29,18 +29,42 @@ bool symbianImageProbe(const char*folder,FILE*report,bool(*keepRunning)(),void(*
   }
   control.report("Linking libraries",libraries.size(),libraries.size());
   std::fprintf(report,"ROM_MAPPED guest_bytes=%zu imports_resolved=%zu/%zu\n",session.memory().used(),total,session.module().imports.size());
+  bool dependencies=session.linkDependencies(folder,error,&control);
+  std::size_t dllImports=0;for(const auto&library:session.libraries())dllImports+=library.image.imports.size();
+  std::fprintf(report,"DEPENDENCY_GRAPH ready=%d game_libraries=%zu main_imports_resolved=%zu/%zu DLL_imports=%zu guest_bytes=%zu error=%s\n",dependencies,session.libraries().size(),dependencies?session.module().imports.size():total,session.module().imports.size(),dllImports,session.memory().used(),error.c_str());std::fflush(report);
+  if(!checkpoint())return true;
+  if(!dependencies){std::fprintf(report,"DIAGNOSTIC_STOP dependency_graph_incomplete\n");return true;}
   auto heap=session.initializeHeap((root+"/rom-libs/EUSER.DLL").c_str(),&control);
   std::fprintf(report,"THREAD_HEAP ready=%d address=%08lx guest_bytes=%zu create=%s switch=%s error=%s\n",heap.ready,(unsigned long)heap.address,session.memory().used(),stopName(heap.create.reason),stopName(heap.switchHeap.reason),heap.error.c_str());std::fflush(report);
   if(!checkpoint())return true;
   if(!heap.ready){std::fprintf(report,"DIAGNOSTIC_STOP heap_initialization_incomplete svc=%08lx\n",(unsigned long)heap.create.systemCall);return true;}
+  for(const auto&library:session.libraries()){
+   control.report("Initializing game DLL");auto r=session.call(library.image.entry,1,100000,&control);
+   std::fprintf(report,"DLL_THREAD_ATTACH name=%s uid=%08lx entry=%08lx result=%s r0=%08lx svc=%08lx fault=%08lx\n",library.filename.c_str(),(unsigned long)library.uid,(unsigned long)library.image.entry,stopName(r.reason),(unsigned long)r.r0,(unsigned long)r.systemCall,(unsigned long)r.address);std::fflush(report);
+   if(!checkpoint())return true;
+   if(r.reason!=StopReason::Returned||r.r0){std::fprintf(report,"DIAGNOSTIC_STOP game_DLL_initialization_incomplete\n");return true;}
+  }
  }else{if(!checkpoint())return true;std::fprintf(report,"ROM_NOT_MAPPED %s\n",error.c_str());}
  if(!checkpoint())return true;
  const auto&m=session.module();
  for(auto entry:{m.entry,m.exports.empty()?0:m.exports[0]}){
   if(!entry)continue;
-  control.report("Executing diagnostic");auto r=session.call(entry,0,100000,&control);
+  control.report("Executing diagnostic");auto r=session.call(entry,entry==m.entry?1:0,100000,&control);
   std::fprintf(report,"E32_CALL entry=%08lx result=%s r0=%08lx pc=%08lx instructions=%llu import=%s#%lu svc=%08lx fault=%08lx access=%u\n",(unsigned long)entry,stopName(r.reason),(unsigned long)r.r0,(unsigned long)r.pc,(unsigned long long)r.instructions,r.library.c_str(),(unsigned long)r.ordinal,(unsigned long)r.systemCall,(unsigned long)r.address,r.access);std::fflush(report);
-  if(entry!=m.entry&&r.reason==StopReason::Returned&&r.r0){std::uint32_t vtable=0;if(session.memory().permits(r.r0,4,Read|Write)&&session.memory().read(r.r0,&vtable)&&session.memory().permits(vtable,4,Read))std::fprintf(report,"APPLICATION_OBJECT address=%08lx vtable=%08lx mapped_vtable=1\n",(unsigned long)r.r0,(unsigned long)vtable);}
+  if(entry!=m.entry&&r.reason==StopReason::Returned&&r.r0){
+   std::uint32_t vtable=0;
+   if(session.memory().permits(r.r0,4,Read|Write)&&session.memory().read(r.r0,&vtable)&&session.memory().permits(vtable,4,Read)){
+    std::fprintf(report,"APPLICATION_OBJECT address=%08lx vtable=%08lx mapped_vtable=1\n",(unsigned long)r.r0,(unsigned long)vtable);
+    // EKA1 GCC2 primary CApaApplication ABI: two-word vtable prefix,
+    // CBase destructor, PreDocConstructL, CreateDocumentL, AppDllUid.
+    // Only inspect a single-inheritance primary table; never guess for EKA2.
+    std::uint32_t table[6]={};
+    if(h.uid2==0x100039ce&&session.memory().read(vtable,table,sizeof(table))&&table[0]==0&&table[1]==0&&session.memory().permits(table[5]&~1u,table[5]&1?2:4,Read|Execute)){
+     control.report("Checking application UID");auto uid=session.call(table[5],r.r0,100000,&control);
+     std::fprintf(report,"APPLICATION_UID result=%s value=%08lx expected=%08lx matches=%d svc=%08lx fault=%08lx\n",stopName(uid.reason),(unsigned long)uid.r0,(unsigned long)h.uid3,uid.reason==StopReason::Returned&&uid.r0==h.uid3,(unsigned long)uid.systemCall,(unsigned long)uid.address);std::fflush(report);
+    }
+   }
+  }
   if(!checkpoint())return true;
  }
  auto elapsed=std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started).count();

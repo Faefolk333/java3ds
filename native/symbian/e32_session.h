@@ -16,6 +16,7 @@ struct ExecutionResult {
 struct HeapStartResult {
  bool ready=false;std::uint32_t address=0;ExecutionResult create,switchHeap;std::string error;
 };
+struct E32Library {std::string filename;std::uint32_t uid=0;LoadedE32 image;};
 // One bounded E32 call, not a Symbian OS. Unimplemented imports/SVCs stop with
 // their identities instead of returning fabricated success to an application.
 class E32Session {
@@ -26,6 +27,10 @@ public:
  bool mountRom(const char*path,std::string&error,TaskControl*control=nullptr);
  bool linkRomLibrary(const std::string&importName,const char*descriptor,std::size_t&resolved,std::string&error);
  bool romExport(const char*descriptor,std::uint32_t uid,std::uint32_t ordinal,std::uint32_t&target,std::string&error);
+ // Resolve the entire main/game-DLL import graph atomically, before execution.
+ // ROM headers live in rom-libs; owner-supplied E32 DLLs live in game-libs.
+ bool linkDependencies(const char*folder,std::string&error,TaskControl*control=nullptr);
+ const std::vector<E32Library>&libraries()const;
  const LoadedE32&module()const;
  AddressSpace&memory();
  void enableEka1Kernel();
