@@ -24,8 +24,19 @@ and returned pointers are verified against the actual owner's ROM. This is
 cleanup/handler creation only: native Leave unwinding, trap frame stacks,
 application framework/process environment, scheduling, filesystem/window/audio
 servers, EKA2 and SIS installation remain incomplete. No game frame is run.
-The new ROM/cleanup steps require physical testing. Existing private 0.4.0
-SD data is sufficient; collect ROM_INITIALIZATION and NATIVE_CLEANUP log records.
+The owner's 0.4.1 New 3DS logs confirm ROM_INITIALIZATION ready=1 completed=114/114
+and NATIVE_CLEANUP ready=1 with the same pointers as the host run. All fixture
+flags pass, including trap-handler state, and zero CPU faults are recorded.
+The app factory returns 0x200000ec and its UID matches. The complete diagnostic
+takes 5589 ms; this is not a gameplay benchmark. Evidence:
+validation/0.4.1/device-v041-*.log and hardware-v041-result.json.
+Existing private 0.4.0 SD data remains sufficient.
+
+The next error-path work requires checked EKA1 TTrap frame push/pop SVCs
+0x72/0x73 (the pinned upstream kernel::trap has 16 saved words and three pointer
+words), followed by a native trapped Leave/cleanup-unwind test. These services
+are not yet implemented by the current model. Framework/process environment
+and real service servers remain further prerequisites for a game window.
 
 ## Recursive EKA1 game DLL linking (0.4.0)
 

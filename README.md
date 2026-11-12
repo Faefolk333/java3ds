@@ -5,8 +5,10 @@ UID. This update adds the next standalone diagnostic steps: a bounded ROM DLL
 initialization plan following EKA1 dependency tables, execution of every planned
 thread-attach entry, and the supplied ROM's real CTrapCleanup::New bootstrap.
 The host Shadowkey/RH-29 run completes 114/114 ROM DLL entries and creates the
-native cleanup stack/trap handler before its application factory. The new steps
-still need console validation. They do not implement exception unwinding or a
+native cleanup stack/trap handler before its application factory. The owner's
+0.4.1 New 3DS logs now confirm these steps and all fixture flags, with zero CPU
+faults and a full diagnostic time of 5589 ms. Evidence: validation/0.4.1.
+These steps do not implement exception unwinding or a
 phone OS/framework/game scene. Java ME behavior is unchanged.
 
 Update through Wi-Fi, reopen Java3DS once, then run Symbian Probe 0.4.1 -> Y.

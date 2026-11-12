@@ -4,7 +4,9 @@ Vaše logy z New 3DS potvrzují celý test 0.4.0: všechny importy, obě herní 
 paměť i správné UID aplikace. Nově test také zjistí pořadí inicializace knihoven
 přímo z ROMu a spustí jejich vstupní funkce. Na PC prošlo 114 ze 114 knihoven.
 Potom původní EUSER vytvoří CTrapCleanup, tedy nativní úklidový zásobník a
-obsluhu chyb vlákna. Tyto nové kroky ještě potřebují ověřit na konzoli.
+obsluhu chyb vlákna. Vaše logy 0.4.1 nyní potvrzují stejný výsledek na New 3DS:
+všech 114 knihoven i cleanup prošly, všechny kontroly mají výsledek 1 a CPU
+hlásí nula chyb. Celá diagnostika trvala 5589 ms; nejde o měření rychlosti hry.
 
 Aktualizujte přes Wi-Fi, znovu otevřete Java3DS a v Homebrew Launcheru spusťte
 Symbian Probe 0.4.1 -> Y. Platí stejná soukromá data z 0.4.0; nový ZIP není třeba.

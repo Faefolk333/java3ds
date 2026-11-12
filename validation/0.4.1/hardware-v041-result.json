@@ -1,0 +1,28 @@
+{
+  "version": "0.4.1",
+  "device": "owner New 3DS",
+  "CPU_E32_kernel_fixtures": "all pass",
+  "recorded_CPU_faults": 0,
+  "trap_handler_fixture": "pass",
+  "main_imports_resolved": 415,
+  "main_imports_total": 415,
+  "game_DLL_imports_resolved": 284,
+  "ROM_DLL_thread_attach_completed": 114,
+  "ROM_DLL_thread_attach_planned": 114,
+  "game_DLL_thread_attach": {
+    "GAMECOMMS": "returned zero",
+    "SIMKIN": "returned zero"
+  },
+  "native_RHeap": "20000000",
+  "native_cleanup": "20000080",
+  "native_trap_handler": "20000084",
+  "application_object": "200000ec",
+  "application_UID": "101fd3f6",
+  "application_UID_matches": true,
+  "guest_bytes": 20580716,
+  "whole_diagnostic_ms": 5589,
+  "native_Leave_unwinding_tested": false,
+  "gameplay": false,
+  "probe_log_sha256": "0c05cd8df6bbffea88ed5da897594139d49c7400517f1436ad4ee5993582364a",
+  "loader_log_sha256": "69eb653c6861baedf470b1033b8b5a41d64bbeda299c6c373b7038feaf042000"
+}

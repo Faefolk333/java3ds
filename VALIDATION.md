@@ -1,8 +1,13 @@
 # Java3DS 0.4.1 validation — 2026-11-12
 
-The owner's 0.4.0 New 3DS logs pass all fixtures, 415 main/284 game DLL imports,
-both game DLL thread-attach entries and matching application UID (4610 ms total).
-Those logs do not cover the new ROM DLL plan/native cleanup bootstrap below.
+The owner's 0.4.1 New 3DS logs now confirm all CPU/E32/kernel/trap fixture flags
+pass, with zero recorded CPU faults. The full import graph, 114/114 ROM DLL
+thread-attach entries, both game DLLs and native cleanup/handler creation pass.
+The application factory returns 0x200000ec with UID 0x101fd3f6, matching the E32.
+The complete diagnostic takes 5589 ms; this is not a game FPS measurement.
+Evidence: validation/0.4.1/device-v041-*.log and hardware-v041-result.json.
+Native Leave/cleanup unwinding, full framework/services and gameplay remain
+incomplete; these logs validate creation/attachment, not those later paths.
 
 * Original ROM fixtures verify dependency order, cycles, identity checking even
   for already visited nodes, invalid bounds/table flags/entry layout, rejection
@@ -21,7 +26,7 @@ Those logs do not cover the new ROM DLL plan/native cleanup bootstrap below.
   currently stop explicitly. New trap-handler SVC get/set checks pass in the
   common kernel probe, including invalid pointer rejection and old-value return.
 * No owner firmware/game inputs are tracked or publicly packaged. The same
-  private 0.4.0 SD data remains valid. The new bootstrap needs console testing;
+  private 0.4.0 SD data remains valid. The new bootstrap passed on the owner's New 3DS;
   no GUI, full scheduler, service servers, EKA2/SIS or gameplay is claimed.
 
 * Final devkitARM CIA/3DSX/probe builds pass; modified objects are ARMv6K,
