@@ -3,8 +3,8 @@
 The separate Symbian probe resolves the supplied Shadowkey's complete static
 import graph on PC: 415 main imports, 284 imports from two native game DLLs.
 Both game DLL thread-attach entries and the application UID check pass.
-Console validation of this new graph remains pending; the prior 0.3.15 native
-heap/application factory path passed on New 3DS. This is not a phone OS boot,
+The owner's New 3DS logs confirm this graph, both DLL thread-attach entries
+and matching application UID, with all fixture checks passing (4610 ms total). This is not a phone OS boot,
 playable game, complete framework initialization, EKA2/SIS or a Java change.
 
 ## Previous history

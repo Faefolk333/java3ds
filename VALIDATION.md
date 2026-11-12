@@ -1,8 +1,12 @@
 # Java3DS 0.4.0 validation — 2026-11-12
 
-New dependency linking/thread-attach/application-UID steps are host-tested;
-physical console validation remains pending. The previous 0.3.15 native heap
-and application factory pass is recorded under validation/0.3.15.
+The owner's New 3DS logs confirm all 0.4.0 CPU/E32/kernel fixture flags pass,
+with zero recorded CPU faults. All 415 main and 284 game DLL imports resolve;
+GAMECOMMS/SIMKIN thread-attach entries return zero, native heap/application
+creation succeeds and the application UID matches 0x101fd3f6. The complete
+diagnostic takes 4610 ms; this is not a gameplay FPS measurement. Evidence:
+validation/0.4.0/device-v040-*.log and hardware-v040-result.json. Complete ROM
+DLL/framework initialization, phone OS and gameplay remain incomplete.
 
 * Original nested E32 -> E32 -> ROM functions return the real fixture value.
   UID/ordinal errors, cyclic dependencies, the 32-game-DLL limit, complete

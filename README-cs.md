@@ -3,7 +3,8 @@
 Samostatný Symbian test nyní načítá také herní EKA1 DLL včetně jejich závislostí.
 Na PC připojí všech 415 importů Shadowkey a dalších 284 importů knihoven
 GAMECOMMS/SIMKIN. Obě knihovny dokončí inicializaci vlákna a vytvořený objekt
-aplikace vrátí správné UID. Nový postup ještě potřebuje ověřit na konzoli.
+aplikace vrátí správné UID. Váš test na New 3DS nyní potvrzuje stejný výsledek:
+všechny kontroly prošly a celá diagnostika trvala 4610 ms.
 
 Po aktualizaci znovu otevřete Java3DS. Nový soukromý ZIP Shadowkey rozbalte do
 kořene SD; přidává game-libs/GAMECOMMS.DLL, SIMKIN.DLL a osm hlaviček ROM DLL.

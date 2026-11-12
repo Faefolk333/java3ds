@@ -23,8 +23,10 @@ The public API declaration order can be inspected at
 https://github.com/SymbianSource/oss.API_REF.Public_API/blob/Symbian3/epoc32/include/mw/apaapp.h
 and actual EKA1 instructions/return values are verified with the owner's input.
 
-The previous 0.3.15 heap/factory path passed on New 3DS. These new linking and
-UID steps still need physical testing. A new private local SD ZIP adds the two
+The previous 0.3.15 heap/factory path passed on New 3DS. The owner's 0.4.0 New 3DS logs now confirm the complete import graph, both
+game DLL thread-attach entries and matching UID, with all fixture flags passing
+and a total diagnostic time of 4610 ms. Evidence: validation/0.4.0/device-v040-*.log
+and hardware-v040-result.json. No game frame is run. A new private local SD ZIP adds the two
 game DLLs and eight matching ROM headers; tools/prepare_symbian_test.py now walks
 dependencies rather than omitting game DLLs. None of those original inputs is
 tracked or included in the public release. Collect DEPENDENCY_GRAPH,

@@ -5,7 +5,8 @@ all their imports recursively, before running any application code. With the
 supplied RH-29/Shadowkey dataset, the host test resolves all 415 main imports
 and 284 imports from GAMECOMMS/SIMKIN; both game DLL thread-attach entries
 return successfully. A checked GCC2 primary application vtable call returns
-Shadowkey's actual application UID. These new steps need console validation.
+Shadowkey's actual application UID. The owner's New 3DS logs now confirm these steps, all fixture flags passing
+and the full diagnostic completing in 4610 ms. No gameplay FPS is measured.
 
 Update the main app, reopen it once, and unpack the new PRIVATE Shadowkey test
 ZIP locally onto SD, then run Symbian Probe 0.4.0 -> Y. The private ZIP adds
