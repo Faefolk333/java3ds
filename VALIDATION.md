@@ -1,7 +1,14 @@
 # Java3DS 0.3.15 validation — 2026-11-12
 
-New EPOC6 executive/native heap bootstrap requires console validation. Previous
-0.3.14 hardware logs prove the loader/ROM path, not these new services.
+The owner's New 3DS logs now confirm the 0.3.15 EPOC6 executive/native heap
+bootstrap. All CPU/E32/kernel fixture flags pass with zero recorded CPU faults.
+Native ChunkHeap/HeapSwitch return successfully, selecting RHeap at 0x20000000.
+Shadowkey's DLL entry and factory return; the application object is 0x20000080
+with mapped vtable 0x120fd9bc. The whole diagnostic completes in 3613 ms, with
+20,395,716 guest bytes reserved and 324/415 imports resolved. This is not a game
+FPS measurement or a phone OS/gameplay result. Evidence: device-v0315 logs and
+hardware-v0315-result.json under validation/0.3.15. The additional 512-object
+allocation stress result below remains host-only.
 
 * Original kernel fixture passes chunk commit/grow/shrink/zeroing, close/stale
   handles and address reuse, recursive mutex/semaphore/request semantics, heap

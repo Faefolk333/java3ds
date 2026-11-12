@@ -26,8 +26,12 @@ real ChunkHeap/HeapSwitch code with the E32 heap min/max and 4096-byte growth.
 It checks the returned allocator and gates application creation on success.
 On the host with the supplied RH-29 data, native RHeap is created at 0x20000000;
 Shadowkey's factory returns 0x20000080 with vtable 0x120fd9bc. This is execution
-of the supplied program/ROM, not a fabricated application object. The new
-executive/bootstrap path still needs a physical console test.
+of the supplied program/ROM, not a fabricated application object. The owner's
+0.3.15 New 3DS logs confirm the same heap and application-object results, all
+CPU/E32/kernel fixture flags passing and zero recorded CPU faults. The complete
+diagnostic takes 3613 ms; this is not a gameplay speed measurement. Evidence:
+validation/0.3.15/device-v0315-*.log and hardware-v0315-result.json. The additional
+512-object allocation stress test remains host-only.
 
 The probe adds kernel checks to symbian-probe.log. Y uses the same private data
 and records THREAD_HEAP and APPLICATION_OBJECT in symbian-loader.log. No GUI,

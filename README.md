@@ -18,7 +18,9 @@ scheduler-required result. Unsupported functions remain explicit stops/errors.
 Use EUSER's real ChunkHeap/HeapSwitch code from the supplied matching ROM to
 create/select RHeap before calling the application's factory. On the PC,
 Shadowkey now returns an application object with a mapped virtual table instead
-of stopping on Heap SVC 0x6c. The new kernel and bootstrap need console validation.
+of stopping on Heap SVC 0x6c. The owner's New 3DS logs now confirm this result:
+all CPU/E32/kernel fixtures pass and the full diagnostic completes in 3613 ms.
+This does not measure gameplay performance. Evidence: validation/0.3.15.
 Original CPU tests cover ARM/Thumb SVC return via LR, chunks, stale handles,
 synchronization and heap context. No firmware or game is bundled.
 

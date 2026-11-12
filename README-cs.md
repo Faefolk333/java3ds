@@ -2,8 +2,9 @@
 
 První část jádra EPOC6 nyní obsluhuje paměťové bloky, vybrané služby vláken,
 semafory, mutexy a výběr haldy. Samotný RHeap vytváří původní kód EUSER z vašeho
-ROMu. Na PC už Shadowkey vytvoří objekt aplikace a překročí zastavení na Heap.
-Nový kernel a inicializace potřebují ověřit na 3DS. Použijte stejná soukromá
+ROMu. Na PC i na vašem New 3DS už Shadowkey vytvoří objekt aplikace a překročí
+zastavení na Heap. Všechny kontroly CPU/E32/kernelu na konzoli prošly; celá
+diagnostika trvala 3613 ms. To není měření rychlosti hry. Použijte stejná soukromá
 data: po aktualizaci otevřete Java3DS a spusťte Symbian Probe 0.3.15 -> Y.
 Logy přidávají kernelové kontroly, THREAD_HEAP a APPLICATION_OBJECT.
 Zatím nevzniká herní obrazovka; služby systému, plánovač, grafika/zvuk a SIS

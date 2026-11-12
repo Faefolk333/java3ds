@@ -1,8 +1,9 @@
 # Compatibility work — 0.3.15
 
 The separate Symbian runtime has an initial single-thread EPOC6 executive.
-On PC the supplied Shadowkey now creates its application object using native
-RHeap code. New kernel/heap behavior needs a device test. No phone GUI, playable
+On PC and the owner's New 3DS, the supplied Shadowkey now creates its application
+object using native RHeap code. All 0.3.15 CPU/E32/kernel fixtures pass on hardware;
+the full diagnostic completes in 3613 ms. No phone GUI, playable
 game, EKA2/SIS or Java compatibility change is claimed; see SYMBIAN.md.
 
 ## Earlier 0.3.14 work
