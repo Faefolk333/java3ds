@@ -13,7 +13,9 @@ Eka1Kernel::Object* Eka1Kernel::object(std::uint32_t h,unsigned type){
 }
 Eka1Kernel::Object* Eka1Kernel::newObject(){
  if(nextHandle>=0x7fffffff)return nullptr;
- for(auto&o:objects)if(!o.type){o={};o.handle=nextHandle++;o.references=1;return &o;}return nullptr;
+ // Callbacks may allocate nested kernel objects before a caller assigns type.
+ // A reserved slot already owns a reference and must not be reused then.
+ for(auto&o:objects)if(!o.type&&!o.references){o={};o.handle=nextHandle++;o.references=1;return &o;}return nullptr;
 }
 std::uint32_t Eka1Kernel::newAlias(Object&o){
  if(nextHandle>=0x7fffffff)return 0;
@@ -26,6 +28,18 @@ std::uint32_t Eka1Kernel::chunkAddress(std::uint32_t size)const{
   for(const auto&o:objects)if(o.type==Object::Chunk&&std::uint64_t(base)<std::uint64_t(o.base)+o.maximum&&std::uint64_t(o.base)<std::uint64_t(base)+size){base=o.base+o.maximum;overlap=true;break;}
   if(!overlap)return std::uint64_t(base)+size<=0x40000000?base:0;
  }return 0;
+}
+bool Eka1Kernel::initializeGraphicsResources(){
+ const std::u16string names[]={u"FbsSharedChunk",u"FbsLargeChunk",u"FbsLargeBitmapAccess"};
+ for(const auto&o:objects)if(o.type==Object::Chunk&&o.global&&o.name==names[0])return true;
+ std::array<Object*,3> created{};std::array<bool,2> mapped{};
+ for(unsigned n=0;n<3;n++){
+  auto*o=newObject();if(!o)break;created[n]=o;o->name=names[n];o->global=true;
+  if(n<2){o->type=Object::Chunk;o->maximum=1024*1024;o->size=n?0:65536;o->base=chunkAddress(o->maximum);
+   if(!o->base||!memory.map(o->base,o->maximum,Read|Write))break;mapped[n]=true;memory.commit(o->base,o->size);
+  }else{o->type=Object::Mutex;return true;}
+ }
+ for(unsigned n=0;n<3;n++)if(auto*o=created[n]){if(n<2&&mapped[n])memory.unmap(o->base);*o={};}return false;
 }
 KernelResult Eka1Kernel::finish(std::uint32_t status,std::int32_t result){
  if(!memory.write(status,&result))return fault(status,Write);pendingRequests++;return returned(result);
@@ -77,6 +91,20 @@ KernelResult Eka1Kernel::executor(std::uint32_t attr,std::uint32_t info,std::uin
  if(!memory.permits(status,4,Write))return fault(status,Write);
  unsigned operation=attr&255;
  if(attr&~0x400000ffu)return {};
+ if(operation==2||operation==0x18){
+  std::u16string name;if(!readText16(args[1],name))return finish(status,argument);
+  std::uint32_t output=0;if(!package(args[0],4,true,output))return finish(status,argument);
+  unsigned type=operation==2?Object::Chunk:Object::Mutex;
+  for(auto&o:objects)if(o.type==type&&o.global&&o.name==name){auto h=newAlias(o);if(!h)return finish(status,noMemory);memory.write(output,&h);return finish(status,0);}return finish(status,-1);
+ }
+ if(operation==0x16){
+  std::u16string name;if(!readText16(args[1],name))return finish(status,argument);
+  if(name==u"FileServer"?!fileService:!systemService)return {};
+  std::uint32_t output=0;if(!package(args[0],4,true,output)||args[2]>64)return finish(status,argument);
+  auto*o=newObject();if(!o)return finish(status,noMemory);
+  auto result=name==u"FileServer"?fileService(o->handle,-1,{}):systemService(name,o->handle,-1,{});if(result.kind!=KernelResult::Kind::Returned||result.value){*o={};return result.kind==KernelResult::Kind::Returned?finish(status,result.value):result;}
+  o->type=Object::Session;o->base=o->handle;o->name=std::move(name);memory.write(output,&o->handle);return finish(status,0);
+ }
  if(operation==0x2d||operation==0x21){
   if((args[0]&~0x8000u)!=(operation==0x2d?0xffff0001u:0xffff0000u))return finish(status,badHandle);
   finish(status,0);threadExited=true;threadExitCode=args[1];return {KernelResult::Kind::Exited,args[1],0,0};
@@ -95,7 +123,7 @@ KernelResult Eka1Kernel::executor(std::uint32_t attr,std::uint32_t info,std::uin
   std::uint32_t initial,maximum;if(!pageRound(description[0],initial)||!pageRound(description[1],maximum)||!maximum||initial>maximum)return finish(status,argument);
   std::uint32_t output=0;if(!package(args[0],4,true,output))return finish(status,argument);
   auto*o=newObject();auto base=chunkAddress(maximum);
-  if(!o||!base||!memory.map(base,maximum,Read|Write))return finish(status,noMemory);
+  if(!o)return finish(status,noMemory);if(!base||!memory.map(base,maximum,Read|Write)){*o={};return finish(status,noMemory);}
   memory.commit(base,initial);o->type=Object::Chunk;o->base=base;o->maximum=maximum;o->size=initial;
   memory.write(output,&o->handle);return finish(status,0);
  }
@@ -121,7 +149,7 @@ KernelResult Eka1Kernel::executor(std::uint32_t attr,std::uint32_t info,std::uin
   for(auto&o:objects)if(o.type&&o.handle==args[0]){o.handle=0;target=&o;break;}
   if(!target)for(auto&a:aliases)if(a.handle==args[0]){target=&objects[a.index];a={};break;}
   if(!target)return finish(status,badHandle);
-  if(!--target->references){if(target->type==Object::Chunk)memory.unmap(target->base);*target={};}return finish(status,0);
+  if(!--target->references){if(target->type==Object::Chunk)memory.unmap(target->base);if(target->type==Object::Session){if(target->name==u"FileServer"&&fileService)fileService(target->base,-2,{});else if(systemService)systemService(target->name,target->base,-2,{});}*target={};}return finish(status,0);
  }
  if(operation==0x34){
   for(auto&slot:tls)if(slot.used&&slot.key==args[0]){slot.value=args[1];return finish(status,0);}
@@ -134,6 +162,13 @@ KernelResult Eka1Kernel::executor(std::uint32_t attr,std::uint32_t info,std::uin
 KernelResult Eka1Kernel::dispatch(std::uint32_t svc,const std::array<std::uint32_t,4>&a){
  if(threadExited)return {KernelResult::Kind::Exited,threadExitCode,0,0};
  switch(svc){
+ case 0xc000bf:case 0xc00031:{
+  auto*o=object(a[0],Object::Session);if(!o)return returned(badHandle);
+  if(a[3]&&!memory.permits(a[3],4,Write))return fault(a[3],Write);
+  std::array<std::uint32_t,4> args{};if(a[2]&&!memory.read(a[2],args.data(),sizeof(args)))return fault(a[2],Read);
+  auto result=o->name==u"FileServer"&&fileService?fileService(o->base,a[1],args):systemService?systemService(o->name,o->base,a[1],args):KernelResult{};if(result.kind!=KernelResult::Kind::Returned)return result;
+  if(a[3]){finish(a[3],result.value);return returned(0);}return result;
+ }
  case 0x6c:return returned(currentHeap);
  case 0x4f:case 0x51:case 0x52:{
   auto c=a[0];if(c>127)return {};if(svc==0x52){if(c>='a'&&c<='z')c-=32;}else if(c>='A'&&c<='Z')c+=32;return returned(c);

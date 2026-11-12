@@ -1,3 +1,27 @@
+# Java3DS — test build 0.6.0
+
+This Symbian service batch adds EPOC6 session creation and old four-word IPC,
+a bounded read-only FileServer, named graphics chunks/mutexes, FBS connection
+state and initial WindowServer communication. Native ROM RFs/RFile functions
+now pass application/ROM open, entry/UID metadata, read, seek, EOF, asynchronous
+completion, missing-file and close checks on PC. Native RFbsSession connection,
+shared memory, repeated connection and final disconnection also pass.
+
+The original AppRun now gets through both service connections and WindowServer
+initialization. Its next explicit stop is CreateScreenDevice (command 25).
+Screen devices, drawing/fonts/bitmaps, complete scheduling, audio, EKA2/SIS and
+playable Symbian scenes remain incomplete. These new checks still need physical
+3DS validation; 0.5.0 hardware results do not validate this new service layer.
+Java ME behavior and the banner are unchanged. No game FPS gain is claimed.
+
+Update over Wi-Fi, reopen Java3DS, then run Symbian Probe 0.6.0 -> Y using the
+same private 0.4.0 SD data. No new owner-data ZIP is needed. Collect
+/3ds/java-3ds/symbian-probe.log and symbian-loader.log. NATIVE_FILES and NATIVE_FBS
+flags should all be 1, followed by WINDOWSERVER command=25. This expected
+unsupported drawing boundary is not a game launch or an emulator crash.
+
+## Previous history
+
 # Java3DS — test build 0.5.0
 
 This larger standalone Symbian batch adds bounded EKA1 TRAP frame handling,

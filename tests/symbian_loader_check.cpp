@@ -12,13 +12,15 @@
 #include <filesystem>
 #include <fstream>
 using namespace symbian;
+#include "symbian_file_server_check.h"
 static void put(std::vector<std::uint8_t>&b,unsigned at,std::uint32_t word){for(unsigned n=0;n<4;n++)b[at+n]=word>>(n*8);}
 static std::uint32_t imageRead=0;static unsigned imageCancelSignals=0;
 static void imageProgress(const char*stage,std::uint32_t done,std::uint32_t){if(!std::strcmp(stage,"Reading ROM"))imageRead=done;}
 static bool cancelImageOnce(){if(imageRead>=65536&&!imageCancelSignals){imageCancelSignals++;return false;}return true;}
 static bool cancelNative=false;
+static const char*cancelServiceStage=nullptr;
 static bool nativeKeepRunning(){return !cancelNative;}
-static void nativeCancelProgress(const char*stage,std::uint32_t done,std::uint32_t){if(!std::strcmp(stage,"Testing native TRAP / cleanup")&&done>=3)cancelNative=true;}
+static void nativeCancelProgress(const char*stage,std::uint32_t done,std::uint32_t){if(cancelServiceStage?!std::strcmp(stage,cancelServiceStage):(!std::strcmp(stage,"Testing native TRAP / cleanup")&&done>=3))cancelNative=true;}
 static void romLookupChecks(){
  namespace fs=std::filesystem;const fs::path folder="work/symbian-rom-lookup-check";fs::create_directories(folder);const auto path=(folder/"original.rom").string();
  std::vector<std::uint8_t> original(8192);put(original,0,0xea000000);put(original,140,0x50000000);put(original,144,original.size());put(original,148,0x50000200);put(original,0x200,1);put(original,0x208,0x50000300);
@@ -235,9 +237,11 @@ static void romChecks(const std::vector<std::uint8_t>&e32){
 int main(int argc,char**argv){
  if(argc==3&&!std::strcmp(argv[1],"--folder"))return symbianImageProbe(argv[2],stdout)?0:5;
  if(argc==4&&!std::strcmp(argv[1],"--folder")&&!std::strcmp(argv[3],"--stress-runtime"))return symbianImageProbe(argv[2],stdout,nullptr,nullptr,512)?0:5;
- if(argc==4&&!std::strcmp(argv[1],"--folder")&&!std::strcmp(argv[3],"--cancel-native")){
+ if(argc==4&&!std::strcmp(argv[1],"--folder")&&(!std::strcmp(argv[3],"--cancel-native")||!std::strcmp(argv[3],"--cancel-files")||!std::strcmp(argv[3],"--cancel-graphics"))){
+  if(!std::strcmp(argv[3],"--cancel-files"))cancelServiceStage="Reading native file size";
+  if(!std::strcmp(argv[3],"--cancel-graphics"))cancelServiceStage="Checking native FBS shared chunk";
   FILE*f=std::tmpfile();assert(f);assert(symbianImageProbe(argv[2],f,nativeKeepRunning,nativeCancelProgress));std::rewind(f);char text[16384]={};auto bytes=std::fread(text,1,sizeof(text)-1,f);std::fclose(f);
-  assert(bytes&&cancelNative&&std::strstr(text,"DIAGNOSTIC_CANCELLED")&&!std::strstr(text,"APPLICATION_OBJECT")&&!std::strstr(text,"ROM_APPRUN")&&!std::strstr(text,"DIAGNOSTIC_END"));puts("NATIVE_CANCEL_PASS latched_between_runtime_checks no_app_factory no_ROM_process_after_cancel");return 0;
+  assert(bytes&&cancelNative&&std::strstr(text,"DIAGNOSTIC_CANCELLED")&&!std::strstr(text,"APPLICATION_OBJECT")&&!std::strstr(text,"ROM_APPRUN")&&!std::strstr(text,"DIAGNOSTIC_END"));printf("NATIVE_CANCEL_PASS stage=%s no_app_factory no_ROM_process_after_cancel\n",cancelServiceStage?cancelServiceStage:"TRAP cleanup");return 0;
  }
  if(argc>1){
   E32Image image;std::string error;
@@ -282,6 +286,8 @@ int main(int argc,char**argv){
  assert(result.passed());
  auto kernel=symbianKernelProbe();printf("KERNEL_PROBE chunks=%d handles=%d sync=%d heap=%d abi=%d thumb=%d trap=%d trap_frames=%d tls=%d scheduler=%d named_sync=%d guest_exit=%d\n",kernel.chunks,kernel.handles,kernel.sync,kernel.heap,kernel.abi,kernel.thumb,kernel.trap,kernel.frames,kernel.tls,kernel.scheduler,kernel.namedSync,kernel.lifecycle);fflush(stdout);assert(kernel.passed());
  kernelNegativeChecks();
+ fileServerChecks();
+ graphicsServerChecks();
  AddressSpace memory(8192);assert(!memory.map(0,4096,Read));assert(!memory.map(0xfffff000,8192,Read));
  assert(memory.map(0x1000,4096,Read|Write));assert(!memory.map(0x1800,4096,Read));
  assert(!memory.map(0x5000,8192,Read));assert(memory.used()==4096);

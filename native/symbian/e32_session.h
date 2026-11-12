@@ -15,6 +15,11 @@ struct ExecutionResult {
  std::array<std::uint32_t,4> arguments{};
  std::uint32_t kernelErrorCall=0,kernelErrorValue=0;
  std::array<std::uint32_t,4> kernelErrorArguments{};
+ std::uint32_t fileCalls=0,fileOpens=0,fileReads=0,fileBytes=0;
+ std::int32_t fileOperation=-1,fileResult=0;bool fileUnsupported=false;
+ std::string filePath;
+ std::uint32_t graphicsCalls=0,graphicsInitializations=0;std::int32_t graphicsOperation=-1;
+ std::uint32_t windowCalls=0,windowInitializations=0,windowCommand=0,windowObject=0;std::int32_t windowOperation=-1;
 };
 struct HeapStartResult {
  bool ready=false;std::uint32_t address=0;ExecutionResult create,switchHeap;std::string error;
@@ -33,6 +38,16 @@ struct NativeContextResult {
  bool tls=false,scheduler=false,events=false,runError=false,teardown=false;
  ExecutionResult call;std::string error;
  bool passed()const{return tls&&scheduler&&events&&runError&&teardown;}
+};
+struct NativeFilesResult {
+ bool connected=false,path=false,opened=false,read=false,seek=false,eof=false,missing=false,closed=false,rom=false,entry=false;
+ ExecutionResult call;std::string error;
+ bool passed()const{return connected&&path&&opened&&read&&seek&&eof&&missing&&closed&&rom&&entry;}
+};
+struct NativeGraphicsResult {
+ bool connected=false,shared=false,retained=false,closed=false;
+ ExecutionResult call;std::string error;
+ bool passed()const{return connected&&shared&&retained&&closed;}
 };
 // One bounded E32 call, not a Symbian OS. Unimplemented imports/SVCs stop with
 // their identities instead of returning fabricated success to an application.
@@ -56,6 +71,8 @@ public:
  CleanupStartResult initializeCleanup(const char*euserDescriptor,TaskControl*control=nullptr);
  NativeRuntimeResult checkNativeRuntime(const char*euserDescriptor,unsigned repetitions=16,TaskControl*control=nullptr);
  NativeContextResult checkNativeContext(const char*euserDescriptor,TaskControl*control=nullptr);
+ NativeFilesResult checkNativeFiles(const char*efsrvDescriptor,const char*euserDescriptor,TaskControl*control=nullptr);
+ NativeGraphicsResult checkNativeGraphics(const char*fbscliDescriptor,TaskControl*control=nullptr);
  ExecutionResult runRomProgram(const char*path,std::string&error,TaskControl*control=nullptr);
  ExecutionResult call(std::uint32_t entry,std::uint32_t argument=0,std::uint64_t budget=100000,TaskControl*control=nullptr);
  ExecutionResult callArgs(std::uint32_t entry,const std::array<std::uint32_t,4>&arguments,std::uint64_t budget=100000,TaskControl*control=nullptr);

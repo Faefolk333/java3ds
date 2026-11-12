@@ -1,3 +1,26 @@
+# Java3DS 0.6.0 — souborové a grafické služby Symbianu
+
+Přibyl souborový server, původní čtyřslovné IPC, relace služeb, pojmenovaná
+sdílená paměť a mutex pro grafiku a začátek komunikace s WindowServerem.
+Na PC přes skutečné funkce ROM prošlo otevření herního i ROM souboru, metadata,
+čtení, posun, konec souboru, asynchronní dokončení, chybějící soubor a zavření.
+Prošlo i nativní připojení k FBS, sdílená paměť a opakované připojení/odpojení.
+
+AppRun už projde připojením obou služeb a inicializací WindowServeru. Dalším
+chybějícím krokem je CreateScreenDevice (příkaz 25). Vykreslování, písma/bitmapy,
+plné plánování, zvuk Symbianu, EKA2/SIS a hratelná scéna ještě hotové nejsou.
+Nová vrstva je ověřená na PC; ověření 0.6.0 na konzoli teprve zbývá. Výsledky
+0.5.0 z konzole se na nové služby nevztahují. Java hry ani banner se nemění.
+
+Aktualizujte přes Wi-Fi, znovu otevřete Java3DS a spusťte Symbian Probe 0.6.0 -> Y.
+Stačí stejná soukromá data z 0.4.0. V symbian-loader.log očekáváme všechny příznaky
+NATIVE_FILES a NATIVE_FBS = 1 a pak WINDOWSERVER command=25. Pošlete oba logy
+z /3ds/java-3ds/. Toto zastavení označuje chybějící vykreslování, nikoli spuštění
+hry. Soukromá ROM a hry nejsou součástí vydání. Repozitář zůstává veřejný jen
+v již dohodnutém testovacím okně, do vašeho oznámení o konci testování.
+
+## Předchozí historie
+
 # Java3DS 0.5.0 — větší testovací balík Symbianu
 
 Nově: skutečné zachycení Leave a nativní úklid přes původní ROM, vnořené TRAP

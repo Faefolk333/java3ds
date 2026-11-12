@@ -70,6 +70,14 @@ bool symbianImageProbe(const char*folder,FILE*report,bool(*keepRunning)(),void(*
    std::fprintf(report,"NATIVE_CONTEXT tls=%d scheduler=%d events=%d run_error=%d teardown=%d result=%s svc=%08lx fault=%08lx error=%s\n",context.tls,context.scheduler,context.events,context.runError,context.teardown,stopName(context.call.reason),(unsigned long)context.call.systemCall,(unsigned long)context.call.address,context.error.c_str());std::fflush(report);
    if(!checkpoint())return true;
    if(!context.passed()){std::fprintf(report,"DIAGNOSTIC_STOP native_thread_context_incomplete\n");return true;}
+   auto files=session.checkNativeFiles((root+"/rom-libs/EFSRV.DLL").c_str(),(root+"/rom-libs/EUSER.DLL").c_str(),&control);
+   std::fprintf(report,"NATIVE_FILES connect=%d path=%d open=%d read=%d seek=%d eof=%d missing=%d close=%d rom=%d entry=%d result=%s r0=%08lx svc=%08lx fault=%08lx error=%s\n",files.connected,files.path,files.opened,files.read,files.seek,files.eof,files.missing,files.closed,files.rom,files.entry,stopName(files.call.reason),(unsigned long)files.call.r0,(unsigned long)files.call.systemCall,(unsigned long)files.call.address,files.error.c_str());std::fflush(report);
+   if(!checkpoint())return true;
+   if(!files.passed()){std::fprintf(report,"DIAGNOSTIC_STOP native_file_service_incomplete\n");return true;}
+   auto graphics=session.checkNativeGraphics((root+"/rom-libs/FBSCLI.DLL").c_str(),&control);
+   std::fprintf(report,"NATIVE_FBS connect=%d shared=%d retained=%d close=%d result=%s r0=%08lx svc=%08lx fault=%08lx error=%s\n",graphics.connected,graphics.shared,graphics.retained,graphics.closed,stopName(graphics.call.reason),(unsigned long)graphics.call.r0,(unsigned long)graphics.call.systemCall,(unsigned long)graphics.call.address,graphics.error.c_str());std::fflush(report);
+   if(!checkpoint())return true;
+   if(!graphics.passed()){std::fprintf(report,"DIAGNOSTIC_STOP native_graphics_connection_incomplete\n");return true;}
   }
   if(entry!=m.entry&&r.reason==StopReason::Returned&&r.r0){
    std::uint32_t vtable=0;
@@ -93,6 +101,9 @@ bool symbianImageProbe(const char*folder,FILE*report,bool(*keepRunning)(),void(*
   if(run.systemCall==0xc00076){std::uint32_t args[4];if(session.memory().read(run.arguments[1],args,sizeof(args)))std::fprintf(report,"ROM_APPRUN_EXECUTOR operation=%08lx args=%08lx,%08lx,%08lx,%08lx\n",(unsigned long)run.arguments[0],(unsigned long)args[0],(unsigned long)args[1],(unsigned long)args[2],(unsigned long)args[3]);}
   if(run.kernelErrorValue)std::fprintf(report,"ROM_APPRUN_KERNEL_ERROR svc=%08lx value=%08lx args=%08lx,%08lx,%08lx,%08lx\n",(unsigned long)run.kernelErrorCall,(unsigned long)run.kernelErrorValue,(unsigned long)run.kernelErrorArguments[0],(unsigned long)run.kernelErrorArguments[1],(unsigned long)run.kernelErrorArguments[2],(unsigned long)run.kernelErrorArguments[3]);
   if(!run.serviceName.empty())std::fprintf(report,"ROM_APPRUN_SERVICE name=%s stage=session_creation_unimplemented\n",run.serviceName.c_str());
+  std::fprintf(report,"FILESERVER calls=%lu opens=%lu reads=%lu bytes=%lu operation=%ld result=%ld unsupported=%d path=%s\n",(unsigned long)run.fileCalls,(unsigned long)run.fileOpens,(unsigned long)run.fileReads,(unsigned long)run.fileBytes,(long)run.fileOperation,(long)run.fileResult,run.fileUnsupported,run.filePath.c_str());
+  std::fprintf(report,"FONTBITMAPSERVER calls=%lu initializations=%lu operation=%ld\n",(unsigned long)run.graphicsCalls,(unsigned long)run.graphicsInitializations,(long)run.graphicsOperation);
+  std::fprintf(report,"WINDOWSERVER calls=%lu initializations=%lu operation=%ld command=%lu object=%08lx\n",(unsigned long)run.windowCalls,(unsigned long)run.windowInitializations,(long)run.windowOperation,(unsigned long)run.windowCommand,(unsigned long)run.windowObject);
  }
  if(!checkpoint())return true;
  auto elapsed=std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started).count();

@@ -1,0 +1,7 @@
+{
+  "native_files": true,
+  "native_FBS_connection": true,
+  "WindowServer_initialized": true,
+  "next_missing_command": "CreateScreenDevice (25)",
+  "no_phone_GUI_or_gameplay": true
+}

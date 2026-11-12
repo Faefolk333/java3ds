@@ -1,3 +1,35 @@
+# Java3DS 0.6.0 validation — 2026-11-12
+
+The new service layer is host-validated; physical 0.6.0 confirmation is pending.
+The owner's prior 0.5.0 logs validate the earlier CPU/kernel/unwind/context layer,
+not these new services. No phone GUI or playable Symbian scene is claimed.
+
+* Native UID-checked EFSRV RFs/RFile methods exercise connection, UTF-16 session
+  paths, read-only application/ROM opens, TEntry/UID metadata, size, seek,
+  current-position/asynchronous reads, EOF, missing-file errors and both closes.
+* Real FBSCLI Connect/GetSession/HeapBase/Disconnect exercise FBS session state,
+  shared chunk aliases and two-connect/two-disconnect lifetime. Server-owned
+  named chunks reserve 1 MiB each within the same 24 MiB guest budget; initially
+  shared chunk commits 64 KiB and large chunk zero. This does not render fonts.
+* Original ROM AppRun reaches initial WindowServer IPC and stops explicitly at
+  CreateScreenDevice (25). Unknown drawing calls are not acknowledged as done.
+* Original portable regressions cover descriptor overflow/wrap/read-only/HBufC
+  length handling, old four-word IPC and exactly-once completion, read/seek/EOF,
+  mount/path guards, stale handles, 8-session/32-file quotas, disconnect cleanup,
+  nested object reservation, named chunk/mutex aliases, setup rollback, bounded
+  command parsing and unsupported calls. Earlier 418 malformed E32 cases remain.
+* Cancellation tests interrupt native TRAP, file and FBS stages; no application
+  factory, ROM program or normal completion record follows a cancelled stage.
+  The separate 512-cycle native unwind stress remains host-only.
+* The report checker verifies fields and the exact expected boundary. A loader
+  CLI exit status of zero alone is not treated as a native-service pass.
+
+ARM/CIA, embedded asset and update-delivery evidence is stored in validation/0.6.0
+and the local release folder. The banner is reused without changes, and the main
+Java VM behavior is unchanged. Owner ROM, game data and tokens must not be packed.
+
+## Previous history
+
 # Java3DS 0.5.0 validation — 2026-11-12
 
 The owner's New 3DS 0.5.0 logs now confirm all CPU/E32/kernel/runtime fixture

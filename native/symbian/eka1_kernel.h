@@ -1,6 +1,7 @@
 #pragma once
 #include "address_space.h"
 #include <string>
+#include <functional>
 namespace symbian {
 struct KernelResult {
  enum class Kind {Unhandled,Returned,Fault,Blocked,Exited};
@@ -22,7 +23,7 @@ class Eka1Kernel {
  bool threadExited=false;std::uint32_t threadExitCode=0;
  std::uint32_t nextHandle=0x100;
  unsigned pendingRequests=0;
- struct Object {enum {Empty,Chunk,Mutex,Semaphore};unsigned type=0,references=0;std::uint32_t handle=0,base=0,maximum=0,size=0;int depth=0;bool global=false;std::u16string name;};
+ struct Object {enum {Empty,Chunk,Mutex,Semaphore,Session};unsigned type=0,references=0;std::uint32_t handle=0,base=0,maximum=0,size=0;int depth=0;bool global=false;std::u16string name;};
  std::array<Object,64> objects{};
  struct Alias {std::uint32_t handle=0;unsigned index=0;};
  std::array<Alias,64> aliases{};
@@ -36,6 +37,10 @@ class Eka1Kernel {
  std::uint32_t newAlias(Object&object);
  std::uint32_t chunkAddress(std::uint32_t size)const;
 public:
+ // -1 connects, -2 disconnects; other operations carry the original EKA1 IPC
+ // function and exactly four old-style argument words. No guest host pointers.
+ std::function<KernelResult(std::uint32_t,std::int32_t,const std::array<std::uint32_t,4>&)> fileService;
+ std::function<KernelResult(const std::u16string&,std::uint32_t,std::int32_t,const std::array<std::uint32_t,4>&)> systemService;
  explicit Eka1Kernel(AddressSpace&m):memory(m){}
  KernelResult dispatch(std::uint32_t svc,const std::array<std::uint32_t,4>&args);
  std::uint32_t heap()const{return currentHeap;}
@@ -47,5 +52,6 @@ public:
  bool alive()const{return !threadExited;}
  std::uint32_t exitCode()const{return threadExitCode;}
  bool descriptor16(std::uint32_t at,std::u16string&text){return readText16(at,text);}
+ bool initializeGraphicsResources();
 };
 }

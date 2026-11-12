@@ -6,7 +6,7 @@ subprocess.run([sys.executable,'tools/generate_symbian_e32_guest.py'],check=True
 d=Path('C:/devkitPro/msys64/opt/devkitpro');b=d/'devkitARM/bin';os.environ['PATH']=str(b)+';'+str(d/'tools/bin')+';'+os.environ['PATH'];out=r/'work/arm';out.mkdir(exist_ok=True)
 flags=['-std=gnu++20','-O2','-march=armv6k','-mtune=mpcore','-mfloat-abi=hard','-mtp=soft','-D__3DS__','-DTRANS_CACHE_SIZE=8388608','-fno-rtti','-fno-exceptions','-ffunction-sections','-fdata-sections','-I'+str(d/'libctru/include'),'-Inative/symbian/compat','-Ithird-party/eka2l1-cpu/cpu/include','-Ithird-party/eka2l1-cpu/common/include']
 objects=[]
-for name in ('cpu_probe','probe_3ds','e32_image','e32_session','rom_image','eka1_kernel','kernel_probe','loader_probe','image_probe'):
+for name in ('cpu_probe','probe_3ds','e32_image','e32_session','rom_image','file_server','eka1_kernel','kernel_probe','loader_probe','image_probe'):
  obj=out/('symbian-'+name+'.o');subprocess.run([str(b/'arm-none-eabi-g++.exe'),*flags,'-c','native/symbian/'+name+'.cpp','-o',str(obj)],check=True);objects.append(str(obj))
 elf=out/'java3ds-symbian-probe.elf';smdh=out/'java3ds-symbian-probe.smdh';target=out/'java3ds-symbian-probe.3dsx'
 heap=out/'symbian-startup_heap.o';subprocess.run([str(b/'arm-none-eabi-g++.exe'),*flags,'-c','native/cia_heap.cpp','-o',str(heap)],check=True)

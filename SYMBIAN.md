@@ -1,3 +1,53 @@
+# Symbian implementation — CPU/EKA1 services, no game runtime yet
+
+## FileServer, IPC and graphics connection batch (0.6.0)
+
+EKA1 CreateSession and sync/async sends now handle old IPC's four argument words,
+checked completion statuses and request signaling. The bounded FileServer has
+8 sessions and 32 file subsessions. The only E: file is the explicitly supplied
+test.app; Z: paths are resolved within the validated ROM. Guest paths never reach
+host filesystem APIs. Paths reject traversal, wildcard and malformed drive/name
+components. Files are read-only; writes return access denied, unknown functions
+stop. Session disconnect closes every owned host stream, and IDs are not reused.
+
+Supported operations cover session/default path reads, session path changes,
+drive list, notify-error preference, file open/read/seek/size/attributes/modified,
+flush/close, entry metadata, ROM address lookup and file-section reads. Not every
+RFs operation, directory or save service is implemented. Per-read transfers are
+bounded to 1 MiB. File metadata is limited to mounted read-only content.
+
+Guest descriptors distinguish 8/16-bit element sizes and constant/inline/pointer/
+HBufC-backed layouts. Data, header and capacity checks precede writes. A mutable
+HBufC pointer updates both lengths. Native EFSRV tests validate actual RFs/RFile
+ABI, including the IsFileInRom output package rather than a returned IPC address.
+
+Initial FBS sessions support initialization and pixel-size state; font/bitmap
+operations remain explicit missing calls. The kernel supplies server-owned
+FbsSharedChunk, FbsLargeChunk and FbsLargeBitmapAccess objects. Each chunk reserves
+1 MiB, initially committing 64 KiB/0 respectively. OpenGlobal creates checked
+aliases; closing a guest alias preserves the server's backing object. Setup is
+transactional. A reserved object slot cannot be reused by a nested service
+allocation, fixing a session/chunk identity collision caught during this work.
+Native FBSCLI tests cover connection, shared base and retained/final disconnect.
+
+WindowServer now maintains bounded sessions and initialization IDs, validates
+command-buffer headers, handles and lengths before state changes, and supports
+empty flush/disconnect. Other commands stop with their decoded identity. Original
+AppRun gets through FileServer/FBS/WindowServer initialization and reaches
+CreateScreenDevice (25). No screen device, font rasterizer, drawing backend,
+phone GUI, full scheduler, Symbian audio, EKA2 or SIS runtime is claimed.
+
+Host regressions and the real owner ROM pipeline pass; new hardware evidence is
+still required. Same private 0.4.0 input ZIP, Probe 0.6.0 -> Y. The two resulting
+logs should show all NATIVE_FILES/NATIVE_FBS flags true and WINDOWSERVER command=25.
+The 0.5.0 hardware pass below remains evidence for the older layer only.
+
+ABI reference: local pinned EKA2L1 78dbf9fccae273a23173fd67d916e7461234a9ec,
+kernel/svc.cpp and services/fs, services/fbs, services/window. The bounded service
+implementation and tests are original project code; phone/game bytes stay local.
+
+## Previous history
+
 # Symbian implementation — CPU/EKA1 loader foundation, no game runtime yet
 
 ## Native unwind, thread context and ROM entry batch (0.5.0)

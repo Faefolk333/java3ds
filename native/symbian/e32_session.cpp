@@ -1,6 +1,8 @@
 #include "e32_session.h"
 #include "rom_image.h"
 #include "eka1_kernel.h"
+#include "file_server.h"
+#include "graphics_server.h"
 #include "runtime_guest.h"
 #include <cpu/dyncom/arm_dyncom.h>
 #include <cpu/12l1r/exclusive_monitor.h>
@@ -25,6 +27,9 @@ struct E32Session::Impl {
  std::vector<RomInitEntry> romRoots;
  std::vector<std::uint32_t> initializedRomEntries;bool romProgramAttempted=false;
  RomImage rom;
+ FileServer fileServer{memory,rom};
+ GraphicsServer graphicsServer{memory};
+ std::string testApplicationPath;bool filesMounted=false;
  ExecutionResult result;
  std::uint32_t stackSize=0;
  bool loaded=false;
@@ -37,6 +42,11 @@ struct E32Session::Impl {
  template<class T>bool write(std::uint32_t a,const T*in){if(memory.write(a,in))return true;fault(a,Write);return false;}
  template<class T>std::int32_t exclusive(std::uint32_t a,T value,T expected){T previous;if(!read(a,&previous))return -1;if(previous!=expected)return 0;return write(a,&value)?1:-1;}
  Impl(){
+  kernel.fileService=[this](auto handle,auto operation,const auto&args){return fileServer.request(handle,operation,args);};
+  kernel.systemService=[this](const auto&name,auto handle,auto operation,const auto&args){
+   if(name==u"Fontbitmapserver"&&operation==-1&&!kernel.initializeGraphicsResources())return KernelResult{KernelResult::Kind::Returned,std::uint32_t(-4),0,0};
+   return graphicsServer.request(name,handle,operation,args);
+  };
   cpu.read_8bit=[this](auto a,auto p){return read(a,p);};cpu.read_16bit=[this](auto a,auto p){return read(a,p);};cpu.read_32bit=[this](auto a,auto p){return read(a,p);};cpu.read_64bit=[this](auto a,auto p){return read(a,p);};
   cpu.read_code=[this](auto a,auto p){*p=0;if(memory.read(a,p,sizeof(*p),Read|Execute))return true;fault(a,Execute);return false;};
   cpu.write_8bit=[this](auto a,auto p){return write(a,p);};cpu.write_16bit=[this](auto a,auto p){return write(a,p);};cpu.write_32bit=[this](auto a,auto p){return write(a,p);};cpu.write_64bit=[this](auto a,auto p){return write(a,p);};
@@ -62,7 +72,7 @@ struct E32Session::Impl {
      if(handled.kind==KernelResult::Kind::Exited){cpu.set_reg(0,handled.value);result.reason=StopReason::ThreadExited;cpu.stop();return;}
      if(handled.kind==KernelResult::Kind::Fault){fault(handled.address,handled.access);return;}
      if(handled.kind==KernelResult::Kind::Blocked){result.reason=StopReason::ThreadBlocked;cpu.stop();return;}
-     if(svc==0xc00076&&(result.arguments[0]&255)==0x16){
+     if(svc==0xc00076&&((result.arguments[0]&255)==0x16||(result.arguments[0]&255)==2||(result.arguments[0]&255)==0x18)){
       std::uint32_t args[4];std::u16string name;
       if(memory.read(result.arguments[1],args,sizeof(args))&&kernel.descriptor16(args[1],name))for(auto c:name)result.serviceName+=c>=32&&c<127?char(c):'?';
      }
@@ -158,6 +168,7 @@ bool E32Session::linkDependencies(const char*folder,std::string&error,TaskContro
  std::size_t exportCount=0;
  std::uint32_t codeBase=0x13000000,dataBase=0x03000000;
  const std::string root=folder;
+ p.testApplicationPath=root+"/test.app";
  auto rollback=[&](){for(auto base:mappings)p.memory.unmap(base);return false;};
  auto checkpoint=[&](){if(!control||control->checkpoint())return true;error="Dependency linking cancelled";return false;};
  auto target=[&](const Provider&provider,const E32Import&import,std::uint32_t slot){
@@ -343,6 +354,73 @@ NativeContextResult E32Session::checkNativeContext(const char*descriptor,TaskCon
  if(!result.passed()&&result.error.empty())result.error="Native TLS/scheduler/RunL/RunError/teardown check did not complete";
  for(auto at:mapped)p.memory.unmap(at);return result;
 }
+NativeFilesResult E32Session::checkNativeFiles(const char*efsrv,const char*euser,TaskControl*control){
+ auto&p=*impl;NativeFilesResult result;
+ if(!p.romInitReady||!p.kernel.trap()||p.kernel.trapDepth()||p.kernel.scheduler()||p.romProgramAttempted){result.error="Native files require initialized idle thread context";return result;}
+ if(!p.filesMounted){if(!p.fileServer.mountApplication(p.testApplicationPath)){result.error="Cannot mount diagnostic application file";return result;}p.filesMounted=true;}
+ std::uint32_t functions[12]{};const unsigned ordinals[]={18,163,178,121,185,142,162,15,139};
+ for(unsigned n=0;n<9;n++)if(!romExport(efsrv,0x100039e4,ordinals[n],functions[n],result.error))return result;
+ if(!romExport(euser,0x100039e5,172,functions[9],result.error))return result;
+ if(!romExport(efsrv,0x100039e4,39,functions[10],result.error)||!romExport(efsrv,0x100039e4,68,functions[11],result.error))return result;
+ constexpr std::uint32_t data=0x31030000;
+ if(!p.memory.map(data,4096,Read|Write)){result.error="Cannot allocate native file diagnostic storage";return result;}
+ struct Unmap {AddressSpace&m;~Unmap(){m.unmap(data);}} unmap{p.memory};
+ auto word=[&](unsigned offset,std::uint32_t value){p.memory.write(data+offset,&value);};
+ auto get=[&](unsigned offset){std::uint32_t value=0;p.memory.read(data+offset,&value);return value;};
+ auto string=[&](unsigned offset,const std::u16string&value){word(offset,value.size());p.memory.write(data+offset+4,value.data(),value.size()*2);};
+ auto buffer=[&](unsigned offset,unsigned pointer,unsigned maximum){word(offset,0x20000000);word(offset+4,maximum);word(offset+8,data+pointer);};
+ auto invoke=[&](unsigned fn,const std::array<std::uint32_t,4>&args,const char*stage,bool zero=true){
+  if(control)control->report(stage);result.call=callArgs(functions[fn],args,100000,control);
+  if(result.call.reason!=StopReason::Returned||(zero&&result.call.r0)){result.error=stage;return false;}return true;
+ };
+ const auto fs=data,file=data+64;buffer(128,160,256);buffer(768,800,64);
+ if(!invoke(0,{fs,4,0,0},"Connecting native RFs"))return result;result.connected=get(0)!=0;
+ if(!invoke(1,{fs,data+128,0,0},"Reading native session path"))return result;
+ result.path=get(128)==0x20000003;
+ string(400,u"E:\\System\\Apps\\Java3DS\\");
+ if(!invoke(2,{fs,data+400,0,0},"Setting native session path"))return result;
+ string(400,u"test.app");
+ if(!invoke(10,{fs,data+400,data+1100,0},"Reading native file entry"))return result;
+ result.entry=get(1116)==0x10000079&&get(1128)==8;
+ if(!invoke(3,{file,fs,data+400,0},"Opening native application file"))return result;result.opened=true;
+ if(!invoke(4,{file,data+960,0,0},"Reading native file size"))return result;auto size=get(960);if(size<12){result.error="Mounted application file is truncated";return result;}
+ if(!invoke(5,{file,0,data+768,12},"Reading native E32 UID header"))return result;result.read=(get(768)&0xffffff)==12&&get(800)==0x10000079;
+ word(960,std::uint32_t(-4));
+ if(!invoke(6,{file,3,data+960,0},"Seeking native file from end"))return result;result.seek=get(960)==size-4;
+ if(!invoke(5,{file,size+1,data+768,12},"Reading native end of file"))return result;result.eof=(get(768)&0xffffff)==0;
+ // Async RFile::Read must complete the guest TRequestStatus and signal once.
+ word(960,std::uint32_t(-4));if(!invoke(6,{file,3,data+960,0},"Restoring native file position"))return result;
+ word(976,0x80000001);if(!invoke(8,{file,data+768,4,data+976},"Completing native asynchronous file read",false))return result;
+ result.read=result.read&&get(976)==0&&(get(768)&0xffffff)==4;
+ if(!invoke(7,{file,0,0,0},"Closing native RFile",false))return result;
+ string(400,u"missing-java3ds-test.file");
+ if(!invoke(3,{file,fs,data+400,0},"Checking native missing file",false))return result;result.missing=result.call.r0==std::uint32_t(-1);
+ string(400,u"Z:\\System\\Programs\\AppRun.exe");
+ if(!invoke(11,{fs,data+400,0,0},"Locating native ROM file",false))return result;auto romAddress=result.call.r0;
+ if(!invoke(3,{file,fs,data+400,0},"Opening native ROM file")||!invoke(5,{file,0,data+768,12},"Reading native ROM UID header"))return result;
+ result.rom=romAddress>=0x50000000&&(get(768)&0xffffff)==12&&get(800)==0x1000007a;
+ if(!invoke(7,{file,0,0,0},"Closing native ROM file",false))return result;
+ if(!invoke(9,{fs,0,0,0},"Closing native RFs",false))return result;result.closed=get(0)==0;
+ if(!result.passed())result.error="Native file result mismatch";return result;
+}
+NativeGraphicsResult E32Session::checkNativeGraphics(const char*descriptor,TaskControl*control){
+ auto&p=*impl;NativeGraphicsResult result;
+ if(!p.romInitReady||!p.kernel.trap()||p.kernel.trapDepth()||p.kernel.scheduler()||p.romProgramAttempted){result.error="Native graphics require initialized idle thread context";return result;}
+ std::uint32_t functions[4]{};const unsigned ordinals[]={13,48,56,20};
+ for(unsigned n=0;n<4;n++)if(!romExport(descriptor,0x10003a15,ordinals[n],functions[n],result.error))return result;
+ auto invoke=[&](unsigned fn,std::uint32_t arg,const char*stage,bool zero=false){
+  if(control)control->report(stage);result.call=call(functions[fn],arg,100000,control);
+  if(result.call.reason!=StopReason::Returned||(zero&&result.call.r0)){result.error=stage;return false;}return true;
+ };
+ if(!invoke(0,0,"Connecting native RFbsSession",true)||!invoke(1,0,"Reading native FBS session"))return result;
+ auto session=result.call.r0;result.connected=session&&p.memory.permits(session,48,Read|Write);
+ if(!result.connected){result.error="Invalid native FBS session storage";return result;}
+ if(!invoke(2,session,"Checking native FBS shared chunk"))return result;
+ result.shared=result.call.r0&&p.memory.permits(result.call.r0,65536,Read|Write);
+ if(!invoke(0,0,"Retaining native FBS session",true)||!invoke(3,0,"Releasing native FBS reference")||!invoke(1,0,"Checking retained native FBS session"))return result;result.retained=result.call.r0==session;
+ if(!invoke(3,0,"Closing native FBS session")||!invoke(1,0,"Checking closed native FBS session"))return result;result.closed=result.call.r0==0;
+ if(!result.passed())result.error="Native FBS connection result mismatch";return result;
+}
 ExecutionResult E32Session::runRomProgram(const char*path,std::string&error,TaskControl*control){
  auto&p=*impl;ExecutionResult result;result.reason=StopReason::InvalidEntry;
  if(!p.romInitReady||!p.kernel.trap()||p.kernel.trapDepth()||p.kernel.scheduler()||p.romProgramAttempted){error="ROM process entry requires initialized, fresh idle thread context";return result;}
@@ -359,6 +437,7 @@ ExecutionResult E32Session::runRomProgram(const char*path,std::string&error,Task
  for(const auto&library:order)if(std::find(p.initializedRomEntries.begin(),p.initializedRomEntries.end(),library.entry)==p.initializedRomEntries.end()){error="ROM executable depends on an unattached DLL";return result;}
  std::u16string filename;for(const char*c=path;*c;c++)filename+=*c=='/'?'\\':char16_t(*c);
  if(!p.kernel.configureProcess(filename,u"\"E:\\System\\Apps\\Java3DS\\test.app\" R\"test\" ")){error="Cannot configure bounded diagnostic process metadata";return result;}
+ if(!p.filesMounted){if(!p.fileServer.mountApplication(p.testApplicationPath)){error="Cannot mount diagnostic application file";return result;}p.filesMounted=true;}
  p.romProgramAttempted=true;if(control)control->report("Entering ROM AppRun");return call(h[4],0,1000000,control);
 }
 ExecutionResult E32Session::callArgs(std::uint32_t entry,const std::array<std::uint32_t,4>&arguments,std::uint64_t budget,TaskControl*control){
@@ -376,6 +455,10 @@ ExecutionResult E32Session::callArgs(std::uint32_t entry,const std::array<std::u
   if(!executed&&p.result.reason==StopReason::Running){p.result.reason=StopReason::BudgetExhausted;break;}
  }
  if(p.result.reason==StopReason::Running)p.result.reason=StopReason::BudgetExhausted;
- p.result.pc=p.cpu.get_pc();p.result.r0=p.cpu.get_reg(0);return p.result;
+ p.result.pc=p.cpu.get_pc();p.result.r0=p.cpu.get_reg(0);
+ const auto&t=p.fileServer.trace;p.result.fileCalls=t.calls;p.result.fileOpens=t.opens;p.result.fileReads=t.reads;p.result.fileBytes=t.bytes;p.result.fileOperation=t.operation;p.result.fileResult=t.result;p.result.fileUnsupported=t.unsupported;
+ for(auto c:t.path)p.result.filePath+=c>=32&&c<127?char(c):'?';
+ p.result.graphicsCalls=p.graphicsServer.calls;p.result.graphicsInitializations=p.graphicsServer.initializations;p.result.graphicsOperation=p.graphicsServer.lastOperation;
+ p.result.windowCalls=p.graphicsServer.windowCalls;p.result.windowInitializations=p.graphicsServer.windowInitializations;p.result.windowOperation=p.graphicsServer.windowOperation;p.result.windowCommand=p.graphicsServer.windowCommand;p.result.windowObject=p.graphicsServer.windowObject;return p.result;
 }
 }

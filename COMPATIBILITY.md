@@ -1,3 +1,20 @@
+# Compatibility work — 0.6.0
+
+Native PC validation now covers EPOC6 RFs/RFile access to the owner's mounted
+application and ROM files, native FBS connect/shared chunks/refcounted disconnect
+and original AppRun reaching WindowServer CreateScreenDevice (25). FileServer
+mounts only the explicit test.app and validated Z: ROM; writable saves, general
+SD game-resource mounts, directory enumeration and the rest of RFs are not yet
+implemented. Unsupported operations stop rather than reporting fake success.
+
+No phone GUI/gameplay, EKA2/SIS, font rasterization/bitmap drawing, full async
+scheduling or Symbian audio is claimed. No Java ME compatibility/performance
+change. New 3DS validation of 0.6.0 remains pending. Existing private 0.4.0 test
+inputs suffice; they are excluded from releases. Details: SYMBIAN.md and
+validation/0.6.0. The separate 0.5.0 hardware pass remains historical evidence.
+
+## Previous history
+
 # Compatibility work — 0.5.0
 
 A larger EKA1 runtime batch adds real ROM TRAP/Leave cleanup, DLL TLS, native
