@@ -1,0 +1,8 @@
+{
+  "native_files": true,
+  "native_FBS_connection": true,
+  "WindowServer_initialized": true,
+  "native_window": true,
+  "next_missing_command": "FBS nearest font in twips (EKA1 12)",
+  "no_phone_GUI_or_gameplay": true
+}

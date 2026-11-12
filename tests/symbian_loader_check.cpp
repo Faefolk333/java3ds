@@ -13,6 +13,7 @@
 #include <fstream>
 using namespace symbian;
 #include "symbian_file_server_check.h"
+#include "symbian_window_check.h"
 static void put(std::vector<std::uint8_t>&b,unsigned at,std::uint32_t word){for(unsigned n=0;n<4;n++)b[at+n]=word>>(n*8);}
 static std::uint32_t imageRead=0;static unsigned imageCancelSignals=0;
 static void imageProgress(const char*stage,std::uint32_t done,std::uint32_t){if(!std::strcmp(stage,"Reading ROM"))imageRead=done;}
@@ -237,9 +238,10 @@ static void romChecks(const std::vector<std::uint8_t>&e32){
 int main(int argc,char**argv){
  if(argc==3&&!std::strcmp(argv[1],"--folder"))return symbianImageProbe(argv[2],stdout)?0:5;
  if(argc==4&&!std::strcmp(argv[1],"--folder")&&!std::strcmp(argv[3],"--stress-runtime"))return symbianImageProbe(argv[2],stdout,nullptr,nullptr,512)?0:5;
- if(argc==4&&!std::strcmp(argv[1],"--folder")&&(!std::strcmp(argv[3],"--cancel-native")||!std::strcmp(argv[3],"--cancel-files")||!std::strcmp(argv[3],"--cancel-graphics"))){
+ if(argc==4&&!std::strcmp(argv[1],"--folder")&&(!std::strcmp(argv[3],"--cancel-native")||!std::strcmp(argv[3],"--cancel-files")||!std::strcmp(argv[3],"--cancel-graphics")||!std::strcmp(argv[3],"--cancel-window"))){
   if(!std::strcmp(argv[3],"--cancel-files"))cancelServiceStage="Reading native file size";
   if(!std::strcmp(argv[3],"--cancel-graphics"))cancelServiceStage="Checking native FBS shared chunk";
+  if(!std::strcmp(argv[3],"--cancel-window"))cancelServiceStage="Querying native screen pixels";
   FILE*f=std::tmpfile();assert(f);assert(symbianImageProbe(argv[2],f,nativeKeepRunning,nativeCancelProgress));std::rewind(f);char text[16384]={};auto bytes=std::fread(text,1,sizeof(text)-1,f);std::fclose(f);
   assert(bytes&&cancelNative&&std::strstr(text,"DIAGNOSTIC_CANCELLED")&&!std::strstr(text,"APPLICATION_OBJECT")&&!std::strstr(text,"ROM_APPRUN")&&!std::strstr(text,"DIAGNOSTIC_END"));printf("NATIVE_CANCEL_PASS stage=%s no_app_factory no_ROM_process_after_cancel\n",cancelServiceStage?cancelServiceStage:"TRAP cleanup");return 0;
  }
@@ -288,6 +290,7 @@ int main(int argc,char**argv){
  kernelNegativeChecks();
  fileServerChecks();
  graphicsServerChecks();
+ windowServerChecks();
  AddressSpace memory(8192);assert(!memory.map(0,4096,Read));assert(!memory.map(0xfffff000,8192,Read));
  assert(memory.map(0x1000,4096,Read|Write));assert(!memory.map(0x1800,4096,Read));
  assert(!memory.map(0x5000,8192,Read));assert(memory.used()==4096);

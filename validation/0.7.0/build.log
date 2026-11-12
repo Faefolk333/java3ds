@@ -1,0 +1,78 @@
+{
+  "cgfx_bytes": 276536,
+  "dictionaries": [
+    {
+      "offset": 148,
+      "entries": 1
+    },
+    {
+      "offset": 420,
+      "entries": 3
+    },
+    {
+      "offset": 532,
+      "entries": 5
+    },
+    {
+      "offset": 900,
+      "entries": 7
+    },
+    {
+      "offset": 1416,
+      "entries": 48
+    },
+    {
+      "offset": 5012,
+      "entries": 4
+    },
+    {
+      "offset": 11076,
+      "entries": 7
+    },
+    {
+      "offset": 12784,
+      "entries": 1
+    },
+    {
+      "offset": 12860,
+      "entries": 4
+    },
+    {
+      "offset": 13032,
+      "entries": 1
+    },
+    {
+      "offset": 13384,
+      "entries": 1
+    },
+    {
+      "offset": 13508,
+      "entries": 1
+    },
+    {
+      "offset": 13592,
+      "entries": 4
+    }
+  ],
+  "lookups_passed": 87
+}
+BANNER_MOTION_PASS {"serialized_vertex_samples": 739673, "max_authored_vertex_error_scene_units": 0.0042302503701989735, "authored_loop_seconds": 5, "mesh_bound_billboard": 5, "timed_counter_rotation": false, "rotation_channels_retained": 4, "hardware_motion_verified": false, "CGFX_bytes": 276536}
+[INFO] Created banner "C:/Users/Administrator/Desktop/game/java-3ds-launcher/assets/banner/banner.bnr".
+DIAGNOSTIC_GUEST_BYTES 1300
+CPU 3ds armstate.cpp
+CPU 3ds armsupp.cpp
+CPU 3ds arm_dyncom.cpp
+CPU 3ds arm_dyncom_dec.cpp
+CPU 3ds arm_dyncom_interpreter.cpp
+CPU 3ds arm_dyncom_thumb.cpp
+CPU 3ds arm_dyncom_trans.cpp
+CPU 3ds vfp.cpp
+CPU 3ds vfpdouble.cpp
+CPU 3ds vfpsingle.cpp
+CPU 3ds exclusive_monitor.cpp
+CPU 3ds bytes.cpp
+SYMBIAN_CPU_LIBRARY_BUILT 3ds
+ORIGINAL_E32_GUEST_BYTES 392
+SYMBIAN_PROBE_BUILT C:\Users\Administrator\Desktop\game\java-3ds-launcher\work\arm\java3ds-symbian-probe.3dsx
+AMR_DECODER_BUILT arm sources 92
+[INFO] Created SMDH "C:/Users/Administrator/Desktop/game/java-3ds-launcher/work/arm/java3ds-cia.smdh".

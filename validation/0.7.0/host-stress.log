@@ -1,0 +1,45 @@
+Java3DS EKA1 loader diagnostic 0.7.0; no phone OS/gameplay
+E32_VALID uid3=101fd3f6 code=1051076 data=0 bss=0 imports=415 relocations=10104
+E32_MAPPED bytes=1062596
+ROM_LINK APPARC[10003a3d].DLL resolved=4 status=linked
+ROM_LINK AVKON[100056c6].DLL resolved=20 status=linked
+ROM_LINK BITGDI[10003b18].DLL resolved=5 status=linked
+ROM_LINK CONE[10003a41].DLL resolved=43 status=linked
+ROM_LINK EFSRV[100039e4].DLL resolved=19 status=linked
+ROM_LINK EIKCORE[10004892].DLL resolved=60 status=linked
+ROM_LINK ESOCK[10003d3f].DLL resolved=7 status=linked
+ROM_LINK ESTLIB[10003b0b].DLL resolved=29 status=linked
+ROM_LINK ETEL[10003d46].DLL resolved=16 status=linked
+ROM_LINK EUSER[100039e5].DLL resolved=101 status=linked
+ROM_LINK EZLIB[10005706].DLL resolved=1 status=linked
+ROM_LINK FBSCLI[10003a15].DLL resolved=6 status=linked
+ROM_LINK GAMECOMMS[101f5ee2].DLL resolved=0 status=ROM library descriptor not found
+ROM_LINK GDI[10003b15].DLL resolved=3 status=linked
+ROM_LINK HAL[100039e8].DLL resolved=1 status=linked
+ROM_LINK MEDIACLIENTAUDIOSTREAM[10003996].DLL resolved=1 status=linked
+ROM_LINK MSGS[10004e66].DLL resolved=3 status=linked
+ROM_LINK NOKIAFC[101f8a5b].DLL resolved=1 status=linked
+ROM_LINK SIMKIN[101fae0a].DLL resolved=0 status=ROM library descriptor not found
+ROM_LINK WS32[10003b21].DLL resolved=4 status=linked
+ROM_MAPPED guest_bytes=19347140 imports_resolved=324/415
+DEPENDENCY_GRAPH ready=1 game_libraries=2 main_imports_resolved=415/415 DLL_imports=284 guest_bytes=19532140 error=
+THREAD_HEAP ready=1 address=20000000 guest_bytes=20580716 create=returned switch=returned error=
+ROM_INITIALIZATION ready=1 completed=114/114 uid=101f8a5b entry=510edda5 result=returned r0=00000000 svc=007fffff fault=00000000 args=00000000,6fff0000,00000000,00000000 error=
+DLL_THREAD_ATTACH name=GAMECOMMS.DLL uid=101f5ee2 entry=13000000 result=returned r0=00000000 svc=007fffff fault=00000000
+DLL_THREAD_ATTACH name=SIMKIN.DLL uid=101fae0a entry=13008000 result=returned r0=00000000 svc=007fffff fault=00000000
+E32_CALL entry=12000000 result=returned r0=00000000 pc=6fff0004 instructions=4 import=#0 svc=007fffff fault=00000000 access=0
+NATIVE_CLEANUP ready=1 address=20000080 handler=20000084 result=returned svc=007fffff fault=00000000 error=
+NATIVE_TRAP normal=1 leave=1 nested=1 cleanup=1 heap_reuse=1 iterations=512 result=returned svc=007fffff fault=00000000 error=
+NATIVE_CONTEXT tls=1 scheduler=1 events=1 run_error=1 teardown=1 result=returned svc=007fffff fault=00000000 error=
+NATIVE_FILES connect=1 path=1 open=1 read=1 seek=1 eof=1 missing=1 close=1 rom=1 entry=1 result=returned r0=00000000 svc=007fffff fault=00000000 error=
+NATIVE_FBS connect=1 shared=1 retained=1 close=1 result=returned r0=00000000 svc=007fffff fault=00000000 error=
+NATIVE_WINDOW connect=1 device=1 pixels=1 twips=1 color=1 group=1 name=1 close=1 result=returned r0=00000000 svc=007fffff fault=00000000 error=
+E32_CALL entry=1202841c result=returned r0=200000ec pc=6fff0004 instructions=199 import=#0 svc=007fffff fault=00000000 access=0
+APPLICATION_OBJECT address=200000ec vtable=120fd9bc mapped_vtable=1
+APPLICATION_UID result=returned value=101fd3f6 expected=101fd3f6 matches=1 svc=007fffff fault=00000000
+ROM_APPRUN result=unimplemented system call r0=00000114 pc=503a75bc instructions=131971 svc=00c000bf fault=00000000 access=0 args=00000114,0000000c,70001cfc,70001ce4 error=
+FILESERVER calls=451 opens=4 reads=430 bytes=1800 operation=31 result=0 unsupported=0 path=
+FONTBITMAPSERVER calls=5 initializations=3 operation=12
+WINDOWSERVER calls=17 initializations=2 operation=0 command=21 object=00000118
+SCREEN_DEVICES created=2 queries=8 width=176 height=208 bits=12 groups=2
+DIAGNOSTIC_END elapsed_ms=615 partial_EPOC6_kernel_no_phone_OS_or_gameplay

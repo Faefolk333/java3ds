@@ -35,6 +35,12 @@ bool RomImage::mount(AddressSpace&memory,const char*path,std::string&e,TaskContr
  if(control&&!control->checkpoint()){memory.unmap(imageBase);return error(e,"ROM read cancelled");}
  base=imageBase;size=imageSize;return true;
 }
+bool RomImage::display(AddressSpace&memory,RomDisplay&display)const{
+ // EKA1 TRomHeader difference block: screen X/Y/depth at 184/188/192.
+ std::uint32_t values[3]{};if(!mounted()||!memory.read(base+184,values,sizeof(values))||!values[0]||values[0]>1024||!values[1]||values[1]>1024)return false;
+ switch(values[2]){case 1:case 2:case 4:case 8:case 12:case 16:case 24:case 32:break;default:return false;}
+ display={values[0],values[1],values[2]};return true;
+}
 bool RomImage::library(AddressSpace&memory,const char*path,RomLibrary&library,std::string&e)const{
  e.clear();if(!mounted())return error(e,"Mount the matching ROM before loading library headers");
  FILE*f=std::fopen(path,"rb");if(!f)return error(e,"ROM library descriptor not found");

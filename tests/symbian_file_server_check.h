@@ -70,10 +70,13 @@ static void graphicsServerChecks(){
  text(0x1200,u"FbsLargeBitmapAccess");assert(exec(0x18,{0x1100,0x1200,0,0}).value==0);auto mutex=get(0x1120);assert(kernel.dispatch(0x19,{mutex,0,0,0}).value==0&&kernel.dispatch(0x1a,{mutex,0,0,0}).value==0);
  assert(graphics.request(u"Fontbitmapserver",fbs,11,{1,1,0,0}).value==std::uint32_t(-18));assert(graphics.request(u"Fontbitmapserver",fbs,0,{}).value==0);assert(graphics.request(u"Fontbitmapserver",fbs,11,{12,13,0,0}).value==0&&graphics.twipsX==12&&graphics.twipsY==13);
  assert(graphics.request(u"Fontbitmapserver",fbs,14,{}).kind==KernelResult::Kind::Unhandled);
+ assert(graphics.window.configure({176,208,12}));
  text(0x1200,u"Windowserver");assert(exec(0x16,{0x1100,0x1200,0,0}).value==0);auto ws=get(0x1120);
  assert(graphics.request(u"Windowserver",ws,2,{}).value==ws);
  word(0x1300,0x10000008);word(0x1304,0x1400);word(0x1400,0x00008019);word(0x1404,ws);
- assert(graphics.request(u"Windowserver",ws,4,{0x1300,0,0,0}).kind==KernelResult::Kind::Unhandled&&graphics.windowCommand==25&&graphics.windowObject==ws);
+ auto screen=graphics.request(u"Windowserver",ws,4,{0x1300,0,0,0});assert(screen.kind==KernelResult::Kind::Returned&&screen.value>=0x10001&&graphics.window.lastCommand==25&&graphics.window.lastObject==ws);
+ word(0x1400,0x00008001);word(0x1404,screen.value);assert(graphics.request(u"Windowserver",ws,4,{0x1300,0,0,0}).kind==KernelResult::Kind::Unhandled);
+ word(0x1404,ws);
  word(0x1400,0x10008000);assert(graphics.request(u"Windowserver",ws,4,{0x1300,0,0,0}).value==std::uint32_t(-6));
  word(0x1400,0x00008000);assert(graphics.request(u"Windowserver",ws,4,{0x1300,0,0,0}).value==0);assert(graphics.request(u"Windowserver",ws,4,{0x1300,0,0,0}).value==std::uint32_t(-18));
  GuestDescriptor d(m);assert(d.view(0x1300,1,false));unsigned data=0;assert(!d.write(&data,4));word(0x1300,0x31000000);assert(!d.view(0x1300,1,true));

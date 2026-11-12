@@ -127,7 +127,10 @@ HeapStartResult E32Session::initializeHeap(const char*descriptor,TaskControl*con
  if(result.switchHeap.reason!=StopReason::Returned||p.kernel.heap()!=result.address){result.error="Native HeapSwitch did not select the allocator";return result;}
  result.ready=true;return result;
 }
-bool E32Session::mountRom(const char*path,std::string&error,TaskControl*control){return impl->rom.mount(impl->memory,path,error,control);}
+bool E32Session::mountRom(const char*path,std::string&error,TaskControl*control){
+ if(!impl->rom.mount(impl->memory,path,error,control))return false;
+ RomDisplay display;if(impl->rom.display(impl->memory,display))impl->graphicsServer.window.configure(display);return true;
+}
 bool E32Session::linkRomLibrary(const std::string&importName,const char*descriptor,std::size_t&resolved,std::string&error){
  resolved=0;std::string filename;std::uint32_t uid=0;
  if(!impl->loaded||!e32LibraryIdentity(importName,filename,uid)){error="Unsupported EKA1 library identity";return false;}
@@ -421,6 +424,35 @@ NativeGraphicsResult E32Session::checkNativeGraphics(const char*descriptor,TaskC
  if(!invoke(3,0,"Closing native FBS session")||!invoke(1,0,"Checking closed native FBS session"))return result;result.closed=result.call.r0==0;
  if(!result.passed())result.error="Native FBS connection result mismatch";return result;
 }
+NativeWindowResult E32Session::checkNativeWindow(const char*ws32,const char*fbscli,const char*euser,TaskControl*control){
+ auto&p=*impl;NativeWindowResult result;RomDisplay display;
+ if(!p.romInitReady||!p.kernel.trap()||p.kernel.trapDepth()||p.kernel.scheduler()||p.romProgramAttempted||!p.rom.display(p.memory,display)){result.error="Native window test requires initialized idle EKA1 display context";return result;}
+ std::uint32_t functions[18]{};const unsigned ordinals[]={268,43,276,47,243,244,75,272,46,139,210,151,35,263,74};
+ for(unsigned n=0;n<15;n++)if(!romExport(ws32,0x10003b21,ordinals[n],functions[n],result.error))return result;
+ if(!romExport(fbscli,0x10003a15,13,functions[15],result.error)||!romExport(fbscli,0x10003a15,20,functions[16],result.error)||!romExport(euser,0x100039e5,45,functions[17],result.error))return result;
+ constexpr std::uint32_t data=0x31040000;
+ if(!p.memory.map(data,4096,Read|Write)){result.error="Cannot allocate native window diagnostic storage";return result;}
+ struct Unmap {AddressSpace&m;~Unmap(){m.unmap(data);}} unmap{p.memory};
+ auto word=[&](unsigned offset,std::uint32_t value){p.memory.write(data+offset,&value);};auto get=[&](unsigned offset){std::uint32_t value=0;p.memory.read(data+offset,&value);return value;};
+ auto invoke=[&](unsigned fn,const std::array<std::uint32_t,4>&args,const char*stage,bool zero=false){
+  if(control)control->report(stage);result.call=callArgs(functions[fn],args,200000,control);
+  if(result.call.reason!=StopReason::Returned||(zero&&result.call.r0)){result.error=std::string(stage)+" command="+std::to_string(result.call.windowCommand)+" object="+std::to_string(result.call.windowObject);return false;}return true;
+ };
+ if(!invoke(15,{},"Connecting FBS for native screen",true)||!invoke(0,{data,0,0,0},"Constructing native RWsSession")||!invoke(1,{data,0,0,0},"Connecting native RWsSession",true))return result;result.connected=true;
+ if(!invoke(17,{512,0,0,0},"Allocating native screen device"))return result;auto device=result.call.r0;if(!device||!p.memory.permits(device,512,Read|Write)){result.error="Cannot allocate native screen device";return result;}
+ if(!invoke(2,{device,data,0,0},"Constructing native CWsScreenDevice")||!invoke(3,{device,0,0,0},"Creating native screen device",true))return result;result.device=true;
+ if(!invoke(4,{data+128,device,0,0},"Querying native screen pixels"))return result;result.pixels=get(128)==display.width&&get(132)==display.height;
+ if(!invoke(5,{data+128,device,0,0},"Querying native screen twips"))return result;result.twips=get(128)==display.width*15&&get(132)==display.height*15;
+ if(!invoke(6,{device,0,0,0},"Querying native screen color"))return result;
+ std::uint32_t expectedMode=display.bits==1?1:display.bits==2?2:display.bits==4?5:display.bits==8?6:display.bits==12?10:display.bits==16?7:display.bits==24?8:12;result.color=result.call.r0==expectedMode;
+ if(!invoke(7,{data+64,data,0,0},"Constructing native RWindowGroup")||!invoke(8,{data+64,123,1,0},"Creating native window group",true)||!invoke(9,{data+64,0,0,0},"Querying native group identifier"))return result;result.group=result.call.r0>0&&result.call.r0<0x7fffffff;
+ const std::u16string name=u"Java3DS native screen";word(256,name.size());p.memory.write(data+260,name.data(),name.size()*2);word(384,0x20000000);word(388,64);word(392,data+400);
+ if(!invoke(10,{data+64,data+256,0,0},"Setting native window group name",true)||!invoke(11,{data+64,data+384,0,0},"Reading native window group name",true))return result;
+ std::u16string actual(name.size(),0);result.name=get(384)==(0x20000000|name.size())&&p.memory.read(data+400,actual.data(),actual.size()*2)&&actual==name;
+ if(!invoke(12,{data+64,0,0,0},"Closing native window group")||!invoke(13,{device,0,0,0},"Destroying native screen device")||!invoke(14,{data,0,0,0},"Closing native RWsSession")||!invoke(16,{},"Closing native screen FBS reference"))return result;
+ std::uint32_t free=0;if(!romExport(euser,0x100039e5,476,free,result.error))return result;result.call=call(free,device,100000,control);result.closed=result.call.reason==StopReason::Returned;
+ if(!result.passed())result.error="Native window result mismatch";return result;
+}
 ExecutionResult E32Session::runRomProgram(const char*path,std::string&error,TaskControl*control){
  auto&p=*impl;ExecutionResult result;result.reason=StopReason::InvalidEntry;
  if(!p.romInitReady||!p.kernel.trap()||p.kernel.trapDepth()||p.kernel.scheduler()||p.romProgramAttempted){error="ROM process entry requires initialized, fresh idle thread context";return result;}
@@ -459,6 +491,7 @@ ExecutionResult E32Session::callArgs(std::uint32_t entry,const std::array<std::u
  const auto&t=p.fileServer.trace;p.result.fileCalls=t.calls;p.result.fileOpens=t.opens;p.result.fileReads=t.reads;p.result.fileBytes=t.bytes;p.result.fileOperation=t.operation;p.result.fileResult=t.result;p.result.fileUnsupported=t.unsupported;
  for(auto c:t.path)p.result.filePath+=c>=32&&c<127?char(c):'?';
  p.result.graphicsCalls=p.graphicsServer.calls;p.result.graphicsInitializations=p.graphicsServer.initializations;p.result.graphicsOperation=p.graphicsServer.lastOperation;
- p.result.windowCalls=p.graphicsServer.windowCalls;p.result.windowInitializations=p.graphicsServer.windowInitializations;p.result.windowOperation=p.graphicsServer.windowOperation;p.result.windowCommand=p.graphicsServer.windowCommand;p.result.windowObject=p.graphicsServer.windowObject;return p.result;
+ p.result.windowCalls=p.graphicsServer.window.calls;p.result.windowInitializations=p.graphicsServer.window.initializations;p.result.windowOperation=p.graphicsServer.window.lastOperation;p.result.windowCommand=p.graphicsServer.window.lastCommand;p.result.windowObject=p.graphicsServer.window.lastObject;
+ p.result.screenDevices=p.graphicsServer.window.created;p.result.screenQueries=p.graphicsServer.window.queries;p.result.windowGroups=p.graphicsServer.window.groupsCreated;auto screen=p.graphicsServer.window.screen();p.result.screenWidth=screen.width;p.result.screenHeight=screen.height;p.result.screenBits=screen.bits;return p.result;
 }
 }

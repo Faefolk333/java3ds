@@ -162,6 +162,7 @@ KernelResult Eka1Kernel::executor(std::uint32_t attr,std::uint32_t info,std::uin
 KernelResult Eka1Kernel::dispatch(std::uint32_t svc,const std::array<std::uint32_t,4>&a){
  if(threadExited)return {KernelResult::Kind::Exited,threadExitCode,0,0};
  switch(svc){
+ case 0x800060:return returned(1); // ELanguageEnglish: virtual phone's initial language.
  case 0xc000bf:case 0xc00031:{
   auto*o=object(a[0],Object::Session);if(!o)return returned(badHandle);
   if(a[3]&&!memory.permits(a[3],4,Write))return fault(a[3],Write);

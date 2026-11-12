@@ -1,0 +1,13 @@
+{
+  "ARMv6K_objects": [
+    "work\\arm\\symbian-window_server.o",
+    "work\\arm\\symbian-rom_image.o",
+    "work\\arm\\symbian-e32_session.o",
+    "work\\arm\\symbian-image_probe.o",
+    "work\\arm\\symbian-eka1_kernel.o"
+  ],
+  "no_ARMv7_barriers": true,
+  "new_hardware_validation_pending": true,
+  "CIA_title_version": 112,
+  "unsigned_signature_failures_only": 3
+}

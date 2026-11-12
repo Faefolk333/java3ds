@@ -1,3 +1,28 @@
+# Java3DS 0.7.0 — obrazovková zařízení a skupiny oken Symbianu
+
+Vaše nové logy potvrzují verzi 0.6.0 na New 3DS: všechny testy souborů a připojení
+FBS prošly, CPU hlásí nula chyb a diagnostika skončila za 6815 ms u očekávaného
+CreateScreenDevice. To je ověření předchozí vrstvy, nikoli měření FPS hry.
+
+Nově je implementované logické obrazovkové zařízení podle parametrů ROM, dotazy
+na rozměry/barevný režim/orientaci, fyzické jednotky a skupiny oken. Na PC prošly
+původní funkce WS32 včetně konstrukce, všech testovaných dotazů, identifikátoru
+skupiny, přenosu názvu v UTF-16 a úplného zavření. Přibyl převod starších kódů
+EPOC6 a kontrola celých dávek příkazů před změnou stavu. Počáteční jazyk virtuálního
+telefonu je angličtina. AppRun už čte systémové zdroje z ROM a dojde k výběru písma.
+
+Vykreslování písem/bitmap/oken a herní obrazovka ještě nejsou hotové. Další přesné
+zastavení je FONTBITMAPSERVER operation=12 (výběr písma). Plné plánování, zvuk
+Symbianu a EKA2/SIS také zbývají. Verze 0.7.0 je zatím ověřená na PC; Java hry
+a banner se nemění.
+
+Aktualizujte přes Wi-Fi, znovu otevřete Java3DS a spusťte Symbian Probe 0.7.0 -> Y.
+Stačí stejná soukromá data na SD z 0.4.0. V nových logách očekáváme všechny příznaky
+NATIVE_WINDOW = 1 a zastavení u FONTBITMAPSERVER operation=12. Pošlete oba logy
+z /3ds/java-3ds/. Repozitář zůstává veřejný po dobu dohodnutého testovacího okna.
+
+## Předchozí historie
+
 # Java3DS 0.6.0 — souborové a grafické služby Symbianu
 
 Přibyl souborový server, původní čtyřslovné IPC, relace služeb, pojmenovaná

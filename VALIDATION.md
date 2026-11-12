@@ -1,3 +1,33 @@
+# Java3DS 0.7.0 validation — 2026-11-12
+
+Owner hardware evidence now confirms 0.6.0 on New 3DS: all FileServer/FBS and
+previous fixture flags pass, CPU faults=0, diagnostic 6815 ms, next unsupported
+CreateScreenDevice (25). Archived originals and hardware-v060-result.json are
+in validation/0.6.0. This does not validate the new 0.7.0 screen/group layer.
+
+* Native UID-checked WS32 calls construct RWsSession/CWsScreenDevice/RWindowGroup,
+  connect, query pixel/twips/color values against ROM metadata, round-trip a UTF-16
+  group name, close the group/session and destroy/free the screen device. All
+  NATIVE_WINDOW flags pass on PC, together with prior files/FBS/runtime checks.
+* The original AppRun now reaches resource-file reads from the ROM and FBS font
+  selection (EKA1 operation 12), after successful screen/group creation. No
+  phone GUI or rendered/gameplay scene is validated.
+* Portable regressions cover invalid display metadata, screen queries, mode and
+  conversion bounds, old EPOC6 group/session opcode translation, ownership,
+  quota/stale handle lifetime, reply descriptor protection and batches that
+  reject malformed/unsupported tails without applying earlier closes.
+* 512 native TRAP/unwind cycles still pass on PC. Cancellation during TRAP,
+  FileServer, FBS and native window stages prevents subsequent factory/AppRun
+  calls and normal completion. Hardware iterations remain the earlier 16.
+* ARMv6K, startup heap wrappers, CIA title/content checks and embedded assets are
+  checked for the new build. New 0.7.0 console confirmation remains pending.
+  Update delivery and local CIA QR checks are recorded in the release folder.
+
+No owner ROM/game data/tokens are distributed. Same private 0.4.0 test inputs;
+Java ME behavior and the banner are unchanged. Source/licenses are included.
+
+## Previous history
+
 # Java3DS 0.6.0 validation — 2026-11-12
 
 The new service layer is host-validated; physical 0.6.0 confirmation is pending.

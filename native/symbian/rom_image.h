@@ -11,6 +11,7 @@ struct RomLibrary {
 };
 struct RomInitEntry {std::uint32_t uid=0,entry=0,references=0;};
 struct RomFile {std::uint32_t address=0,size=0;};
+struct RomDisplay {std::uint32_t width=0,height=0,bits=0;};
 // Initial EKA1-only reader: mounts an uncompressed SYM.ROM at its real guest
 // address. Library descriptors must match that exact ROM, not another phone.
 class RomImage {
@@ -21,6 +22,7 @@ public:
  bool initializationOrder(AddressSpace&memory,const std::vector<RomInitEntry>&roots,std::vector<RomInitEntry>&order,std::string&error,TaskControl*control=nullptr)const;
  bool findFile(AddressSpace&memory,const std::string&path,RomFile&file,std::string&error,TaskControl*control=nullptr)const;
  bool mounted()const{return size!=0;}
+ bool display(AddressSpace&memory,RomDisplay&display)const;
  std::uint32_t bytes()const{return size;}
 };
 bool e32LibraryIdentity(const std::string&name,std::string&filename,std::uint32_t&uid);

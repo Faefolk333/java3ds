@@ -1,0 +1,4 @@
+Symbian CPU probe 0.6.0; no OS/game execution
+new_model=1 arm=1 thumb=1 exclusive=1 vfp=1 context=1 bounded_slice=1 faults=0 cache_bytes=8388608 instructions=1000000 cpu_us=124793
+loader_parsed=1 relocated=1 returned=1 import_stop=1 svc_stop=1 memory_guards=1 bounded=1 cancelled=1
+kernel_chunks=1 handles=1 sync=1 heap=1 abi=1 thumb_return=1 trap=1 trap_frames=1 tls=1 scheduler=1 named_sync=1 guest_exit=1

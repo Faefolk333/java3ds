@@ -1,3 +1,29 @@
+# Java3DS — test build 0.7.0
+
+The owner's New 3DS 0.6.0 logs confirm all FileServer/FBS checks, zero CPU faults
+and the expected CreateScreenDevice boundary (6815 ms diagnostic, not game FPS).
+This next batch implements logical screen devices and window groups. Display
+size/depth come from the checked EKA1 ROM header; N-Gage reports 176 x 208 / 12 bpp.
+Original WS32 functions now pass device construction, pixel/twips/color queries,
+group creation/identifier, UTF-16 name round trip and full close/destruction on PC.
+
+The EPOC6 wire table predates AbsPosition, advanced pointer events and two custom
+text-cursor session commands; the service translates these old opcodes. Atomic
+command batches preserve state on unsupported operations, malformed data or bad
+reply descriptors. Object ownership, quotas, stale IDs and cleanup are checked.
+The virtual phone initially selects English. Real AppRun now reads ROM resources
+and reaches FBS nearest-font selection (old opcode 12), which remains unsupported.
+
+No phone GUI, rasterized text/bitmaps, rendered windows or playable Symbian scene
+yet. Full scheduling, Symbian audio and EKA2/SIS remain incomplete. This new 0.7.0
+batch is PC-tested and still needs console validation; Java ME and banner unchanged.
+
+Update via Wi-Fi, reopen Java3DS, launch Symbian Probe 0.7.0 -> Y. SAME private
+0.4.0 SD inputs. Collect both symbian logs; NATIVE_WINDOW flags should all be 1.
+FONTBITMAPSERVER operation=12 is the expected next missing font-service boundary.
+
+## Previous history
+
 # Java3DS — test build 0.6.0
 
 This Symbian service batch adds EPOC6 session creation and old four-word IPC,

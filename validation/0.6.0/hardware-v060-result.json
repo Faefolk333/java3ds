@@ -1,0 +1,10 @@
+{
+  "version": "0.6.0",
+  "new_3ds": true,
+  "CPU_faults": 0,
+  "native_files_all_flags": true,
+  "native_FBS_all_flags": true,
+  "ROM_AppRun_next_command": "WindowServer CreateScreenDevice (25)",
+  "diagnostic_ms": 6815,
+  "no_phone_GUI_or_gameplay": true
+}

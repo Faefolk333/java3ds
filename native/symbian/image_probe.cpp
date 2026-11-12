@@ -78,6 +78,10 @@ bool symbianImageProbe(const char*folder,FILE*report,bool(*keepRunning)(),void(*
    std::fprintf(report,"NATIVE_FBS connect=%d shared=%d retained=%d close=%d result=%s r0=%08lx svc=%08lx fault=%08lx error=%s\n",graphics.connected,graphics.shared,graphics.retained,graphics.closed,stopName(graphics.call.reason),(unsigned long)graphics.call.r0,(unsigned long)graphics.call.systemCall,(unsigned long)graphics.call.address,graphics.error.c_str());std::fflush(report);
    if(!checkpoint())return true;
    if(!graphics.passed()){std::fprintf(report,"DIAGNOSTIC_STOP native_graphics_connection_incomplete\n");return true;}
+   auto window=session.checkNativeWindow((root+"/rom-libs/WS32.DLL").c_str(),(root+"/rom-libs/FBSCLI.DLL").c_str(),(root+"/rom-libs/EUSER.DLL").c_str(),&control);
+   std::fprintf(report,"NATIVE_WINDOW connect=%d device=%d pixels=%d twips=%d color=%d group=%d name=%d close=%d result=%s r0=%08lx svc=%08lx fault=%08lx error=%s\n",window.connected,window.device,window.pixels,window.twips,window.color,window.group,window.name,window.closed,stopName(window.call.reason),(unsigned long)window.call.r0,(unsigned long)window.call.systemCall,(unsigned long)window.call.address,window.error.c_str());std::fflush(report);
+   if(!checkpoint())return true;
+   if(!window.passed()){std::fprintf(report,"DIAGNOSTIC_STOP native_window_incomplete\n");return true;}
   }
   if(entry!=m.entry&&r.reason==StopReason::Returned&&r.r0){
    std::uint32_t vtable=0;
@@ -104,6 +108,7 @@ bool symbianImageProbe(const char*folder,FILE*report,bool(*keepRunning)(),void(*
   std::fprintf(report,"FILESERVER calls=%lu opens=%lu reads=%lu bytes=%lu operation=%ld result=%ld unsupported=%d path=%s\n",(unsigned long)run.fileCalls,(unsigned long)run.fileOpens,(unsigned long)run.fileReads,(unsigned long)run.fileBytes,(long)run.fileOperation,(long)run.fileResult,run.fileUnsupported,run.filePath.c_str());
   std::fprintf(report,"FONTBITMAPSERVER calls=%lu initializations=%lu operation=%ld\n",(unsigned long)run.graphicsCalls,(unsigned long)run.graphicsInitializations,(long)run.graphicsOperation);
   std::fprintf(report,"WINDOWSERVER calls=%lu initializations=%lu operation=%ld command=%lu object=%08lx\n",(unsigned long)run.windowCalls,(unsigned long)run.windowInitializations,(long)run.windowOperation,(unsigned long)run.windowCommand,(unsigned long)run.windowObject);
+  std::fprintf(report,"SCREEN_DEVICES created=%lu queries=%lu width=%lu height=%lu bits=%lu groups=%lu\n",(unsigned long)run.screenDevices,(unsigned long)run.screenQueries,(unsigned long)run.screenWidth,(unsigned long)run.screenHeight,(unsigned long)run.screenBits,(unsigned long)run.windowGroups);
  }
  if(!checkpoint())return true;
  auto elapsed=std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started).count();

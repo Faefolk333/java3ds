@@ -1,3 +1,21 @@
+# Compatibility work — 0.7.0
+
+New 3DS 0.6.0 logs pass FileServer/FBS/CPU checks and reach CreateScreenDevice;
+6815 ms total diagnostic is not gameplay FPS. Evidence: validation/0.6.0/device-
+v060 logs and hardware-v060-result.json.
+
+New host-tested WS32 coverage includes native screen construction, pixel/twips/
+color queries, window groups and identifiers, UTF-16 names and full close.
+EPOC6 old session/group opcode translation, per-session ownership, 32-object
+quota, non-reused IDs and atomic batch validation are implemented. ROM metadata
+selects 176 x 208 / 12 bpp for the supplied N-Gage; one normal screen mode only.
+Original AppRun proceeds to ROM resource reads and missing FBS nearest-font
+selection (old opcode 12). No rendered GUI, font/bitmap rasterizer, game scene,
+Symbian audio, complete scheduler or EKA2/SIS support is claimed. No Java ME or
+banner change. New 0.7.0 physical console validation remains pending.
+
+## Previous history
+
 # Compatibility work — 0.6.0
 
 Native PC validation now covers EPOC6 RFs/RFile access to the owner's mounted

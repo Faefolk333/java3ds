@@ -1,3 +1,47 @@
+# Symbian implementation — EKA1 logical screen/window foundation
+
+## Logical screen devices and window groups (0.7.0)
+
+The owner's New 3DS 0.6.0 logs confirm FileServer/FBS and the prior runtime layer,
+with zero CPU faults and the expected CreateScreenDevice boundary (6815 ms).
+The new 0.7.0 layer is host-validated, with new console evidence still pending.
+
+TRomHeader fields at 184/188/192 provide checked X/Y/bits-per-pixel; no phone
+size is guessed from the 3DS output surface. The supplied N-Gage reports
+176 x 208 / 12 bpp (Color4K). One normal screen mode exposes pixel/twips sizes,
+color/palette capacity, origin/scale, mode/orientation and integer conversions.
+Screen device handles and groups share a bounded 32-object table, scoped to
+8 sessions, with non-reused IDs and teardown on disconnect. Unsupported drawing
+operations stop. These are logical devices; they do not yet render pixels.
+
+EPOC6's wire table lacks two custom-text-cursor session commands, AbsPosition
+and advanced pointer events. Session/group commands translate those gaps before
+dispatch. Groups expose identifier/client handle, checked parent/screen links,
+receive-focus/default-owner properties and UTF-16 names in both legacy pointer
+and remote-descriptor forms. No input/event routing or window composition is
+claimed. Complete command batches validate syntax, ownership and reply storage
+against shadow state before applying changes, including closes and creations.
+A single reply-producing command per synchronous batch is currently supported.
+
+Original WS32 functions test actual construction, connection, screen properties,
+group identifier and name round trip, followed by close/destructor/free. Fixed
+bounded diagnostic R-class storage and a native User allocation contain the
+original objects; no copied phone instructions are embedded. The native screen
+resource lifetime ends before original AppRun is entered with a fresh session.
+User::Language initially selects English for the virtual phone.
+
+AppRun now constructs its screen/group and reads ROM resource files before
+stopping at FBS nearest-font-in-twips selection (EKA1 opcode 12). Fonts and
+bitmap rasterization, drawing/composition, full async scheduling, Symbian audio,
+EKA2/SIS and playable scenes remain unimplemented. The next hardware test uses
+unchanged private 0.4.0 SD inputs; expect all NATIVE_WINDOW flags and FBS opcode 12.
+
+ABI references: pinned EKA2L1 78dbf9fccae273a23173fd67d916e7461234a9ec,
+loader/rom.h, services/window protocol/op/scrdvc/wingroup and kernel/svc.cpp.
+The bounded implementation and fixtures are original project code.
+
+## Previous history
+
 # Symbian implementation — CPU/EKA1 services, no game runtime yet
 
 ## FileServer, IPC and graphics connection batch (0.6.0)

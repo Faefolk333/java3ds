@@ -20,6 +20,7 @@ struct ExecutionResult {
  std::string filePath;
  std::uint32_t graphicsCalls=0,graphicsInitializations=0;std::int32_t graphicsOperation=-1;
  std::uint32_t windowCalls=0,windowInitializations=0,windowCommand=0,windowObject=0;std::int32_t windowOperation=-1;
+ std::uint32_t screenDevices=0,screenQueries=0,screenWidth=0,screenHeight=0,screenBits=0,windowGroups=0;
 };
 struct HeapStartResult {
  bool ready=false;std::uint32_t address=0;ExecutionResult create,switchHeap;std::string error;
@@ -49,6 +50,11 @@ struct NativeGraphicsResult {
  ExecutionResult call;std::string error;
  bool passed()const{return connected&&shared&&retained&&closed;}
 };
+struct NativeWindowResult {
+ bool connected=false,device=false,pixels=false,twips=false,color=false,group=false,name=false,closed=false;
+ ExecutionResult call;std::string error;
+ bool passed()const{return connected&&device&&pixels&&twips&&color&&group&&name&&closed;}
+};
 // One bounded E32 call, not a Symbian OS. Unimplemented imports/SVCs stop with
 // their identities instead of returning fabricated success to an application.
 class E32Session {
@@ -73,6 +79,7 @@ public:
  NativeContextResult checkNativeContext(const char*euserDescriptor,TaskControl*control=nullptr);
  NativeFilesResult checkNativeFiles(const char*efsrvDescriptor,const char*euserDescriptor,TaskControl*control=nullptr);
  NativeGraphicsResult checkNativeGraphics(const char*fbscliDescriptor,TaskControl*control=nullptr);
+ NativeWindowResult checkNativeWindow(const char*ws32Descriptor,const char*fbscliDescriptor,const char*euserDescriptor,TaskControl*control=nullptr);
  ExecutionResult runRomProgram(const char*path,std::string&error,TaskControl*control=nullptr);
  ExecutionResult call(std::uint32_t entry,std::uint32_t argument=0,std::uint64_t budget=100000,TaskControl*control=nullptr);
  ExecutionResult callArgs(std::uint32_t entry,const std::array<std::uint32_t,4>&arguments,std::uint64_t budget=100000,TaskControl*control=nullptr);
