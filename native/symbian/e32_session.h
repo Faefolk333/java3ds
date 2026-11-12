@@ -2,7 +2,7 @@
 #include "e32_image.h"
 #include <memory>
 namespace symbian {
-enum class StopReason { Running,Returned,ImportRequired,SystemCallRequired,MemoryFault,BudgetExhausted,Cancelled,InvalidEntry,ThreadBlocked };
+enum class StopReason { Running,Returned,ImportRequired,SystemCallRequired,MemoryFault,BudgetExhausted,Cancelled,InvalidEntry,ThreadBlocked,ThreadExited };
 const char*stopName(StopReason reason);
 struct ExecutionResult {
  StopReason reason=StopReason::Running;
@@ -10,8 +10,11 @@ struct ExecutionResult {
  unsigned access=0;
  std::uint64_t instructions=0;
  std::string library;
+ std::string serviceName;
  std::uint32_t ordinal=0;
  std::array<std::uint32_t,4> arguments{};
+ std::uint32_t kernelErrorCall=0,kernelErrorValue=0;
+ std::array<std::uint32_t,4> kernelErrorArguments{};
 };
 struct HeapStartResult {
  bool ready=false;std::uint32_t address=0;ExecutionResult create,switchHeap;std::string error;
@@ -21,6 +24,16 @@ struct RomStartResult {
  bool ready=false;std::size_t planned=0,completed=0;std::uint32_t uid=0,entry=0;ExecutionResult call;std::string error;
 };
 struct CleanupStartResult {bool ready=false;std::uint32_t address=0,handler=0;ExecutionResult call;std::string error;};
+struct NativeRuntimeResult {
+ bool normal=false,leave=false,nested=false,cleanup=false,heapReuse=false;
+ unsigned iterations=0;ExecutionResult call;std::string error;
+ bool passed()const{return normal&&leave&&nested&&cleanup&&heapReuse;}
+};
+struct NativeContextResult {
+ bool tls=false,scheduler=false,events=false,runError=false,teardown=false;
+ ExecutionResult call;std::string error;
+ bool passed()const{return tls&&scheduler&&events&&runError&&teardown;}
+};
 // One bounded E32 call, not a Symbian OS. Unimplemented imports/SVCs stop with
 // their identities instead of returning fabricated success to an application.
 class E32Session {
@@ -41,6 +54,9 @@ public:
  HeapStartResult initializeHeap(const char*euserDescriptor,TaskControl*control=nullptr);
  RomStartResult initializeRomLibraries(TaskControl*control=nullptr);
  CleanupStartResult initializeCleanup(const char*euserDescriptor,TaskControl*control=nullptr);
+ NativeRuntimeResult checkNativeRuntime(const char*euserDescriptor,unsigned repetitions=16,TaskControl*control=nullptr);
+ NativeContextResult checkNativeContext(const char*euserDescriptor,TaskControl*control=nullptr);
+ ExecutionResult runRomProgram(const char*path,std::string&error,TaskControl*control=nullptr);
  ExecutionResult call(std::uint32_t entry,std::uint32_t argument=0,std::uint64_t budget=100000,TaskControl*control=nullptr);
  ExecutionResult callArgs(std::uint32_t entry,const std::array<std::uint32_t,4>&arguments,std::uint64_t budget=100000,TaskControl*control=nullptr);
 };

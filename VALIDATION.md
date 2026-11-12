@@ -1,3 +1,45 @@
+# Java3DS 0.5.0 validation — 2026-11-12
+
+New native unwind/context/AppRun steps are host-tested, not yet console-verified.
+The owner's 0.4.1 New 3DS pass is archived under validation/0.4.1.
+
+* Original ARM fixtures invoke UID-checked real EUSER exports: TTrap::Trap,
+  UnTrap, User::Leave, CleanupStack item/pointer push, PopAndDestroy and User
+  allocation/free. Normal and -42 Leave paths pass; register r7 restores from
+  99 to 123. Nested -43/-42 paths invoke cleanup callbacks in order 2,1. All
+  trap frames balance, the handler stays selected, and 512 further alternating
+  normal/Leave iterations reuse the 256-byte native allocation address.
+* Real ROM CActiveScheduler/CActive fixtures in explicitly bounded diagnostic
+  storage perform priority dispatch (2 then 1), a RunL Leave -> RunError path,
+  empty-queue detection and destructor/unregister/Current()==null checks.
+  Request statuses are manually completed original fixtures, not implemented
+  FileServer/timer asynchronous events. Native TLS set/get/overwrite/free pass.
+* Negative tests cover 64 trap frames, duplicate/corrupted frame chains, 64 TLS
+  slots, invalid scheduler state and UTF-16 descriptors, overflow and HBufC-backed
+  pointer descriptors. Named semaphore aliases share state after the original
+  handle closes; duplicate creation, 64 aliases, last-close removal, stale/zero
+  handles and namespace lifetime pass. Actual CPU guest exit prevents resumption.
+* Original ROM path tests cover case-insensitive UTF-16 names, last-entry length
+  semantics, bounded paths/directories, cycles, ambiguous variants, cancellation
+  and atomic output. Native-stage cancellation is latched and prevents application
+  creation/AppRun calls. Previous kernel/E32/ROM/dependency tests still pass.
+* The private RH-29/Shadowkey diagnostic still resolves all imports, creates
+  cleanup and returns the correct app UID. ROM directory lookup finds AppRun;
+  UTF-16 process command line/name services, ASCII character operations, rename
+  and named mutex creation advance its native entry to FileServer session create
+  (executor 0x16). That operation remains explicitly unsupported, with no guest
+  memory fault. No phone GUI or playable frame is run. No new private data ZIP
+  is needed; no owner firmware/game inputs are publicly packaged.
+
+* Final devkitARM CIA/3DSX/probe builds pass. Changed probe objects target
+  ARMv6K and the linked probe contains no ARMv7 DMB/DSB/ISB. All three bounded
+  startup heap links pass. CIA title version 80 / 0.5.0 has verified content
+  hashes with three expected unsigned signature failures. Extracted RomFS,
+  icon, banner and audio PCM match sources; embedded assets pass. Anonymous
+  updater/release verification is performed after publication.
+
+## Previous history
+
 # Java3DS 0.4.1 validation — 2026-11-12
 
 The owner's 0.4.1 New 3DS logs now confirm all CPU/E32/kernel/trap fixture flags

@@ -1,3 +1,16 @@
+# Compatibility work — 0.5.0
+
+A larger EKA1 runtime batch adds real ROM TRAP/Leave cleanup, DLL TLS, native
+ready-object scheduler/RunError checks, named synchronization and guest exit.
+Host stress and negative cases pass; new behavior still needs hardware testing.
+The real ROM AppRun entry now reaches FileServer session creation, where it
+stops explicitly. FileServer/IPC, window/font/graphics/audio services, full
+process scheduling and EKA2/SIS remain incomplete. No playable Symbian scene,
+Java ME compatibility change or game FPS improvement is claimed. Existing
+private 0.4.0 SD data remains sufficient.
+
+## Previous history
+
 # Compatibility work — 0.4.1
 
 New 3DS logs confirm 0.4.0's complete Shadowkey import graph and application UID.

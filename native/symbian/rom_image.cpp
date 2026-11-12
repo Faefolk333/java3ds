@@ -85,6 +85,50 @@ bool RomImage::initializationOrder(AddressSpace&memory,const std::vector<RomInit
  for(const auto&root:roots)if(!visit(root))return false;
  order=std::move(result);return true;
 }
+bool RomImage::findFile(AddressSpace&memory,const std::string&path,RomFile&file,std::string&e,TaskControl*control)const{
+ e.clear();std::vector<std::string> components;std::string part;
+ if(path.empty()||path.size()>256)return error(e,"Invalid ROM path length");
+ auto normalized=path;if(normalized.size()>2&&normalized[1]==':'){
+  if(normalized[0]!='z'&&normalized[0]!='Z')return error(e,"Only the ROM Z drive is available");normalized.erase(0,2);
+ }
+ for(std::size_t n=0;n<=normalized.size();n++){
+  char c=n==normalized.size()?'/':normalized[n];
+  if(c=='/'||c=='\\'){
+   if(part.empty())continue;if(part=="."||part==".."||components.size()>=16)return error(e,"Invalid ROM path component");components.push_back(part);part.clear();
+  }else{if(c<32||c>126||c==':'||c=='*'||c=='?')return error(e,"Unsupported ROM path character");if(c>='a'&&c<='z')c-=32;part+=c;}
+ }
+ if(components.empty())return error(e,"ROM path does not name a file");
+ auto inside=[&](std::uint32_t at,std::uint64_t bytes){return mounted()&&at>=base&&std::uint64_t(at)+bytes<=std::uint64_t(base)+size;};
+ std::uint32_t roots=0,count=0;
+ if(!memory.read(base+148,&roots)||!inside(roots,4)||!memory.read(roots,&count)||!count||count>16||!inside(roots,4+count*8ULL))return error(e,"Invalid ROM root directory list");
+ RomFile found;unsigned totalEntries=0;
+ for(unsigned root=0;root<count;root++){
+  std::uint32_t directory=0;memory.read(roots+8+root*8,&directory);std::set<std::uint32_t> visited;
+  for(std::size_t level=0;level<components.size();level++){
+   if(control&&!control->checkpoint())return error(e,"ROM lookup cancelled");
+   std::uint32_t length=0;
+   if(!visited.insert(directory).second||!inside(directory,4)||!memory.read(directory,&length)||length>1024*1024||!inside(directory,4ULL+length))return error(e,"Invalid/cyclic ROM directory");
+   // The serialized directory length excludes its four-byte length word.
+   std::uint32_t cursor=directory+4,end=directory+4+length,match=0,matchSize=0;bool matchDirectory=false;
+   for(unsigned entries=0;cursor<end;entries++){
+    if(control&&!control->checkpoint())return error(e,"ROM lookup cancelled");
+    if(entries>=2048||++totalEntries>16384||end-cursor<10)return error(e,"ROM directory entry limit/range exceeded");
+    unsigned char header[10];memory.read(cursor,header,10);unsigned letters=header[9];auto bytes=10+letters*2u;
+    if(!letters||bytes>end-cursor)return error(e,"Invalid ROM entry name range");
+    unsigned char name[510];memory.read(cursor+10,name,letters*2);
+    bool equal=letters==components[level].size();
+    for(unsigned i=0;equal&&i<letters;i++){unsigned c=name[i*2]|unsigned(name[i*2+1])<<8;if(c>='a'&&c<='z')c-=32;if(c!=unsigned(components[level][i]))equal=false;}
+    if(equal){if(match)return error(e,"Duplicate ROM directory name");match=word(header+4);matchSize=word(header);matchDirectory=(header[8]&16)!=0;if(!match)return error(e,"Invalid ROM entry address");}
+    auto next=(std::uint64_t(cursor)+bytes+3)&~3ULL;if(next>end)return error(e,"Invalid ROM entry padding");cursor=static_cast<std::uint32_t>(next);
+   }
+   if(!match)break;
+   if(level+1<components.size()){if(!matchDirectory)break;directory=match;continue;}
+   if(matchDirectory||!matchSize||!inside(match,matchSize))return error(e,"ROM file range/type is invalid");
+   if(found.address&&(found.address!=match||found.size!=matchSize))return error(e,"ROM variants contain ambiguous files");found={match,matchSize};
+  }
+ }
+ if(!found.address)return error(e,"ROM file not found");file=found;return true;
+}
 bool e32LibraryIdentity(const std::string&name,std::string&filename,std::uint32_t&uid){
  filename.clear();uid=0;auto bracket=name.find('[');
  // Legacy EKA1 DLLs can import by basename without an embedded UID.

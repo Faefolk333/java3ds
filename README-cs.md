@@ -1,3 +1,27 @@
+# Java3DS 0.5.0 — větší testovací balík Symbianu
+
+Nově: skutečné zachycení Leave a nativní úklid přes původní ROM, vnořené TRAP
+rámce, lokální data DLL, kontext plánovače, pojmenované synchronizační objekty
+se sdílenými handly a ukončení emulovaného vlákna. Na PC prošly běžné i vnořené
+chyby, pořadí úklidu, obnova registrů a 512 cyklů přidělení/uvolnění paměti.
+Původní plánovač obsloužil připravené testovací události podle priority, předal
+Leave do RunError a odregistroval objekty. Nejde zatím o plné asynchronní služby.
+
+Přibyl kontrolovaný přístup k cestám v ROMu a UTF-16 informace procesu. Původní
+AppRun se na PC dostane k požadavku na FileServer. Zde zatím skončí: souborový
+server a IPC, grafické/okenní/fontové a zvukové služby, plný běh procesů,
+EKA2/SIS a herní obrazovka ještě nejsou hotové. Java hry se v tomto balíku nemění.
+Nové kroky potřebují ověřit na konzoli; předchozí test 0.4.1 na New 3DS prošel.
+
+Aktualizujte přes Wi-Fi, znovu otevřete Java3DS a v Homebrew Launcheru spusťte
+Symbian Probe 0.5.0 -> Y. Použijte stejná soukromá data z 0.4.0; nový ZIP není
+potřeba. Pošlete symbian-probe.log a symbian-loader.log z /3ds/java-3ds/.
+Očekáváme všechny příznaky NATIVE_TRAP a NATIVE_CONTEXT = 1. Záznam
+ROM_APPRUN_SERVICE name=FileServer označuje další dosud chybějící službu;
+není to potvrzení spuštění hry. Soukromé ROM/herní soubory nejsou na GitHubu.
+
+## Previous history
+
 # Java3DS 0.4.1 — testovací sestavení
 
 Vaše logy z New 3DS potvrzují celý test 0.4.0: všechny importy, obě herní DLL,

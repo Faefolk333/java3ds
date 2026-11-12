@@ -1,3 +1,29 @@
+# Java3DS — test build 0.5.0
+
+This larger standalone Symbian batch adds bounded EKA1 TRAP frame handling,
+native Leave/cleanup unwinding, DLL TLS, active-scheduler context, named
+synchronization lifetime and controlled guest thread/process exit. The supplied
+ROM performs the actual cleanup and ready-object scheduling; original fixtures
+provide callbacks, manually completed request statuses and checked storage.
+On PC, normal/nested Leave paths preserve error codes and saved registers,
+cleanup runs in LIFO order, 512 allocation/unwind cycles reuse memory, priority
+RunL dispatch and RunError recovery pass, and objects unregister cleanly.
+
+A bounded read-only ROM path lookup finds AppRun without new private files.
+Checked UTF-16 process metadata, current-thread rename and ASCII character
+services let the original AppRun advance to FileServer session creation. It
+stops there explicitly: FileServer/IPC, graphics/window/font/audio services,
+full process scheduling, EKA2/SIS and playable Symbian scenes remain incomplete.
+These new steps need physical testing; the earlier 0.4.1 ROM/cleanup creation
+path already passed on the owner's New 3DS. Java ME behavior is unchanged.
+
+Update over Wi-Fi, reopen Java3DS once, run Symbian Probe 0.5.0 -> Y with the
+same private 0.4.0 SD data. Collect both symbian logs. Look for all NATIVE_TRAP
+and NATIVE_CONTEXT flags = 1 and ROM_APPRUN_SERVICE name=FileServer. The last
+record is an expected unsupported-service boundary, not a playable game.
+
+## Previous history
+
 # Java3DS — test build 0.4.1
 
 The owner's New 3DS 0.4.0 logs confirm the complete import graph and application

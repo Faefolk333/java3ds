@@ -39,6 +39,19 @@ SymbianKernelResult symbianKernelProbe(){
   returned(kernel.dispatch(0x18,{h,0,0,0}),0)&&returned(kernel.dispatch(0x1a,{h,0,0,0}),0)&&returned(kernel.dispatch(0x18,{h,0,0,0}),1);
  unsigned consumed=0;while(consumed<128&&kernel.dispatch(0x4d,{}).kind==KernelResult::Kind::Returned)consumed++;
  result.sync=sem&&mutex&&consumed>0&&consumed<128&&kernel.dispatch(0x4d,{}).kind==KernelResult::Kind::Blocked;
+ std::uint32_t resultPointer=valueAt;memory.write(0x10300+68,&resultPointer);memory.write(0x10380+68,&resultPointer);
+ result.frames=returned(kernel.dispatch(0x72,{0x10300,0,0,0}),0)&&returned(kernel.dispatch(0x72,{0x10380,0,0,0}),0)&&
+  kernel.dispatch(0x72,{0x10300,0,0,0}).kind==KernelResult::Kind::Fault&&returned(kernel.dispatch(0x73,{}),0x10380)&&returned(kernel.dispatch(0x73,{}),0x10300)&&kernel.trapDepth()==0;
+ args[0]=0x101f1234;args[1]=valueAt;memory.write(info,args,sizeof(args));
+ result.tls=returned(exec(0x34),0)&&returned(kernel.dispatch(0x80,{args[0],0,0,0}),valueAt)&&returned(exec(0x35),0)&&returned(kernel.dispatch(0x80,{args[0],0,0,0}),0);
+ result.scheduler=returned(kernel.dispatch(0x74,{}),0)&&returned(kernel.dispatch(0x75,{valueAt,0,0,0}),valueAt)&&
+  returned(kernel.dispatch(0x74,{}),valueAt)&&returned(kernel.dispatch(0x75,{0xffffffff,0,0,0}),-6)&&kernel.scheduler()==valueAt;
+ kernel.dispatch(0x75,{});
+ std::uint32_t name[]={0x30000004,4,0x00450054,0x00540053};memory.write(0x10400,name,sizeof(name));args[0]=output;args[1]=0;args[2]=0x10400;args[3]=1;memory.write(info,args,sizeof(args));
+ bool named=returned(exec(0x19),0);std::uint32_t primary=0,alias=0;memory.read(valueAt,&primary);named=named&&returned(exec(0x19),-11);
+ args[1]=0x10400;memory.write(info,args,sizeof(args));named=named&&returned(exec(0x1a),0);memory.read(valueAt,&alias);
+ args[0]=primary;memory.write(info,args,sizeof(args));named=named&&returned(exec(0x10),0)&&returned(kernel.dispatch(0x29,{alias,0,0,0}),1)&&returned(kernel.dispatch(0x29,{primary,0,0,0}),-8);
+ args[0]=alias;memory.write(info,args,sizeof(args));result.namedSync=named&&returned(exec(0x10),0)&&returned(kernel.dispatch(0x29,{alias,0,0,0}),-8);
  E32Image image;std::string error;if(!image.parse({std::begin(symbian_e32_guest),std::end(symbian_e32_guest)},error))return result;
  E32Session session;if(!session.load(image,0x12000000,0x02000000,error)||!session.memory().map(0x30000000,sizeof(symbian_kernel_guest),Read|Execute)||!session.memory().map(0x31000000,4096,Read|Write))return result;
  session.memory().initialize(0x30000000,symbian_kernel_guest,sizeof(symbian_kernel_guest));session.enableEka1Kernel();
@@ -52,5 +65,8 @@ SymbianKernelResult symbianKernelProbe(){
  session.memory().write(0x31000100,semOut,sizeof(semOut));session.memory().write(0x31000140,semInfo,sizeof(semInfo));
  auto semCreate=session.callArgs(0x30000500,{0x19,0x31000140,0x31000200,0});std::uint32_t semHandle=0;session.memory().read(0x31000180,&semHandle);
  auto wait=session.call(0x30000400,semHandle);result.sync=result.sync&&semCreate.reason==StopReason::Returned&&wait.reason==StopReason::ThreadBlocked;
+ std::uint32_t exitArgs[]={0xffff8001,static_cast<std::uint32_t>(-42),0,0};session.memory().write(0x31000140,exitArgs,sizeof(exitArgs));
+ auto exit=session.callArgs(0x30000500,{0x2d,0x31000140,0x31000200,0});auto afterExit=session.call(0x30000100);
+ result.lifecycle=exit.reason==StopReason::ThreadExited&&exit.r0==std::uint32_t(-42)&&afterExit.reason==StopReason::ThreadExited&&afterExit.r0==exit.r0&&!afterExit.instructions;
  return result;
 }

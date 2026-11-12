@@ -4,7 +4,7 @@
 #include "version.h"
 #include <set>
 #include <chrono>
-bool symbianImageProbe(const char*folder,FILE*report,bool(*keepRunning)(),void(*progress)(const char*,std::uint32_t,std::uint32_t)){
+bool symbianImageProbe(const char*folder,FILE*report,bool(*keepRunning)(),void(*progress)(const char*,std::uint32_t,std::uint32_t),unsigned nativeRepetitions){
  using namespace symbian;std::string root=folder,path=root+"/test.app",error;
  TaskControl control(keepRunning,progress);const auto started=std::chrono::steady_clock::now();
  auto checkpoint=[&](){if(control.checkpoint())return true;auto ms=std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started).count();std::fprintf(report,"DIAGNOSTIC_CANCELLED stage=%s completed=%lu total=%lu elapsed_ms=%lld\n",control.stage(),(unsigned long)control.done(),(unsigned long)control.total(),(long long)ms);std::fflush(report);return false;};
@@ -62,6 +62,14 @@ bool symbianImageProbe(const char*folder,FILE*report,bool(*keepRunning)(),void(*
    std::fprintf(report,"NATIVE_CLEANUP ready=%d address=%08lx handler=%08lx result=%s svc=%08lx fault=%08lx error=%s\n",cleanup.ready,(unsigned long)cleanup.address,(unsigned long)cleanup.handler,stopName(cleanup.call.reason),(unsigned long)cleanup.call.systemCall,(unsigned long)cleanup.call.address,cleanup.error.c_str());std::fflush(report);
    if(!checkpoint())return true;
    if(!cleanup.ready){std::fprintf(report,"DIAGNOSTIC_STOP cleanup_initialization_incomplete\n");return true;}
+   auto native=session.checkNativeRuntime((root+"/rom-libs/EUSER.DLL").c_str(),nativeRepetitions,&control);
+   std::fprintf(report,"NATIVE_TRAP normal=%d leave=%d nested=%d cleanup=%d heap_reuse=%d iterations=%u result=%s svc=%08lx fault=%08lx error=%s\n",native.normal,native.leave,native.nested,native.cleanup,native.heapReuse,native.iterations,stopName(native.call.reason),(unsigned long)native.call.systemCall,(unsigned long)native.call.address,native.error.c_str());std::fflush(report);
+   if(!checkpoint())return true;
+   if(!native.passed()){std::fprintf(report,"DIAGNOSTIC_STOP native_TRAP_cleanup_incomplete\n");return true;}
+   auto context=session.checkNativeContext((root+"/rom-libs/EUSER.DLL").c_str(),&control);
+   std::fprintf(report,"NATIVE_CONTEXT tls=%d scheduler=%d events=%d run_error=%d teardown=%d result=%s svc=%08lx fault=%08lx error=%s\n",context.tls,context.scheduler,context.events,context.runError,context.teardown,stopName(context.call.reason),(unsigned long)context.call.systemCall,(unsigned long)context.call.address,context.error.c_str());std::fflush(report);
+   if(!checkpoint())return true;
+   if(!context.passed()){std::fprintf(report,"DIAGNOSTIC_STOP native_thread_context_incomplete\n");return true;}
   }
   if(entry!=m.entry&&r.reason==StopReason::Returned&&r.r0){
    std::uint32_t vtable=0;
@@ -79,6 +87,14 @@ bool symbianImageProbe(const char*folder,FILE*report,bool(*keepRunning)(),void(*
   }
   if(!checkpoint())return true;
  }
+ if(checkpoint()){
+  auto run=session.runRomProgram("Z:/System/Programs/AppRun.exe",error,&control);
+  std::fprintf(report,"ROM_APPRUN result=%s r0=%08lx pc=%08lx instructions=%llu svc=%08lx fault=%08lx access=%u args=%08lx,%08lx,%08lx,%08lx error=%s\n",stopName(run.reason),(unsigned long)run.r0,(unsigned long)run.pc,(unsigned long long)run.instructions,(unsigned long)run.systemCall,(unsigned long)run.address,run.access,(unsigned long)run.arguments[0],(unsigned long)run.arguments[1],(unsigned long)run.arguments[2],(unsigned long)run.arguments[3],error.c_str());std::fflush(report);
+  if(run.systemCall==0xc00076){std::uint32_t args[4];if(session.memory().read(run.arguments[1],args,sizeof(args)))std::fprintf(report,"ROM_APPRUN_EXECUTOR operation=%08lx args=%08lx,%08lx,%08lx,%08lx\n",(unsigned long)run.arguments[0],(unsigned long)args[0],(unsigned long)args[1],(unsigned long)args[2],(unsigned long)args[3]);}
+  if(run.kernelErrorValue)std::fprintf(report,"ROM_APPRUN_KERNEL_ERROR svc=%08lx value=%08lx args=%08lx,%08lx,%08lx,%08lx\n",(unsigned long)run.kernelErrorCall,(unsigned long)run.kernelErrorValue,(unsigned long)run.kernelErrorArguments[0],(unsigned long)run.kernelErrorArguments[1],(unsigned long)run.kernelErrorArguments[2],(unsigned long)run.kernelErrorArguments[3]);
+  if(!run.serviceName.empty())std::fprintf(report,"ROM_APPRUN_SERVICE name=%s stage=session_creation_unimplemented\n",run.serviceName.c_str());
+ }
+ if(!checkpoint())return true;
  auto elapsed=std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started).count();
  control.report("Diagnostic finished");std::fprintf(report,"DIAGNOSTIC_END elapsed_ms=%lld partial_EPOC6_kernel_no_phone_OS_or_gameplay\n",(long long)elapsed);return true;
 }

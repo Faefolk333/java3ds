@@ -1,2 +1,2 @@
 #pragma once
-#define SYMBIAN_PROBE_VERSION "0.4.1"
+#define SYMBIAN_PROBE_VERSION "0.5.0"

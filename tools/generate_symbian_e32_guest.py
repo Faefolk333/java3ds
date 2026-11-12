@@ -22,6 +22,14 @@ image=bytes(h)+code+data+imp+rel
 header='// Generated from tests/symbian_e32_guest.S and original E32 fixture metadata.\n#pragma once\nstatic const unsigned char symbian_e32_guest[]={\n'+','.join('0x%02x'%n for n in image)+'\n};\n'
 p=r/'native/symbian/e32_guest.h'
 if not p.exists() or p.read_text()!=header:p.write_text(header)
+
+subprocess.run([str(b/'arm-none-eabi-as.exe'),'-o',str(out/'runtime.o'),'tests/symbian_runtime_guest.S'],check=True)
+subprocess.run([str(b/'arm-none-eabi-ld.exe'),'-Ttext=0x30010000','--entry=native_trap_check','-o',str(out/'runtime.elf'),str(out/'runtime.o')],check=True)
+subprocess.run([str(b/'arm-none-eabi-objcopy.exe'),'-O','binary',str(out/'runtime.elf'),str(out/'runtime.bin')],check=True)
+data=(out/'runtime.bin').read_bytes()
+header='// Original tests/symbian_runtime_guest.S; no firmware/game data.\n#pragma once\nstatic const unsigned char symbian_runtime_guest[]={\n'+','.join('0x%02x'%n for n in data)+'\n};\n'
+p=r/'native/symbian/runtime_guest.h'
+if not p.exists() or p.read_text()!=header:p.write_text(header)
 print('ORIGINAL_E32_GUEST_BYTES',len(image))
 subprocess.run([str(b/'arm-none-eabi-as.exe'),'-o',str(out/'kernel.o'),'tests/symbian_kernel_guest.S'],check=True)
 subprocess.run([str(b/'arm-none-eabi-ld.exe'),'-Ttext=0x30000000','--entry=kernel_heap_stub','-o',str(out/'kernel.elf'),str(out/'kernel.o')],check=True)

@@ -16,6 +16,37 @@ static void put(std::vector<std::uint8_t>&b,unsigned at,std::uint32_t word){for(
 static std::uint32_t imageRead=0;static unsigned imageCancelSignals=0;
 static void imageProgress(const char*stage,std::uint32_t done,std::uint32_t){if(!std::strcmp(stage,"Reading ROM"))imageRead=done;}
 static bool cancelImageOnce(){if(imageRead>=65536&&!imageCancelSignals){imageCancelSignals++;return false;}return true;}
+static bool cancelNative=false;
+static bool nativeKeepRunning(){return !cancelNative;}
+static void nativeCancelProgress(const char*stage,std::uint32_t done,std::uint32_t){if(!std::strcmp(stage,"Testing native TRAP / cleanup")&&done>=3)cancelNative=true;}
+static void romLookupChecks(){
+ namespace fs=std::filesystem;const fs::path folder="work/symbian-rom-lookup-check";fs::create_directories(folder);const auto path=(folder/"original.rom").string();
+ std::vector<std::uint8_t> original(8192);put(original,0,0xea000000);put(original,140,0x50000000);put(original,144,original.size());put(original,148,0x50000200);put(original,0x200,1);put(original,0x208,0x50000300);
+ auto directory=[&](auto&b,unsigned at,const char*name,unsigned target,unsigned size,bool isDirectory){
+  unsigned length=std::strlen(name),bytes=(10+length*2+3)&~3u;put(b,at,bytes);put(b,at+4,size);put(b,at+8,target);b[at+12]=isDirectory?16:1;b[at+13]=length;
+  for(unsigned n=0;n<length;n++){b[at+14+n*2]=name[n];b[at+15+n*2]=0;}
+ };
+ directory(original,0x300,"System",0x50000400,0,true);directory(original,0x400,"Programs",0x50000500,0,true);directory(original,0x500,"AppRun.exe",0x50001000,100,false);
+ auto lookup=[&](const auto&b,const char*name,RomFile&file,TaskControl*control=nullptr){
+  {std::ofstream f(path,std::ios::binary);f.write(reinterpret_cast<const char*>(b.data()),b.size());assert(f.good());}
+  AddressSpace memory;RomImage rom;std::string error;assert(rom.mount(memory,path.c_str(),error));return rom.findFile(memory,name,file,error,control);
+ };
+ RomFile file;assert(lookup(original,"z:\\system/PROGRAMS/apprun.EXE",file)&&file.address==0x50001000&&file.size==100);
+ for(const char*name:{"Z:/System/Programs/missing.exe","C:/System/Programs/AppRun.exe","Z:/../System/Programs/AppRun.exe","Z:/System/Programs/*","Z:/System/Programs"}){
+  assert(!lookup(original,name,file)&&file.address==0x50001000&&file.size==100);
+ }
+ for(unsigned which=0;which<5;which++){
+  auto b=original;
+  if(which==0)b[0x50d]=255;
+  if(which==1)put(b,0x308,0x50000300);
+  if(which==2)put(b,0x508,0xffffff00);
+  if(which==3)put(b,0x200,17);
+  if(which==4){put(b,0x200,2);put(b,0x210,0x50000600);directory(b,0x600,"System",0x50000700,0,true);directory(b,0x700,"Programs",0x50000800,0,true);directory(b,0x800,"AppRun.exe",0x50001100,100,false);}
+  assert(!lookup(b,"Z:/System/Programs/AppRun.exe",file)&&file.address==0x50001000);
+ }
+ unsigned polls=0;TaskControl cancel([&](){return ++polls<2;});assert(!lookup(original,"Z:/System/Programs/AppRun.exe",file,&cancel)&&cancel.cancelled());
+ puts("ROM_LOOKUP_PASS UTF16_casefold last_entry_length_word path_guards bounds cycles variants cancellation atomic_output");
+}
 static void romInitializationChecks(){
  namespace fs=std::filesystem;const fs::path folder="work/symbian-rom-init-check";fs::create_directories(folder);const auto path=(folder/"original.rom").string();
  std::vector<std::uint8_t> original(16384);put(original,0,0xea000000);put(original,140,0x50000000);put(original,144,original.size());
@@ -119,7 +150,40 @@ static void kernelNegativeChecks(){
  assert(kernel.dispatch(0x123456,{}).kind==KernelResult::Kind::Unhandled);
  std::uint32_t word=0xffffffff;memory.write(0x10200,&word);assert(code(kernel.dispatch(0x8d,{0x10200,0,0,0}),-1));memory.read(0x10200,&word);assert(word==0);
  assert(code(kernel.dispatch(0x8e,{0x10200,0,0,0}),0));memory.read(0x10200,&word);assert(word==0xffffffff);
+ assert(memory.map(0x20000,8192,Read|Write));
+ assert(kernel.dispatch(0x72,{0xffffffff,0,0,0}).kind==KernelResult::Kind::Fault&&kernel.trapDepth()==0);
+ std::uint32_t resultPointer=0x10100;
+ for(unsigned n=0;n<64;n++){auto frame=0x20000+n*80;memory.write(frame+68,&resultPointer);assert(code(kernel.dispatch(0x72,{frame,0,0,0}),0));}
+ memory.write(0x21400+68,&resultPointer);assert(kernel.dispatch(0x72,{0x21400,0,0,0}).kind==KernelResult::Kind::Fault&&kernel.trapDepth()==64);
+ assert(kernel.trapDepth()==64&&kernel.dispatch(0x72,{0x20000,0,0,0}).kind==KernelResult::Kind::Fault);
+ auto last=0x20000+63*80;word=0;memory.write(last+64,&word);assert(kernel.dispatch(0x73,{}).kind==KernelResult::Kind::Fault&&kernel.trapDepth()==64);
+ word=last-80;memory.write(last+64,&word);
+ for(unsigned n=64;n;n--)assert(code(kernel.dispatch(0x73,{}),0x20000+(n-1)*80));
+ assert(code(kernel.dispatch(0x73,{}),0)&&kernel.trapDepth()==0);
+ for(unsigned n=0;n<64;n++){args[0]=0x1000+n;args[1]=0xffff0000+n;memory.write(0x10040,args,sizeof(args));assert(code(exec(0x34),0));assert(code(kernel.dispatch(0x80,{args[0],0,0,0}),args[1]));}
+ args[0]=0x2000;memory.write(0x10040,args,sizeof(args));assert(code(exec(0x34),-4));
+ args[0]=0x1000;args[1]=123;memory.write(0x10040,args,sizeof(args));assert(code(exec(0x34),0)&&code(kernel.dispatch(0x80,{args[0],0,0,0}),123));assert(code(exec(0x35),0)&&code(kernel.dispatch(0x80,{args[0],0,0,0}),0));
+ args[0]=0x2000;memory.write(0x10040,args,sizeof(args));assert(code(exec(0x34),0));
+ assert(code(kernel.dispatch(0x74,{}),0));kernel.dispatch(0x75,{0x10100,0,0,0});assert(code(kernel.dispatch(0x74,{}),0x10100));assert(code(kernel.dispatch(0x75,{0xffffffff,0,0,0}),-6)&&kernel.scheduler()==0x10100);kernel.dispatch(0x75,{});
+ assert(code(kernel.dispatch(0x4f,{'E',0,0,0}),'e')&&code(kernel.dispatch(0x51,{'Z',0,0,0}),'z')&&code(kernel.dispatch(0x52,{'b',0,0,0}),'B')&&kernel.dispatch(0x4f,{0x100,0,0,0}).kind==KernelResult::Kind::Unhandled);
+ assert(kernel.configureProcess(u"Z:\\System\\AppRun.exe",u"test"));assert(code(kernel.dispatch(0x8000c0,{0xffff0000,0,0,0}),4)&&code(kernel.dispatch(0x8000c0,{123,0,0,0}),-8));
+ std::uint32_t textDescriptor[]={0x20000000,4,0x10500};memory.write(0x10400,textDescriptor,sizeof(textDescriptor));assert(code(kernel.dispatch(0x80001f,{0x10400,0xffff0000,0,0}),0));std::uint32_t length=0;memory.read(0x10400,&length);char16_t text[4];memory.read(0x10500,text,sizeof(text));assert(length==0x20000004&&std::u16string(text,4)==u"test");
+ textDescriptor[1]=3;memory.write(0x10400,textDescriptor,sizeof(textDescriptor));assert(code(kernel.dispatch(0x80001f,{0x10400,0xffff0000,0,0}),-22));memory.read(0x10400,&length);assert(length==0x20000000);
+ textDescriptor[0]=0x40000000;textDescriptor[1]=4;textDescriptor[2]=0x10600;word=0;memory.write(0x10600,&word);memory.write(0x10400,textDescriptor,sizeof(textDescriptor));assert(code(kernel.dispatch(0x80001f,{0x10400,0xffff8000,0,0}),0));memory.read(0x10600,&length);memory.read(0x10604,text,sizeof(text));assert(length==4&&std::u16string(text,4)==u"test");
+ textDescriptor[2]=0xfffffffe;memory.write(0x10400,textDescriptor,sizeof(textDescriptor));assert(code(kernel.dispatch(0x80001f,{0x10400,0xffff0000,0,0}),-6));
+ std::uint32_t named[]={0x30000004,4,0x00450054,0x00540053};memory.write(0x10700,named,sizeof(named));out[1]=4;memory.write(0x10000,out,sizeof(out));
+ args[0]=0x10000;args[1]=0;args[2]=0x10700;args[3]=1;memory.write(0x10040,args,sizeof(args));assert(code(exec(0x19),0));std::uint32_t namedPrimary=0;memory.read(0x10100,&namedPrimary);assert(code(exec(0x19),-11));
+ std::vector<std::uint32_t> aliases;args[1]=0x10700;memory.write(0x10040,args,sizeof(args));
+ for(unsigned n=0;n<64;n++){assert(code(exec(0x1a),0));std::uint32_t alias;memory.read(0x10100,&alias);assert(alias!=namedPrimary);aliases.push_back(alias);}
+ assert(code(exec(0x1a),-4));args[0]=namedPrimary;memory.write(0x10040,args,sizeof(args));assert(code(exec(0x10),0));assert(code(kernel.dispatch(0x29,{namedPrimary,0,0,0}),-8)&&code(kernel.dispatch(0x29,{aliases.back(),0,0,0}),1));
+ args[0]=0;memory.write(0x10040,args,sizeof(args));assert(code(exec(0x10),-8));
+ for(auto alias:aliases){args[0]=alias;memory.write(0x10040,args,sizeof(args));assert(code(exec(0x10),0)&&code(kernel.dispatch(0x29,{alias,0,0,0}),-8));}
+ args[0]=0x10000;args[1]=0x10700;memory.write(0x10040,args,sizeof(args));assert(code(exec(0x1a),-1));args[1]=0;memory.write(0x10040,args,sizeof(args));assert(code(exec(0x19),0));
+ args[0]=0xffff0001;args[1]=0x10700;memory.write(0x10040,args,sizeof(args));assert(code(exec(0x2c),0)&&kernel.name(false)==u"TEST");
+ assert(code(kernel.dispatch(0x53,{'a',0,0,0}),1)&&code(kernel.dispatch(0x53,{'A',0,0,0}),0)&&code(kernel.dispatch(0x53,{' ',0,0,0}),0x70)&&kernel.dispatch(0x53,{0x100,0,0,0}).kind==KernelResult::Kind::Unhandled);
  puts("KERNEL_NEGATIVE_PASS descriptor_capacity invalid_memory stale_handles table_exhaustion no_memory unsupported_calls atomic_wrap");
+ puts("THREAD_CONTEXT_NEGATIVE_PASS trap_64_frames duplicate_link_guard TLS_64_limit_overwrite_free scheduler_state process_UTF16_descriptors overflow_ptr_to_buf ASCII_scope");
+ puts("NAMED_SYNC_PASS duplicate_create shared_object 64_alias_limit primary_close last_close stale_handle zero_handle namespace_lifetime thread_rename");
 }
 static void romChecks(const std::vector<std::uint8_t>&e32){
  namespace fs=std::filesystem;const fs::path folder="work/symbian-rom-check";fs::create_directories(folder);
@@ -170,6 +234,11 @@ static void romChecks(const std::vector<std::uint8_t>&e32){
 }
 int main(int argc,char**argv){
  if(argc==3&&!std::strcmp(argv[1],"--folder"))return symbianImageProbe(argv[2],stdout)?0:5;
+ if(argc==4&&!std::strcmp(argv[1],"--folder")&&!std::strcmp(argv[3],"--stress-runtime"))return symbianImageProbe(argv[2],stdout,nullptr,nullptr,512)?0:5;
+ if(argc==4&&!std::strcmp(argv[1],"--folder")&&!std::strcmp(argv[3],"--cancel-native")){
+  FILE*f=std::tmpfile();assert(f);assert(symbianImageProbe(argv[2],f,nativeKeepRunning,nativeCancelProgress));std::rewind(f);char text[16384]={};auto bytes=std::fread(text,1,sizeof(text)-1,f);std::fclose(f);
+  assert(bytes&&cancelNative&&std::strstr(text,"DIAGNOSTIC_CANCELLED")&&!std::strstr(text,"APPLICATION_OBJECT")&&!std::strstr(text,"ROM_APPRUN")&&!std::strstr(text,"DIAGNOSTIC_END"));puts("NATIVE_CANCEL_PASS latched_between_runtime_checks no_app_factory no_ROM_process_after_cancel");return 0;
+ }
  if(argc>1){
   E32Image image;std::string error;
   if(!image.open(argv[1],error)){printf("E32_REJECT %s\n",error.c_str());return 2;}
@@ -211,7 +280,7 @@ int main(int argc,char**argv){
  auto result=symbianLoaderProbe();
  printf("E32_PROBE parsed=%d relocated=%d returned=%d imports=%d svc=%d protected_memory=%d bounded=%d cancelled=%d\n",result.parsed,result.relocated,result.returned,result.imports,result.systemCall,result.protectedMemory,result.bounded,result.cancelled);fflush(stdout);
  assert(result.passed());
- auto kernel=symbianKernelProbe();printf("KERNEL_PROBE chunks=%d handles=%d sync=%d heap=%d abi=%d thumb=%d trap=%d\n",kernel.chunks,kernel.handles,kernel.sync,kernel.heap,kernel.abi,kernel.thumb,kernel.trap);fflush(stdout);assert(kernel.passed());
+ auto kernel=symbianKernelProbe();printf("KERNEL_PROBE chunks=%d handles=%d sync=%d heap=%d abi=%d thumb=%d trap=%d trap_frames=%d tls=%d scheduler=%d named_sync=%d guest_exit=%d\n",kernel.chunks,kernel.handles,kernel.sync,kernel.heap,kernel.abi,kernel.thumb,kernel.trap,kernel.frames,kernel.tls,kernel.scheduler,kernel.namedSync,kernel.lifecycle);fflush(stdout);assert(kernel.passed());
  kernelNegativeChecks();
  AddressSpace memory(8192);assert(!memory.map(0,4096,Read));assert(!memory.map(0xfffff000,8192,Read));
  assert(memory.map(0x1000,4096,Read|Write));assert(!memory.map(0x1800,4096,Read));
@@ -220,6 +289,7 @@ int main(int argc,char**argv){
  assert(!memory.permits(0x1000,4,Execute));assert(memory.unmap(0x1000)&&memory.used()==0);
  E32Image image;std::string error;
  const std::vector<std::uint8_t> original(std::begin(symbian_e32_guest),std::end(symbian_e32_guest));
+ romLookupChecks();
  romInitializationChecks();
  dependencyChecks(original);
  romChecks(original);

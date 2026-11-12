@@ -1,6 +1,7 @@
 #include "e32_session.h"
 #include "rom_image.h"
 #include "eka1_kernel.h"
+#include "runtime_guest.h"
 #include <cpu/dyncom/arm_dyncom.h>
 #include <cpu/12l1r/exclusive_monitor.h>
 #include <algorithm>
@@ -22,6 +23,7 @@ struct E32Session::Impl {
  bool dependenciesAttempted=false;
  bool dependenciesReady=false,romInitAttempted=false,romInitReady=false,cleanupAttempted=false;
  std::vector<RomInitEntry> romRoots;
+ std::vector<std::uint32_t> initializedRomEntries;bool romProgramAttempted=false;
  RomImage rom;
  ExecutionResult result;
  std::uint32_t stackSize=0;
@@ -54,10 +56,16 @@ struct E32Session::Impl {
     if(kernelEnabled){
      auto handled=kernel.dispatch(svc,result.arguments);
      if(handled.kind==KernelResult::Kind::Returned){
+      if(handled.value>=0xffffff00u&&svc!=0x80&&svc!=0x8d&&svc!=0x8e){result.kernelErrorCall=svc;result.kernelErrorValue=handled.value;result.kernelErrorArguments=result.arguments;}
       cpu.set_reg(0,handled.value);auto lr=cpu.get_lr();cpu.set_cpsr((cpu.get_cpsr()&~0x20u)|(lr&1?0x20:0));cpu.set_pc(lr&~1u);return;
      }
+     if(handled.kind==KernelResult::Kind::Exited){cpu.set_reg(0,handled.value);result.reason=StopReason::ThreadExited;cpu.stop();return;}
      if(handled.kind==KernelResult::Kind::Fault){fault(handled.address,handled.access);return;}
      if(handled.kind==KernelResult::Kind::Blocked){result.reason=StopReason::ThreadBlocked;cpu.stop();return;}
+     if(svc==0xc00076&&(result.arguments[0]&255)==0x16){
+      std::uint32_t args[4];std::u16string name;
+      if(memory.read(result.arguments[1],args,sizeof(args))&&kernel.descriptor16(args[1],name))for(auto c:name)result.serviceName+=c>=32&&c<127?char(c):'?';
+     }
     }
     result.reason=StopReason::SystemCallRequired;
    }
@@ -71,6 +79,7 @@ const char*stopName(StopReason r){switch(r){
  case StopReason::MemoryFault:return "guest memory fault";case StopReason::BudgetExhausted:return "instruction budget reached";
  case StopReason::Cancelled:return "cancelled";default:return "invalid entry point";
  case StopReason::ThreadBlocked:return "thread blocked (scheduler required)";
+ case StopReason::ThreadExited:return "guest thread exited";
 }}
 E32Session::E32Session():impl(new Impl){}
 E32Session::~E32Session()=default;
@@ -238,6 +247,7 @@ RomStartResult E32Session::initializeRomLibraries(TaskControl*control){
   if(result.call.reason!=StopReason::Returned||result.call.r0){result.error="ROM DLL thread attach did not complete";return result;}
   result.completed++;
  }
+ for(const auto&library:order)p.initializedRomEntries.push_back(library.entry);
  p.romInitReady=true;result.ready=true;return result;
 }
 CleanupStartResult E32Session::initializeCleanup(const char*descriptor,TaskControl*control){
@@ -253,8 +263,107 @@ CleanupStartResult E32Session::initializeCleanup(const char*descriptor,TaskContr
  }
  result.ready=true;return result;
 }
+NativeRuntimeResult E32Session::checkNativeRuntime(const char*descriptor,unsigned repetitions,TaskControl*control){
+ auto&p=*impl;NativeRuntimeResult result;result.call.reason=StopReason::InvalidEntry;
+ if(!p.cleanupAttempted||!p.kernel.trap()||p.kernel.trapDepth()||!repetitions||repetitions>512){result.error="Native TRAP test requires initialized cleanup and 1..512 repetitions";return result;}
+ constexpr std::uint32_t code=0x30010000,data=0x31010000,out=data+128;
+ std::array<std::uint32_t,10> functions{};const unsigned ordinals[]={1148,1164,630,857,824,45,476,859};
+ for(unsigned n=0;n<8;n++)if(!romExport(descriptor,0x100039e5,ordinals[n],functions[n],result.error))return result;
+ if(!p.memory.map(code,sizeof(symbian_runtime_guest),Read|Execute)){result.error="Cannot map native TRAP diagnostic code";return result;}
+ if(!p.memory.map(data,4096,Read|Write)){p.memory.unmap(code);result.error="Cannot map native TRAP diagnostic data";return result;}
+ p.memory.initialize(code,symbian_runtime_guest,sizeof(symbian_runtime_guest));functions[9]=out;
+ auto handler=p.kernel.trap();std::uint32_t firstAllocation=0;bool reuse=true;
+ auto run=[&](unsigned mode,bool nested){
+  std::array<std::uint32_t,12> output{};output[6]=out;output[7]=1;output[8]=out;output[9]=2;
+  functions[8]=mode;p.memory.write(data,functions.data(),sizeof(functions));p.memory.write(out,output.data(),sizeof(output));
+  result.call=call(code+(nested?0x200:0),data,100000,control);
+  p.memory.read(out,output.data(),sizeof(output));
+  bool returned=result.call.reason==StopReason::Returned&&p.kernel.trapDepth()==0&&p.kernel.trap()==handler;
+  if(!returned){result.error="Native TRAP/cleanup did not return with balanced state";return false;}
+  if(nested)return output[0]==std::uint32_t(-42)&&output[1]==2&&output[3]==0&&output[10]==21&&output[11]==std::uint32_t(-43);
+  if(!output[5]||!p.memory.permits(output[5],256,Read|Write))return false;
+  if(!firstAllocation)firstAllocation=output[5];else reuse=reuse&&firstAllocation==output[5];
+  return output[0]==(mode?std::uint32_t(-42):0)&&output[1]==1&&output[2]==1&&output[3]==0&&output[10]==1&&(!mode||output[4]==123);
+ };
+ if(control)control->report("Testing native TRAP / cleanup",0,repetitions+2);
+ result.normal=run(0,false);
+ if(result.normal)result.leave=run(1,false);
+ if(result.leave)result.nested=run(0,true);
+ if(result.nested){
+  result.cleanup=true;
+  for(unsigned n=0;n<repetitions;n++){
+   if(control)control->report("Testing native TRAP / cleanup",n+2,repetitions+2);
+   if(!run(n&1,false)){result.cleanup=false;break;}result.iterations++;
+  }
+ }
+ result.heapReuse=result.cleanup&&reuse;
+ if(!result.passed()&&result.error.empty())result.error="Native TRAP result/cleanup order/register or allocation-reuse mismatch";
+ p.memory.unmap(data);p.memory.unmap(code);return result;
+}
+NativeContextResult E32Session::checkNativeContext(const char*descriptor,TaskControl*control){
+ auto&p=*impl;NativeContextResult result;result.call.reason=StopReason::InvalidEntry;
+ if(!p.cleanupAttempted||!p.kernel.trap()||p.kernel.trapDepth()||p.kernel.scheduler()){result.error="Native context test requires initialized cleanup and no active scheduler";return result;}
+ constexpr std::uint32_t code=0x30010000,scheduler=0x31020000,low=0x31021000,high=0x31022000,data=0x31023000;
+ const unsigned ordinals[]={335,336,328,1343,569,294,963,1259,1395,13,979,1265,630};std::uint32_t fn[13];
+ for(unsigned n=0;n<13;n++)if(!romExport(descriptor,0x100039e5,ordinals[n],fn[n],result.error))return result;
+ std::vector<std::uint32_t> mapped;
+ auto map=[&](std::uint32_t at,std::uint32_t bytes,unsigned access){if(!p.memory.map(at,bytes,access))return false;mapped.push_back(at);return true;};
+ auto invoke=[&](unsigned n,std::array<std::uint32_t,4> args){result.call=callArgs(fn[n],args,100000,control);return result.call.reason==StopReason::Returned;};
+ do{
+  if(!map(code,sizeof(symbian_runtime_guest),Read|Execute)||!map(scheduler,64,Read|Write)||!map(low,64,Read|Write)||!map(high,64,Read|Write)||!map(data,256,Read|Write)){result.error="Cannot map native context fixture";break;}
+  p.memory.initialize(code,symbian_runtime_guest,sizeof(symbian_runtime_guest));
+  if(control)control->report("Testing native DLL TLS");
+  constexpr std::uint32_t key=0xe0001234;
+  if(!invoke(1,{key,0,0,0})||result.call.r0||!invoke(0,{key,data,0,0})||result.call.r0||!invoke(1,{key,0,0,0})||result.call.r0!=data||!invoke(0,{key,data+4,0,0})||result.call.r0||!invoke(1,{key,0,0,0})||result.call.r0!=data+4||!invoke(2,{key,0,0,0})||!invoke(1,{key,0,0,0})||result.call.r0)break;
+  result.tls=true;if(control)control->report("Testing native active scheduler");
+  if(!invoke(3,{scheduler,0,0,0})||result.call.r0!=scheduler||!invoke(4,{scheduler,0,0,0})||!invoke(5,{})||result.call.r0!=scheduler)break;
+  result.scheduler=true;
+  std::uint32_t table[]={0,0,code+0x4c0,code+0x4c0,code+0x400,code+0x480};p.memory.write(data+128,table,sizeof(table));
+  bool objectsReady=true;
+  for(auto object:{low,high}){
+   std::uint32_t expected=object==low?1u:10u,priority=0;
+   if(!invoke(8,{object,expected,0,0})||result.call.r0!=object||!p.memory.read(object+20,&priority)||priority!=expected){objectsReady=false;break;}
+   std::uint32_t vtable=data+128,fields[]={data,object==low?1u:2u,fn[12],0};p.memory.write(object,&vtable);p.memory.write(object+24,fields,sizeof(fields));
+   if(!invoke(9,{object,0,0,0})||!invoke(10,{object,0,0,0})){objectsReady=false;break;}
+   std::uint32_t complete=0;p.memory.write(object+4,&complete);
+  }
+  if(!objectsReady)break;
+  std::uint32_t output[4]={};
+  if(!invoke(6,{data+64,0,0,0})||result.call.r0!=1||!invoke(6,{data+64,0,0,0})||result.call.r0!=1||!invoke(6,{data+64,0,0,0})||result.call.r0!=0)break;
+  p.memory.read(data,output,sizeof(output));result.events=output[0]==2&&output[1]==21;
+  if(!result.events)break;
+  std::uint32_t leave=std::uint32_t(-42),complete=0;p.memory.write(low+36,&leave);p.memory.write(low+4,&complete);
+  if(!invoke(10,{low,0,0,0})||!invoke(6,{data+64,0,0,0})||result.call.r0!=1)break;
+  p.memory.read(data,output,sizeof(output));std::uint32_t dispatchError=1;p.memory.read(data+64,&dispatchError);
+  result.runError=output[0]==3&&output[1]==211&&output[2]==std::uint32_t(-42)&&output[3]==1&&dispatchError==0&&p.kernel.trapDepth()==0;
+  if(!result.runError)break;
+  if(!invoke(11,{low,0,0,0})||!invoke(11,{high,0,0,0})||!invoke(7,{scheduler,0,0,0})||!invoke(5,{})||result.call.r0)break;
+  result.teardown=p.kernel.scheduler()==0&&p.kernel.trapDepth()==0;
+ }while(false);
+ if(!result.passed()&&result.error.empty())result.error="Native TLS/scheduler/RunL/RunError/teardown check did not complete";
+ for(auto at:mapped)p.memory.unmap(at);return result;
+}
+ExecutionResult E32Session::runRomProgram(const char*path,std::string&error,TaskControl*control){
+ auto&p=*impl;ExecutionResult result;result.reason=StopReason::InvalidEntry;
+ if(!p.romInitReady||!p.kernel.trap()||p.kernel.trapDepth()||p.kernel.scheduler()||p.romProgramAttempted){error="ROM process entry requires initialized, fresh idle thread context";return result;}
+ RomFile file;if(!p.rom.findFile(p.memory,path,file,error,control))return result;
+ // ROM directory file length is a logical file length, not the size of the
+ // executable's resident code extent. Validate that extent against the ROM.
+ std::uint32_t h[25];if(file.size<100||!p.memory.read(file.address,h,sizeof(h))||h[0]!=0x1000007a||h[5]!=file.address+100||(h[4]&~1u)!=h[5]||!h[7]||h[8]>h[7]||h[5]<0x50000000||std::uint64_t(h[5])+h[7]>0x50000000ULL+p.rom.bytes()||h[9]||h[10]){error="Unsupported ROM executable header/data layout";return result;}
+ std::vector<RomInitEntry> roots,order;
+ if(h[14]){
+  std::uint32_t refs=0;if(h[14]<0x50000000||std::uint64_t(h[14])+4>0x50000000ULL+p.rom.bytes()||!p.memory.read(h[14],&refs)||(refs&0xffff)!=1||(refs>>16)>128||std::uint64_t(h[14])+4+(refs>>16)*8ULL>0x50000000ULL+p.rom.bytes()){error="Invalid ROM executable dependency table";return result;}
+  for(unsigned n=0;n<(refs>>16);n++){std::uint32_t pair[2];p.memory.read(h[14]+4+n*8,pair,8);roots.push_back({0,pair[0],pair[1]});}
+ }
+ if(!p.rom.initializationOrder(p.memory,roots,order,error,control))return result;
+ for(const auto&library:order)if(std::find(p.initializedRomEntries.begin(),p.initializedRomEntries.end(),library.entry)==p.initializedRomEntries.end()){error="ROM executable depends on an unattached DLL";return result;}
+ std::u16string filename;for(const char*c=path;*c;c++)filename+=*c=='/'?'\\':char16_t(*c);
+ if(!p.kernel.configureProcess(filename,u"\"E:\\System\\Apps\\Java3DS\\test.app\" R\"test\" ")){error="Cannot configure bounded diagnostic process metadata";return result;}
+ p.romProgramAttempted=true;if(control)control->report("Entering ROM AppRun");return call(h[4],0,1000000,control);
+}
 ExecutionResult E32Session::callArgs(std::uint32_t entry,const std::array<std::uint32_t,4>&arguments,std::uint64_t budget,TaskControl*control){
  auto&p=*impl;p.result={};
+ if(p.kernelEnabled&&!p.kernel.alive()){p.result.reason=StopReason::ThreadExited;p.result.r0=p.kernel.exitCode();return p.result;}
  if(!p.loaded||!p.memory.permits(entry&~1u,entry&1?2:4,Read|Execute)||(!(entry&1)&&(entry&3))){p.result.reason=StopReason::InvalidEntry;return p.result;}
  p.cpu.clear_instruction_cache();p.cpu.flush_tlb();p.monitor.clear_exclusive();
  for(unsigned r=0;r<16;r++)p.cpu.set_reg(r,0);

@@ -1,5 +1,57 @@
 # Symbian implementation — CPU/EKA1 loader foundation, no game runtime yet
 
+## Native unwind, thread context and ROM entry batch (0.5.0)
+
+The owner's 0.4.1 New 3DS pass validates ROM/cleanup creation. This larger
+batch, still needing console validation, adds checked EKA1 76-byte TTrap frame
+push/pop services (64 frames maximum), per-thread TLS (64 slots), scheduler
+selection and controlled current-thread/process exit. Invalid/duplicate/cyclic
+trap chains stop inside the guest. No host CPU context or pointer is restored
+from a guest frame: the original ROM instructions perform the saved-register
+return through the checked CPU/memory callbacks.
+
+Original ARM diagnostics call UID-checked EUSER Trap/UnTrap/Leave and cleanup
+exports. They test normal return, -42 Leave, nested -43/-42 errors, register
+restoration, LIFO cleanup and User-allocated pointer cleanup. On PC, 512 further
+normal/Leave cycles reuse the same 256-byte native allocation. These fixtures
+are original project code and contain no ROM instructions or game payload.
+
+Native CActiveScheduler and CActive constructors/functions are exercised using
+bounded diagnostic storage and original GCC2 callback tables. Manually completed
+fixture statuses dispatch RunL in priority order, a Leave reaches RunError, the
+empty queue returns false and native destructors unregister all objects and
+clear the scheduler pointer. This does not implement a complete asynchronous
+scheduler, timers or service-server request completion. Native UserSvr DLL TLS
+set/get/overwrite/free is also exercised through the ROM wrappers.
+
+Synchronization now supports named mutex/semaphore creation and named semaphore
+open in the single modeled process/kernel namespace. Duplicate names return
+KErrAlreadyExists. Sixty-four objects and 64 additional alias handles are bounded;
+IDs are never reused. Closing an original handle preserves the shared object
+while an alias remains; the last close removes the name and backing state.
+Process filename/command line and current-object rename use bounded checked
+UTF-16 descriptors, including HBufC-backed pointer descriptors. Only current
+pseudo-handles are supported. Character case/fold/category operations currently
+cover ASCII; non-ASCII calls stop. ASCII fold-to-lowercase semantics are checked
+against SymbianSource euser/unicode/unicode.cpp (EFoldCase):
+https://github.com/SymbianSource/oss.FCL.sf.os.kernelhwsrv/blob/master/kernel/eka/euser/unicode/unicode.cpp
+
+Read-only ROM path lookup walks only requested directories, with at most 16
+roots/components, 2048 entries per directory and 16384 entries total. UTF-16
+names compare in ASCII case-insensitive paths; traversals, cycles, malformed
+ranges and ambiguous hardware variants are rejected. Serialized directory size
+excludes its four-byte length field. A ROM executable's logical file length
+need not cover its full resident code; that code is checked against the ROM.
+
+The real AppRun is looked up as Z:/System/Programs/AppRun.exe, with validated
+entry layout and already attached ROM dependencies. Its bounded diagnostic
+thread receives a virtual test.app command line, not an installed phone/game.
+It now reaches FileServer session creation (executor 0x16), which remains
+explicitly unsupported. No file service, window/font/graphics/audio servers,
+full process scheduler, EKA2/SIS installation or playable frame is claimed.
+The same private 0.4.0 SD dataset works; no extra firmware files are needed.
+Native-stage cancellation is latched and prevents further app/process calls.
+
 ## ROM DLL attachment and native cleanup bootstrap (0.4.1)
 
 The owner's 0.4.0 New 3DS result confirms all import/heap/app UID steps, with
