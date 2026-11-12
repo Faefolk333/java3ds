@@ -69,6 +69,8 @@ KernelResult Eka1Kernel::executor(std::uint32_t attr,std::uint32_t info,std::uin
 KernelResult Eka1Kernel::dispatch(std::uint32_t svc,const std::array<std::uint32_t,4>&a){
  switch(svc){
  case 0x6c:return returned(currentHeap);
+ case 0x81:return returned(trapHandler);
+ case 0x82:{if(a[0]&&!memory.permits(a[0],4,Read|Write))return returned(argument);auto previous=trapHandler;trapHandler=a[0];return returned(previous);}
  case 0xc0006d:{auto old=currentHeap;if(a[0]&&!memory.permits(a[0],4,Read|Write))return returned(argument);currentHeap=a[0];return returned(old);}
  case 0x800083:{
   if(a[0]!=8)return returned(notSupported);

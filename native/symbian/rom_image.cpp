@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <cstdio>
 #include <cstring>
+#include <functional>
+#include <set>
 namespace symbian {
 namespace {
 std::uint32_t word(const unsigned char*b){return b[0]|std::uint32_t(b[1])<<8|std::uint32_t(b[2])<<16|std::uint32_t(b[3])<<24;}
@@ -44,11 +46,44 @@ bool RomImage::library(AddressSpace&memory,const char*path,RomLibrary&library,st
  if(exportsCount&&(!exportsAddress||exportsAddress<codeBase||std::uint64_t(exportsAddress)+exportsCount*4ULL>std::uint64_t(codeBase)+codeSize))
   return error(e,"ROM DLL export table is outside its code range");
  RomLibrary result;result.uid3=word(h+8);result.codeBase=codeBase;result.codeSize=codeSize;
+ result.entry=word(h+16);result.references=word(h+56);result.dataSize=word(h+36);result.bssSize=word(h+40);
  for(std::uint32_t n=0;n<exportsCount;n++){
   std::uint32_t target=0;if(!memory.read(exportsAddress+n*4,&target))return error(e,"Cannot read ROM DLL export");
   result.exports.push_back(target);
  }
  library=std::move(result);return true;
+}
+bool RomImage::initializationOrder(AddressSpace&memory,const std::vector<RomInitEntry>&roots,std::vector<RomInitEntry>&order,std::string&e,TaskControl*control)const{
+ e.clear();std::vector<RomInitEntry> result;std::set<std::uint32_t> visited;std::size_t edges=0;
+ auto inside=[&](std::uint32_t address,std::uint64_t bytes){return mounted()&&address>=base&&std::uint64_t(address)+bytes<=std::uint64_t(base)+size;};
+ std::function<bool(RomInitEntry)> visit;
+ visit=[&](RomInitEntry expected){
+  if(control&&!control->checkpoint())return error(e,"ROM initialization planning cancelled");
+  // This stage supports EKA1 entry-at-code-start headers only. Reject other
+  // layouts; never scan backwards through arbitrary instructions for a match.
+  std::uint32_t code=expected.entry&~1u;unsigned char h[100];
+  if((code&3)||code<base+100||!inside(code-100,100)||!memory.read(code-100,h,sizeof(h))||word(h)!=0x10000079||word(h+16)!=expected.entry||word(h+20)!=code||!inside(code,word(h+28))||!word(h+28))return error(e,"Unsupported ROM DLL entry/header layout");
+  RomInitEntry current{word(h+8),expected.entry,word(h+56)};
+  if((expected.uid&&expected.uid!=current.uid)||expected.references!=current.references)return error(e,"ROM DLL dependency identity/table mismatch");
+  if(word(h+36)||word(h+40))return error(e,"ROM DLL static writable data requires process mapping");
+  if(visited.count(expected.entry))return true;
+  if(visited.size()>=256)return error(e,"ROM DLL initialization limit (256) exceeded");
+  visited.insert(current.entry);
+  if(current.references){
+   unsigned char head[4];
+   if(!inside(current.references,4)||!memory.read(current.references,head,4))return error(e,"ROM DLL dependency table is outside the ROM");
+   auto flags=unsigned(head[0])|(unsigned(head[1])<<8),count=unsigned(head[2])|(unsigned(head[3])<<8);
+   if(flags!=1||count>128||count>8192-edges||!inside(current.references,4+count*8ULL))return error(e,"Unsupported ROM DLL dependency table flags/count");
+   edges+=count;
+   for(unsigned n=0;n<count;n++){
+    std::uint32_t pair[2];if(!memory.read(current.references+4+n*8,pair,sizeof(pair)))return error(e,"Unreadable ROM DLL dependency");
+    if(!visit({0,pair[0],pair[1]}))return false;
+   }
+  }
+  result.push_back(current);if(control)control->report("Planning ROM initialization",result.size(),256);return true;
+ };
+ for(const auto&root:roots)if(!visit(root))return false;
+ order=std::move(result);return true;
 }
 bool e32LibraryIdentity(const std::string&name,std::string&filename,std::uint32_t&uid){
  filename.clear();uid=0;auto bracket=name.find('[');

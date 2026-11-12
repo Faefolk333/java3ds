@@ -38,19 +38,31 @@ bool symbianImageProbe(const char*folder,FILE*report,bool(*keepRunning)(),void(*
   std::fprintf(report,"THREAD_HEAP ready=%d address=%08lx guest_bytes=%zu create=%s switch=%s error=%s\n",heap.ready,(unsigned long)heap.address,session.memory().used(),stopName(heap.create.reason),stopName(heap.switchHeap.reason),heap.error.c_str());std::fflush(report);
   if(!checkpoint())return true;
   if(!heap.ready){std::fprintf(report,"DIAGNOSTIC_STOP heap_initialization_incomplete svc=%08lx\n",(unsigned long)heap.create.systemCall);return true;}
+  auto initialized=session.initializeRomLibraries(&control);
+  std::fprintf(report,"ROM_INITIALIZATION ready=%d completed=%zu/%zu uid=%08lx entry=%08lx result=%s r0=%08lx svc=%08lx fault=%08lx args=%08lx,%08lx,%08lx,%08lx error=%s\n",initialized.ready,initialized.completed,initialized.planned,(unsigned long)initialized.uid,(unsigned long)initialized.entry,stopName(initialized.call.reason),(unsigned long)initialized.call.r0,(unsigned long)initialized.call.systemCall,(unsigned long)initialized.call.address,(unsigned long)initialized.call.arguments[0],(unsigned long)initialized.call.arguments[1],(unsigned long)initialized.call.arguments[2],(unsigned long)initialized.call.arguments[3],initialized.error.c_str());std::fflush(report);
+  if(!checkpoint())return true;
+  if(!initialized.ready){std::fprintf(report,"DIAGNOSTIC_STOP ROM_DLL_initialization_incomplete\n");return true;}
   for(const auto&library:session.libraries()){
    control.report("Initializing game DLL");auto r=session.call(library.image.entry,1,100000,&control);
    std::fprintf(report,"DLL_THREAD_ATTACH name=%s uid=%08lx entry=%08lx result=%s r0=%08lx svc=%08lx fault=%08lx\n",library.filename.c_str(),(unsigned long)library.uid,(unsigned long)library.image.entry,stopName(r.reason),(unsigned long)r.r0,(unsigned long)r.systemCall,(unsigned long)r.address);std::fflush(report);
    if(!checkpoint())return true;
    if(r.reason!=StopReason::Returned||r.r0){std::fprintf(report,"DIAGNOSTIC_STOP game_DLL_initialization_incomplete\n");return true;}
   }
- }else{if(!checkpoint())return true;std::fprintf(report,"ROM_NOT_MAPPED %s\n",error.c_str());}
+ }else{if(!checkpoint())return true;std::fprintf(report,"ROM_NOT_MAPPED %s\n",error.c_str());return true;}
  if(!checkpoint())return true;
  const auto&m=session.module();
  for(auto entry:{m.entry,m.exports.empty()?0:m.exports[0]}){
   if(!entry)continue;
   control.report("Executing diagnostic");auto r=session.call(entry,entry==m.entry?1:0,100000,&control);
   std::fprintf(report,"E32_CALL entry=%08lx result=%s r0=%08lx pc=%08lx instructions=%llu import=%s#%lu svc=%08lx fault=%08lx access=%u\n",(unsigned long)entry,stopName(r.reason),(unsigned long)r.r0,(unsigned long)r.pc,(unsigned long long)r.instructions,r.library.c_str(),(unsigned long)r.ordinal,(unsigned long)r.systemCall,(unsigned long)r.address,r.access);std::fflush(report);
+  if(!checkpoint())return true;
+  if(entry==m.entry){
+   if(r.reason!=StopReason::Returned||r.r0){std::fprintf(report,"DIAGNOSTIC_STOP application_DLL_initialization_incomplete\n");return true;}
+   auto cleanup=session.initializeCleanup((root+"/rom-libs/EUSER.DLL").c_str(),&control);
+   std::fprintf(report,"NATIVE_CLEANUP ready=%d address=%08lx handler=%08lx result=%s svc=%08lx fault=%08lx error=%s\n",cleanup.ready,(unsigned long)cleanup.address,(unsigned long)cleanup.handler,stopName(cleanup.call.reason),(unsigned long)cleanup.call.systemCall,(unsigned long)cleanup.call.address,cleanup.error.c_str());std::fflush(report);
+   if(!checkpoint())return true;
+   if(!cleanup.ready){std::fprintf(report,"DIAGNOSTIC_STOP cleanup_initialization_incomplete\n");return true;}
+  }
   if(entry!=m.entry&&r.reason==StopReason::Returned&&r.r0){
    std::uint32_t vtable=0;
    if(session.memory().permits(r.r0,4,Read|Write)&&session.memory().read(r.r0,&vtable)&&session.memory().permits(vtable,4,Read)){

@@ -20,6 +20,8 @@ struct E32Session::Impl {
  std::vector<E32Import> traps;
  std::vector<E32Library> libraries;
  bool dependenciesAttempted=false;
+ bool dependenciesReady=false,romInitAttempted=false,romInitReady=false,cleanupAttempted=false;
+ std::vector<RomInitEntry> romRoots;
  RomImage rom;
  ExecutionResult result;
  std::uint32_t stackSize=0;
@@ -143,6 +145,7 @@ bool E32Session::linkDependencies(const char*folder,std::string&error,TaskContro
  std::map<std::string,Provider> providers;
  std::vector<std::pair<std::uint32_t,std::uint32_t>> patches;
  std::vector<unsigned> order;
+ std::vector<RomInitEntry> romRoots;
  std::size_t exportCount=0;
  std::uint32_t codeBase=0x13000000,dataBase=0x03000000;
  const std::string root=folder;
@@ -169,6 +172,7 @@ bool E32Session::linkDependencies(const char*folder,std::string&error,TaskContro
   RomLibrary rom;std::string romError;
   if(p.rom.library(p.memory,(root+"/rom-libs/"+name).c_str(),rom,romError)){
    if(uid&&rom.uid3!=uid){error="ROM DLL UID mismatch: "+name;return false;}
+   romRoots.push_back({rom.uid3,rom.entry,rom.references});
    if(rom.exports.size()>131072-exportCount){error="DLL export budget exceeded";return false;}exportCount+=rom.exports.size();
    auto provider=providers.emplace(name,Provider{rom.uid3,std::move(rom.exports)}).first;
    return target(provider->second,import,slot);
@@ -218,7 +222,36 @@ bool E32Session::linkDependencies(const char*folder,std::string&error,TaskContro
  if(!checkpoint())return rollback();
  for(const auto&patch:patches)p.memory.initialize(patch.first,&patch.second,4);
  for(auto index:order)p.libraries.push_back(std::move(candidates[index].library));
+ p.romRoots=std::move(romRoots);p.dependenciesReady=true;
  p.traps=std::move(traps);p.cpu.clear_instruction_cache();p.cpu.flush_tlb();return true;
+}
+RomStartResult E32Session::initializeRomLibraries(TaskControl*control){
+ auto&p=*impl;RomStartResult result;result.call.reason=StopReason::InvalidEntry;
+ if(!p.dependenciesReady||!p.kernel.heap()||p.romInitAttempted){result.error="ROM initialization requires linked dependencies and a fresh native thread heap";return result;}
+ p.romInitAttempted=true;std::vector<RomInitEntry> order;
+ if(!p.rom.initializationOrder(p.memory,p.romRoots,order,result.error,control))return result;
+ result.planned=order.size();
+ for(const auto&library:order){
+  result.uid=library.uid;result.entry=library.entry;
+  if(control)control->report("Initializing ROM DLL",result.completed,result.planned);
+  result.call=call(library.entry,1,100000,control);
+  if(result.call.reason!=StopReason::Returned||result.call.r0){result.error="ROM DLL thread attach did not complete";return result;}
+  result.completed++;
+ }
+ p.romInitReady=true;result.ready=true;return result;
+}
+CleanupStartResult E32Session::initializeCleanup(const char*descriptor,TaskControl*control){
+ auto&p=*impl;CleanupStartResult result;result.call.reason=StopReason::InvalidEntry;
+ if(!p.romInitReady||p.cleanupAttempted){result.error="Cleanup bootstrap requires initialized ROM libraries and a fresh thread";return result;}
+ p.cleanupAttempted=true;std::uint32_t create=0;
+ // EKA1 EUSER ordinal 746: CTrapCleanup::New (pinned epoc6_n.def).
+ if(!romExport(descriptor,0x100039e5,746,create,result.error))return result;
+ if(control)control->report("Creating native cleanup stack");result.call=call(create,0,100000,control);
+ result.address=result.call.r0;result.handler=p.kernel.trap();
+ if(result.call.reason!=StopReason::Returned||!p.memory.permits(result.address,4,Read|Write)||!p.memory.permits(result.handler,4,Read|Write)){
+  result.error="Native cleanup stack/handler did not initialize";return result;
+ }
+ result.ready=true;return result;
 }
 ExecutionResult E32Session::callArgs(std::uint32_t entry,const std::array<std::uint32_t,4>&arguments,std::uint64_t budget,TaskControl*control){
  auto&p=*impl;p.result={};

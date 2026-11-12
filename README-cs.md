@@ -1,3 +1,22 @@
+# Java3DS 0.4.1 — testovací sestavení
+
+Vaše logy z New 3DS potvrzují celý test 0.4.0: všechny importy, obě herní DLL,
+paměť i správné UID aplikace. Nově test také zjistí pořadí inicializace knihoven
+přímo z ROMu a spustí jejich vstupní funkce. Na PC prošlo 114 ze 114 knihoven.
+Potom původní EUSER vytvoří CTrapCleanup, tedy nativní úklidový zásobník a
+obsluhu chyb vlákna. Tyto nové kroky ještě potřebují ověřit na konzoli.
+
+Aktualizujte přes Wi-Fi, znovu otevřete Java3DS a v Homebrew Launcheru spusťte
+Symbian Probe 0.4.1 -> Y. Platí stejná soukromá data z 0.4.0; nový ZIP není třeba.
+Logy stále najdete v /3ds/java-3ds/symbian-probe.log a symbian-loader.log.
+Očekávané záznamy: trap=1, ROM_INITIALIZATION ready=1 completed=114/114 a
+NATIVE_CLEANUP ready=1. Po vytvoření cleanup objektu se adresa aplikace změnila;
+UID má stále souhlasit. Zatím nevzniká herní obrazovka: aplikační prostředí,
+plánování, služby souborů/grafiky/zvuku, zpracování Leave a SIS ještě nejsou hotové.
+Chování Java her se nemění; soukromé ROM/herní soubory nejsou ve veřejném vydání.
+
+## Previous history
+
 # Java3DS 0.4.0 — testovací sestavení
 
 Samostatný Symbian test nyní načítá také herní EKA1 DLL včetně jejich závislostí.

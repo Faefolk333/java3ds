@@ -1,3 +1,38 @@
+# Java3DS 0.4.1 validation — 2026-11-12
+
+The owner's 0.4.0 New 3DS logs pass all fixtures, 415 main/284 game DLL imports,
+both game DLL thread-attach entries and matching application UID (4610 ms total).
+Those logs do not cover the new ROM DLL plan/native cleanup bootstrap below.
+
+* Original ROM fixtures verify dependency order, cycles, identity checking even
+  for already visited nodes, invalid bounds/table flags/entry layout, rejection
+  of static writable data, the 256-DLL cap, atomic plan output and cancellation.
+  Bootstrap-before-heap/graph rejection is checked. All previous CPU/kernel,
+  dependency rollback and 418 malformed/truncated E32 checks remain passing.
+* The owner's private host dataset completes 114/114 actual ROM DLL entries
+  in dependency order with thread-attach reason 1. Both game DLLs and the main
+  application DLL attach next. EUSER CTrapCleanup::New (EKA1 ordinal 746)
+  returns 0x20000080 and installs native trap handler 0x20000084. Only then does
+  the factory create the app at 0x200000ec; its UID is still 0x101fd3f6.
+  Creation is checked; full native Leave/cleanup unwinding is not implemented.
+* The ROM planner accepts only checked EKA1 entry-at-code-start headers and
+  flag-1 entry/table dependency pairs. Limits are 256 DLLs, 128 references per
+  table, 8192 edges. Static ROM DLL data/BSS require a future process mapper and
+  currently stop explicitly. New trap-handler SVC get/set checks pass in the
+  common kernel probe, including invalid pointer rejection and old-value return.
+* No owner firmware/game inputs are tracked or publicly packaged. The same
+  private 0.4.0 SD data remains valid. The new bootstrap needs console testing;
+  no GUI, full scheduler, service servers, EKA2/SIS or gameplay is claimed.
+
+* Final devkitARM CIA/3DSX/probe builds pass; modified objects are ARMv6K,
+  with no ARMv7 DMB/DSB/ISB in the linked probe. All three bounded startup heap
+  links pass. Final CIA title version 65 / 0.4.1 has verified content hashes
+  with the three expected unsigned signature failures. Extracted RomFS, icon,
+  banner and audio PCM match sources, and embedded assets pass. Anonymous
+  updater/public release checks are performed after publication.
+
+## Previous history
+
 # Java3DS 0.4.0 validation — 2026-11-12
 
 The owner's New 3DS logs confirm all 0.4.0 CPU/E32/kernel fixture flags pass,

@@ -1,5 +1,32 @@
 # Symbian implementation — CPU/EKA1 loader foundation, no game runtime yet
 
+## ROM DLL attachment and native cleanup bootstrap (0.4.1)
+
+The owner's 0.4.0 New 3DS result confirms all import/heap/app UID steps, with
+all fixture flags passing (4610 ms total). The next runtime stage follows EKA1
+ROM DLL dependency tables directly in the mounted ROM, deduplicates cycles and
+prepares a complete dependency-first call list before executing any entry.
+It verifies entry-at-code-start headers, dependency table identity on repeated
+edges, flag-1 paired entry/table format and all ROM ranges. Bounds: 256 DLLs,
+128 references per table and 8192 edges. Unsupported static writable data/BSS
+or entry layouts stop explicitly. No backward instruction scanning is used.
+
+The private host dataset completes all 114 ROM DLL thread-attach entries,
+then both game DLL entries and the main application DLL entry (reason 1).
+The runtime next invokes the matching EUSER ordinal 746, CTrapCleanup::New.
+New checked EPOC6 TrapHandler/SetTrapHandler SVCs retain the thread-local guest
+pointer and return the previous value. The real ROM constructs its cleanup
+object at 0x20000080 and installs its handler at 0x20000084. The application
+factory runs afterwards and returns 0x200000ec with the correct UID.
+
+The checked ordinal/name comes from the pinned EKA2L1 epoc6_n.def; native code
+and returned pointers are verified against the actual owner's ROM. This is
+cleanup/handler creation only: native Leave unwinding, trap frame stacks,
+application framework/process environment, scheduling, filesystem/window/audio
+servers, EKA2 and SIS installation remain incomplete. No game frame is run.
+The new ROM/cleanup steps require physical testing. Existing private 0.4.0
+SD data is sufficient; collect ROM_INITIALIZATION and NATIVE_CLEANUP log records.
+
 ## Recursive EKA1 game DLL linking (0.4.0)
 
 Before heap/bootstrap calls, the diagnostic now resolves the complete main/game

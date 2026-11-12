@@ -17,6 +17,10 @@ struct HeapStartResult {
  bool ready=false;std::uint32_t address=0;ExecutionResult create,switchHeap;std::string error;
 };
 struct E32Library {std::string filename;std::uint32_t uid=0;LoadedE32 image;};
+struct RomStartResult {
+ bool ready=false;std::size_t planned=0,completed=0;std::uint32_t uid=0,entry=0;ExecutionResult call;std::string error;
+};
+struct CleanupStartResult {bool ready=false;std::uint32_t address=0,handler=0;ExecutionResult call;std::string error;};
 // One bounded E32 call, not a Symbian OS. Unimplemented imports/SVCs stop with
 // their identities instead of returning fabricated success to an application.
 class E32Session {
@@ -35,6 +39,8 @@ public:
  AddressSpace&memory();
  void enableEka1Kernel();
  HeapStartResult initializeHeap(const char*euserDescriptor,TaskControl*control=nullptr);
+ RomStartResult initializeRomLibraries(TaskControl*control=nullptr);
+ CleanupStartResult initializeCleanup(const char*euserDescriptor,TaskControl*control=nullptr);
  ExecutionResult call(std::uint32_t entry,std::uint32_t argument=0,std::uint64_t budget=100000,TaskControl*control=nullptr);
  ExecutionResult callArgs(std::uint32_t entry,const std::array<std::uint32_t,4>&arguments,std::uint64_t budget=100000,TaskControl*control=nullptr);
 };

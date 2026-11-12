@@ -16,6 +16,38 @@ static void put(std::vector<std::uint8_t>&b,unsigned at,std::uint32_t word){for(
 static std::uint32_t imageRead=0;static unsigned imageCancelSignals=0;
 static void imageProgress(const char*stage,std::uint32_t done,std::uint32_t){if(!std::strcmp(stage,"Reading ROM"))imageRead=done;}
 static bool cancelImageOnce(){if(imageRead>=65536&&!imageCancelSignals){imageCancelSignals++;return false;}return true;}
+static void romInitializationChecks(){
+ namespace fs=std::filesystem;const fs::path folder="work/symbian-rom-init-check";fs::create_directories(folder);const auto path=(folder/"original.rom").string();
+ std::vector<std::uint8_t> original(16384);put(original,0,0xea000000);put(original,140,0x50000000);put(original,144,original.size());
+ auto header=[&](auto&bytes,unsigned code,unsigned uid,bool thumb,unsigned refs){auto h=code-100;put(bytes,h,0x10000079);put(bytes,h+8,uid);put(bytes,h+16,0x50000000+code+(thumb?1:0));put(bytes,h+20,0x50000000+code);put(bytes,h+28,8);put(bytes,h+56,refs);};
+ header(original,0x1000,1,false,0x50001100);header(original,0x2000,2,true,0x50002100);header(original,0x3000,3,false,0);
+ put(original,0x1100,0x10001);put(original,0x1104,0x50002001);put(original,0x1108,0x50002100);
+ put(original,0x2100,0x20001);put(original,0x2104,0x50001000);put(original,0x2108,0x50001100);put(original,0x210c,0x50003000);put(original,0x2110,0);
+ auto plan=[&](const auto&bytes,std::vector<RomInitEntry>&order,TaskControl*control=nullptr){
+  {std::ofstream out(path,std::ios::binary);out.write(reinterpret_cast<const char*>(bytes.data()),bytes.size());assert(out.good());}
+  AddressSpace memory;RomImage rom;std::string error;assert(rom.mount(memory,path.c_str(),error));return rom.initializationOrder(memory,{{1,0x50001000,0x50001100}},order,error,control);
+ };
+ std::vector<RomInitEntry> order;assert(plan(original,order)&&order.size()==3&&order[0].uid==3&&order[1].uid==2&&order[2].uid==1);
+ for(unsigned which=0;which<6;which++){
+  auto invalid=original;
+  if(which==0)put(invalid,0x2108,0x50001104); // identity mismatch even on an already visited node
+  if(which==1)put(invalid,0x1100,0x810001); // more than 128 references
+  if(which==2)put(invalid,0x2000-100+36,4); // static writable data needs a process mapping
+  if(which==3)put(invalid,0x1100,0x10002); // unsupported flags
+  if(which==4)put(invalid,0x1104,0xffffffff); // outside ROM
+  if(which==5)put(invalid,0x3000-100+20,0x50003004); // unsupported entry/header layout
+  auto previous=order;assert(!plan(invalid,order)&&order.size()==previous.size()&&order[0].entry==previous[0].entry);
+ }
+ unsigned polls=0;TaskControl cancel([&](){return ++polls<3;});assert(!plan(original,order,&cancel)&&cancel.cancelled()&&order.size()==3);
+ std::vector<std::uint8_t> large(0x22000);put(large,0,0xea000000);put(large,140,0x50000000);put(large,144,large.size());
+ for(unsigned n=0;n<257;n++){
+  unsigned code=0x1000+n*0x200,ref=n==256?0:0x50000000+code+0x100;header(large,code,n+1,false,ref);
+  if(ref){put(large,code+0x100,0x10001);put(large,code+0x104,0x50000000+code+0x200);put(large,code+0x108,n==255?0:ref+0x200);}
+ }
+ assert(!plan(large,order)&&order.size()==3);
+ E32Session session;assert(!session.initializeRomLibraries().ready&&!session.initializeCleanup("missing").ready);
+ puts("ROM_INIT_PLAN_PASS dependency_order cycle visited_identity bounds flags static_data_rejection 256_DLL_limit atomic_output cancellation bootstrap_order");
+}
 static void dependencyChecks(const std::vector<std::uint8_t>&original){
  namespace fs=std::filesystem;const fs::path root="work/symbian-dependency-check";
  fs::create_directories(root/"rom-libs");fs::create_directories(root/"game-libs");
@@ -179,7 +211,7 @@ int main(int argc,char**argv){
  auto result=symbianLoaderProbe();
  printf("E32_PROBE parsed=%d relocated=%d returned=%d imports=%d svc=%d protected_memory=%d bounded=%d cancelled=%d\n",result.parsed,result.relocated,result.returned,result.imports,result.systemCall,result.protectedMemory,result.bounded,result.cancelled);fflush(stdout);
  assert(result.passed());
- auto kernel=symbianKernelProbe();printf("KERNEL_PROBE chunks=%d handles=%d sync=%d heap=%d abi=%d thumb=%d\n",kernel.chunks,kernel.handles,kernel.sync,kernel.heap,kernel.abi,kernel.thumb);fflush(stdout);assert(kernel.passed());
+ auto kernel=symbianKernelProbe();printf("KERNEL_PROBE chunks=%d handles=%d sync=%d heap=%d abi=%d thumb=%d trap=%d\n",kernel.chunks,kernel.handles,kernel.sync,kernel.heap,kernel.abi,kernel.thumb,kernel.trap);fflush(stdout);assert(kernel.passed());
  kernelNegativeChecks();
  AddressSpace memory(8192);assert(!memory.map(0,4096,Read));assert(!memory.map(0xfffff000,8192,Read));
  assert(memory.map(0x1000,4096,Read|Write));assert(!memory.map(0x1800,4096,Read));
@@ -188,6 +220,7 @@ int main(int argc,char**argv){
  assert(!memory.permits(0x1000,4,Execute));assert(memory.unmap(0x1000)&&memory.used()==0);
  E32Image image;std::string error;
  const std::vector<std::uint8_t> original(std::begin(symbian_e32_guest),std::end(symbian_e32_guest));
+ romInitializationChecks();
  dependencyChecks(original);
  romChecks(original);
  unsigned rejected=0;

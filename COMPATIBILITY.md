@@ -1,3 +1,14 @@
+# Compatibility work — 0.4.1
+
+New 3DS logs confirm 0.4.0's complete Shadowkey import graph and application UID.
+On PC, the next stage now completes all 114 ROM dependency thread-attach calls,
+then game/application DLL attachment and native CTrapCleanup creation. This is
+not a phone OS/framework boot, exception unwinding or playable game. The new
+steps require hardware validation; the private 0.4.0 dataset stays unchanged.
+Java ME compatibility is unchanged.
+
+## Previous history
+
 # Compatibility work — 0.4.0
 
 The separate Symbian probe resolves the supplied Shadowkey's complete static

@@ -10,6 +10,7 @@ struct KernelResult {
 class Eka1Kernel {
  AddressSpace&memory;
  std::uint32_t currentHeap=0;
+ std::uint32_t trapHandler=0;
  std::uint32_t nextHandle=0x100;
  unsigned pendingRequests=0;
  struct Object {enum {Empty,Chunk,Mutex,Semaphore};unsigned type=0;std::uint32_t handle=0,base=0,maximum=0,size=0;int depth=0;};
@@ -24,5 +25,6 @@ public:
  explicit Eka1Kernel(AddressSpace&m):memory(m){}
  KernelResult dispatch(std::uint32_t svc,const std::array<std::uint32_t,4>&args);
  std::uint32_t heap()const{return currentHeap;}
+ std::uint32_t trap()const{return trapHandler;}
 };
 }

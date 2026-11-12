@@ -1,3 +1,21 @@
+# Java3DS — test build 0.4.1
+
+The owner's New 3DS 0.4.0 logs confirm the complete import graph and application
+UID. This update adds the next standalone diagnostic steps: a bounded ROM DLL
+initialization plan following EKA1 dependency tables, execution of every planned
+thread-attach entry, and the supplied ROM's real CTrapCleanup::New bootstrap.
+The host Shadowkey/RH-29 run completes 114/114 ROM DLL entries and creates the
+native cleanup stack/trap handler before its application factory. The new steps
+still need console validation. They do not implement exception unwinding or a
+phone OS/framework/game scene. Java ME behavior is unchanged.
+
+Update through Wi-Fi, reopen Java3DS once, then run Symbian Probe 0.4.1 -> Y.
+Use the same private Shadowkey 0.4.0 SD data; no new private ZIP is needed.
+Collect symbian-probe.log and symbian-loader.log. Look for trap=1,
+ROM_INITIALIZATION ready=1 completed=114/114 and NATIVE_CLEANUP ready=1.
+
+## Previous history
+
 # Java3DS — test build 0.4.0
 
 The separate Symbian diagnostic now links owner-supplied EKA1 game DLLs and

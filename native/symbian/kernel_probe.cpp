@@ -11,6 +11,9 @@ SymbianKernelResult symbianKernelProbe(){
  memory.write(output,out,sizeof(out));memory.write(description,desc,sizeof(desc));memory.write(info,args,sizeof(args));
  auto exec=[&](unsigned op){return kernel.dispatch(0xc00076,{op,info,status,0});};
  auto returned=[&](KernelResult r,std::int32_t value){return r.kind==KernelResult::Kind::Returned&&r.value==std::uint32_t(value);};
+ result.trap=returned(kernel.dispatch(0x81,{}),0)&&returned(kernel.dispatch(0x82,{valueAt,0,0,0}),0)&&
+  returned(kernel.dispatch(0x81,{}),valueAt)&&returned(kernel.dispatch(0x82,{0xffffffff,0,0,0}),-6)&&kernel.trap()==valueAt&&
+  returned(kernel.dispatch(0x82,{}),valueAt)&&returned(kernel.dispatch(0x81,{}),0);
  if(!returned(exec(0),0))return result;std::uint32_t h=0;memory.read(valueAt,&h);
  auto base=kernel.dispatch(1,{h,0,0,0}).value;std::uint32_t word=0x12345678,zero=1;
  bool initial=memory.permits(base,4096,Read|Write)&&!memory.permits(base+4096,4,Read);
