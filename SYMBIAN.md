@@ -2,8 +2,12 @@
 
 ## Native unwind, thread context and ROM entry batch (0.5.0)
 
-The owner's 0.4.1 New 3DS pass validates ROM/cleanup creation. This larger
-batch, still needing console validation, adds checked EKA1 76-byte TTrap frame
+The owner's 0.5.0 New 3DS logs now validate this batch: all fixture flags pass,
+16 TRAP iterations and native context checks succeed, and AppRun reaches the
+expected FileServer boundary (6460 ms total; no game FPS measurement). Evidence:
+validation/0.5.0/device-v050-*.log and hardware-v050-result.json. The 512-cycle
+stress remains host-only; runtime.log contains only the main app startup header.
+This batch adds checked EKA1 76-byte TTrap frame
 push/pop services (64 frames maximum), per-thread TLS (64 slots), scheduler
 selection and controlled current-thread/process exit. Invalid/duplicate/cyclic
 trap chains stop inside the guest. No host CPU context or pointer is restored

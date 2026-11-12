@@ -11,7 +11,9 @@ Přibyl kontrolovaný přístup k cestám v ROMu a UTF-16 informace procesu. Pů
 AppRun se na PC dostane k požadavku na FileServer. Zde zatím skončí: souborový
 server a IPC, grafické/okenní/fontové a zvukové služby, plný běh procesů,
 EKA2/SIS a herní obrazovka ještě nejsou hotové. Java hry se v tomto balíku nemění.
-Nové kroky potřebují ověřit na konzoli; předchozí test 0.4.1 na New 3DS prošel.
+Vaše logy 0.5.0 nyní potvrzují tyto kroky na New 3DS: všechny kontroly prošly,
+16 cyklů TRAP i plánovač fungují a CPU hlásí nula chyb. Diagnostika skončila za
+6460 ms u očekávaného FileServer. Zátěžový test 512 cyklů zůstává výsledkem z PC.
 
 Aktualizujte přes Wi-Fi, znovu otevřete Java3DS a v Homebrew Launcheru spusťte
 Symbian Probe 0.5.0 -> Y. Použijte stejná soukromá data z 0.4.0; nový ZIP není

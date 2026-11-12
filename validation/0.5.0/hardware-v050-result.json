@@ -1,0 +1,22 @@
+{
+  "version": "0.5.0",
+  "device": "owner New 3DS",
+  "CPU_E32_kernel_fixtures": "all pass",
+  "recorded_CPU_faults": 0,
+  "main_imports_resolved": 415,
+  "game_DLL_imports_resolved": 284,
+  "ROM_DLL_thread_attach_completed": 114,
+  "native_TRAP_normal_leave_nested_cleanup_heap_reuse": "all pass",
+  "device_native_TRAP_iterations": 16,
+  "native_TLS_scheduler_priority_RunError_teardown": "all pass",
+  "application_UID": "101fd3f6",
+  "application_UID_matches": true,
+  "ROM_AppRun_boundary": "FileServer session creation, executor 0x16 explicitly unsupported",
+  "whole_diagnostic_ms": 6460,
+  "host_512_cycle_stress": "not a hardware result",
+  "runtime_log_scope": "startup header only, no game session evidence",
+  "gameplay": false,
+  "probe_log_sha256": "16f536b701eb4a401b3671b40848f02fdde20871f64337cff595e9055b9af0e6",
+  "loader_log_sha256": "00128f45b9000babf2db2b2b1329a83ffc88571de6fa00abfa2e3317ac00efbd",
+  "runtime_log_sha256": "b850afd29f6dac7a739dbc369d1266b3c139261a4ec523ad46bd9f9ce436526b"
+}

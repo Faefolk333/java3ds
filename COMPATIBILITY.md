@@ -2,7 +2,9 @@
 
 A larger EKA1 runtime batch adds real ROM TRAP/Leave cleanup, DLL TLS, native
 ready-object scheduler/RunError checks, named synchronization and guest exit.
-Host stress and negative cases pass; new behavior still needs hardware testing.
+The owner's 0.5.0 New 3DS logs confirm all fixture flags, 16 TRAP iterations,
+native context checks and the same FileServer boundary (6460 ms total). The
+512-cycle stress remains host-only; no game session is present in runtime.log.
 The real ROM AppRun entry now reaches FileServer session creation, where it
 stops explicitly. FileServer/IPC, window/font/graphics/audio services, full
 process scheduling and EKA2/SIS remain incomplete. No playable Symbian scene,

@@ -1,7 +1,14 @@
 # Java3DS 0.5.0 validation — 2026-11-12
 
-New native unwind/context/AppRun steps are host-tested, not yet console-verified.
-The owner's 0.4.1 New 3DS pass is archived under validation/0.4.1.
+The owner's New 3DS 0.5.0 logs now confirm all CPU/E32/kernel/runtime fixture
+flags pass with zero recorded CPU faults. Sixteen native normal/Leave cycles,
+nested cleanup, TLS, priority/RunError dispatch and teardown pass. All imports,
+114 ROM entries and the application UID still pass. ROM AppRun reaches the
+expected unsupported FileServer session creation boundary. The full diagnostic
+completes in 6460 ms; this is not a game FPS measurement. The separate runtime
+log contains only the 0.5.0 startup header, not a game session. Evidence:
+device-v050 logs and hardware-v050-result.json in validation/0.5.0. The 512-cycle
+stress result below remains host-only. No phone GUI or gameplay is validated.
 
 * Original ARM fixtures invoke UID-checked real EUSER exports: TTrap::Trap,
   UnTrap, User::Leave, CleanupStack item/pointer push, PopAndDestroy and User
